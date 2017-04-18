@@ -1,8 +1,29 @@
 \chapter{Linear Regression}
 \label{chp:linreg}
 
+Linear regression is an approach in supervised learning. It is used for predicting a quantitative response and it is widely used for statistical learning methods. It may seem that it is a bit simple compared to some of the more modern statistical learning approaches, but it serves as a good base as newer approaches can be seen as an generalization or extensions of the linear regression. 
+In this chapter the key ideas in linear regression model and it will describe the least squares approach
+which is the most commonly used to fit this model
+
 \section{Lab 3.6.2 - Simple Linear Regression}
 
+Simple linear regression is used for predicting a quantitative response, that is often called Y, based on a single predictor, which is often called X.
+The relationship between X and Y can be expressed as:
 
+\begin{center}
+	$Y \approx \beta_0 + \beta_1X$
+\end{center}
+
+This means that Y is approximately modeled as X or in other word Y regressing on X. 
+$\beta_0$ and $\beta_1$ are two unknown constant that represent the intercept and slope in the linear model. They are also known as model coefficients or parameters. 
+To be able to predict, the training data is used to produce
+an estimation of $\hat{\beta_0}$ and $\hat{\beta_1}$ for the model coefficients. 
+The mathematically expression for the computation is:
+
+\begin{center}
+	$\hat{\beta_0} = \hat{\beta_0} + \hat{\beta_1}x$
+\end{center}
+
+$\hat{y}$ is the prediction of Y based on X = x. The \textit{hat} symbol is used to estimate value for an unknown parameter or coefficient or to predict a value of the response  
 
 \section{Lab 3.6.3}

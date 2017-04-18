@@ -24,6 +24,22 @@ The mathematically expression for the computation is:
 	$\hat{\beta_0} = \hat{\beta_0} + \hat{\beta_1}x$
 \end{center}
 
-$\hat{y}$ is the prediction of Y based on X = x. The \textit{hat} symbol is used to estimate value for an unknown parameter or coefficient or to predict a value of the response  
+$\hat{y}$ is the prediction of Y based on X = x. The \textit{hat} symbol is used to estimate value for an unknown parameter or coefficient or to predict a value of the response.
+
+\newline
+In Lab 3.6.2 the data set Boston is given. It consists of records about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house  value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
+To perform the linear regression the library sklearn is used in python. 
+
+\lstset{}
+\begin{lstlisting}[caption={Python Linear Regression function}, label=lst:lin_reg, mathescape=true]
+regr = linear_model.LinearRegression()
+regr.fit(predXData, predYData)
+\end{lstlisting}
+
+In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the data. ‘predXData’ is the \emph{lstat} data, and ‘predYData’ is the \emph{medv} data.
+The result are plotted in a graph seen in figure \ref{fig:lin_reg_plot}.
+
+\myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
+ 
 
 \section{Lab 3.6.3}

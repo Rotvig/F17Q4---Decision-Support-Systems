@@ -38,4 +38,18 @@ plt.show()
 \myFigure{461_plot.png}{bla}{fig:lab461Plot}{0.6} 
 
 \section{Lab 4.6.2 - Logistic Regression}
-In this lab a logistic regression model is made based on the stock market data. The predictors was examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.
+In this lab a logistic regression model is made based on the stock market data. The predictors were examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.
+
+In the exercise the P-values will first be examined. This is done by fitting a logistic model with the predictors \emph{Lag1, Lag2, Lag3, Lag4, Lag5} and \emph{Volume} to predict the \emph{direction}.  The statsmodels python library is used to print a summary of the fitted model. This is shown in listing asdfsaf
+\begin{lstlisting}[language=Python, caption=print correlation matrix]
+formula = 'Direction ~ Lag1+Lag2+Lag3+Lag4+Lag5+Volume'
+model = smf.glm(formula=formula, data=data, family=sm.families.Binomial())
+print(model.fit().summary())
+\end{lstlisting}
+
+The printet summary is illustrated in figure \ref{fig:lab462Pvalue}
+
+
+
+
+\myFigure{Lab462Pvalue.PNG}{bla}{fig:lab462Pvalue}{0.6} 

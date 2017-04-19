@@ -1,6 +1,41 @@
 \chapter{Logistic Regression}
 \label{chp:logreg}
+Linear regression discussed in previous chapter assumes a quantitative response value Y. Often classification is needed to solve a problem. An example could be predicting whether a tumor is malignant. With a binary classification problem we could use linear regression by converting our wanted qualitative response variable into a quantitative response. For example based on the tumor size the tumor is malignant or not. If Y > 0.5 then we could classify the tumor as malignant. One problem of using linear regression for this is that our estimate might be outside the interval $[0,1]$, which can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that we can not extend it to a multiple classification problem, it can only be used for binary classification.
 
-\section{Lab 4.6.1}
+To avoid the problem with values outside the interval of $[0,1]$ we can instead use a logistic regression. In logistic regression a logistic function is used.
 
-\section{Lab 4.6.2}
+\begin{center}
+	$p(X) = \dfrac{1+e^{\beta_0+ \beta_1 X}}{e^{\beta_0 + \beta_1 X}}$ 
+\end{center}
+
+By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equal to or higher than 0. By dividing by the same equation + 1 the prediction will never be higher than 1.
+
+\section{Lab 4.6.1 - The Stock Market Data}
+In this lab the data will first be examined before the regression coefficients are estimated. 
+
+With the following python code a matrix with the pairwise correlation among the predictors is printet. Numpy is used for calculating the correlation matrix. Pandas is used creating a table based on the calculated correlation matrix.
+\begin{lstlisting}[language=Python, caption=print correlation matrix]
+cor = np.corrcoef(preparedData)
+labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 
+'Today']
+df = pd.DataFrame(cor, columns=labels, index=labels)
+print df
+\end{lstlisting}
+
+The printet correlation matrix is illustrated in figure \ref{fig:lab461}. Here it is shown that there is very little correlation between the different Lag variables and todays return. A interesting correlation can though be seen between year and volume. This indicates that each year the average number of traded stocks increases. 
+
+\myFigure{461.png}{bla}{fig:lab461}{1} 
+\FloatBarrier
+
+With the python code in listing asfdas we can plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
+\begin{lstlisting}[language=Python, caption=print correlation matrix]
+plt.plot(preparedData[6], 'ro')
+plt.ylabel('Volume')
+plt.xlabel('Index')
+plt.show()
+\end{lstlisting}
+
+\myFigure{461_plot.png}{bla}{fig:lab461Plot}{0.6} 
+
+\section{Lab 4.6.2 - Logistic Regression}
+In this lab a logistic regression model is made based on the stock market data. The predictors was examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.

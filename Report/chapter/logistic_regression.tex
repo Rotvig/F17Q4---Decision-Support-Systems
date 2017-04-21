@@ -47,9 +47,49 @@ model = smf.glm(formula=formula, data=data, family=sm.families.Binomial())
 print(model.fit().summary())
 \end{lstlisting}
 
-The printet summary is illustrated in figure \ref{fig:lab462Pvalue}
-
-
-
-
 \myFigure{Lab462Pvalue.PNG}{bla}{fig:lab462Pvalue}{0.6} 
+
+The printet summary is illustrated in figure \ref{fig:lab462Pvalue}. Here we see that the lowest p-value is \emph{Lag1} but it still has a value of 0.145, which is still quite high and it presents no evidence of any association between \emph{Lag1} and \emph{Direction}. But note here that only using the predictors with the lowest p-value would probably yield the most accurate result when predicting the \emph{Direction}. The reason for this is that some predictors have so little assocation with the \emph{Direction} that they will only make the prediction less accurate. This will also be shown in the following examples.
+
+\FloatBarrier
+
+In Listing asdfsadf we divide our training data in a training set and a test set. We use all data from 2004 and before to train our logistic model and we test in on the data from 2005.  In this implementation all predictors is used to fit the logistic model.
+
+\begin{lstlisting}[language=Python, caption=Logistic regression using all predictors]
+X_train = data[:'2004'][['Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume']]
+Y_test = data['2005':]['Direction']
+
+lr = linear_model.LogisticRegression()
+lr.fit(X_train,Y_train)
+\end{lstlisting}
+
+Based on our our test data we check how well our logistic model predicts the \emph{Direction}. The implemention is shown in Listing asdfasdf. The model only predicts correctly $48\%$ of the time. With this result changes to the model definately needs to be made.
+\begin{lstlisting}[language=Python, caption=Logistic regression using all predictors]
+print(lr.score(X_test, Y_test))
+print(pd.crosstab(Y_test, lr.predict(X_test),rownames=['True'], colnames=['Predicted'], margins=True))
+
+print(metrics.classification_report(Y_test, lr.predict(X_test)))
+\end{lstlisting}
+
+In Listing asdfas we now only use the predictors \emph{Lag1} and \emph{Lag2}. These are the two predictors with the lowest p-value. 
+
+\begin{lstlisting}[language=Python, caption=Logistic regression using only Lag1 and Lag2 as predictors]
+X_train = data[:'2004'][['Lag1', 'Lag2']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2']]
+Y_test = data['2005':]['Direction']
+
+lr = linear_model.LogisticRegression()
+lr.fit(X_train,Y_train)
+\end{lstlisting}
+
+Running the python code in Listing aasdfda for this implementation gave a better result. It predicted correctly $52\%$ of the time. 
+
+
+
+
+

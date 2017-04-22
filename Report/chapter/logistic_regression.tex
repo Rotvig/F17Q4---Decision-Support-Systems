@@ -1,20 +1,32 @@
 \chapter{Logistic Regression}
 \label{chp:logreg}
-Linear regression discussed in previous chapter assumes a quantitative response value Y. Often classification is needed to solve a problem. An example could be predicting whether a tumor is malignant. With a binary classification problem, linear regression could be used by converting our wanted qualitative response variable into a quantitative response. For example based on the the quantitative tumor size the tumor is malignant or not. If $Y > 0.5$ then a model could classify the tumor as malignant. One problem of using linear regression for this is that our estimate might be outside the interval $[0,1]$, which can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a multiple classification problem, it can only be used for binary classification.
+Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem:
+\begin{centering}
+Predicting whether a tumor is maligant or not based on the size of the tumor
+\end{centering}
+With a binary classification problem, linear regression could be used by converting our wanted qualitative response variable into a quantitative response.We could convert our quantitative response into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as maligant if the the probability is higher than 0.5. 
+
+A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a multiple classification problem, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap betweens some classes than others. This would make it difficult to make an accurate model using a linear function.
 
 Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used.
 
 \begin{center}
-	$p(X) = \dfrac{1+e^{\beta_0+ \beta_1 X}}{e^{\beta_0 + \beta_1 X}}$ 
+	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}$ 
 \end{center}
 
-By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equal to or higher than 0. By dividing by the same equation + 1 the prediction will never be higher than 1.
+By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equal to or higher than 0. By dividing by the same equation + 1 the prediction will never be higher than 1. In the equation $\beta_0$ and $\beta_1$ is similar to what is used in linear regression. $\beta_0$ describes the probability when the predictor is 0 and $\beta_1$ is the regression coefficient that is multiplied  with the predictor. The equation can be extended to multiple logistic regression using multiple predictors. Instead the equation looks as following.
 
+\begin{center}
+	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}{1 + e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}$ 
+\end{center}
+
+
+\todo{måske indsæt en figur der viser grafer med linear og logistic}
 \section{Lab 4.6.1 - The Stock Market Data}
 In this lab the data will first be examined before the regression coefficients are estimated. 
 
-With the following python code a matrix with the pairwise correlation among the predictors is printet. Numpy is used for calculating the correlation matrix. Pandas is used creating a table based on the calculated correlation matrix.
-\begin{lstlisting}[language=Python, caption=print correlation matrix]
+With the following python code shown in Listing \ref{lst:correlation} a matrix with the pairwise correlation among the predictors is printet. Numpy is used for calculating the correlation matrix. Pandas is used creating a table based on the calculated correlation matrix.
+\begin{lstlisting}[language=Python, label=lst:correlation, caption=print correlation matrix]
 cor = np.corrcoef(preparedData)
 labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 
 'Today']
@@ -27,8 +39,8 @@ The printet correlation matrix is illustrated in figure \ref{fig:lab461}. Here i
 \myFigure{461.png}{bla}{fig:lab461}{1} 
 \FloatBarrier
 
-With the python code in listing asfdas we can plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
-\begin{lstlisting}[language=Python, caption=print correlation matrix]
+With the python code in listing \ref{lst:plotVolume} we can plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
+\begin{lstlisting}[language=Python, label=lst:plotVolume, caption=print correlation matrix]
 plt.plot(preparedData[6], 'ro')
 plt.ylabel('Volume')
 plt.xlabel('Index')
@@ -40,8 +52,8 @@ plt.show()
 \section{Lab 4.6.2 - Logistic Regression}
 In this lab a logistic regression model is made based on the stock market data. The predictors were examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.
 
-In the exercise the P-values will first be examined. This is done by fitting a logistic model with the predictors \emph{Lag1, Lag2, Lag3, Lag4, Lag5} and \emph{Volume} to predict the \emph{direction}.  The statsmodels python library is used to print a summary of the fitted model. This is shown in listing asdfsaf
-\begin{lstlisting}[language=Python, caption=print correlation matrix]
+In the exercise the P-values will first be examined. This is done by fitting a logistic model with the predictors \emph{Lag1, Lag2, Lag3, Lag4, Lag5} and \emph{Volume} to predict the \emph{direction}.  The statsmodels python library is used to print a summary of the fitted model. This is shown in listing \ref{lst:summary}
+\begin{lstlisting}[language=Python, label=lst:summary caption=print correlation matrix]
 formula = 'Direction ~ Lag1+Lag2+Lag3+Lag4+Lag5+Volume'
 model = smf.glm(formula=formula, data=data, family=sm.families.Binomial())
 print(model.fit().summary())
@@ -53,9 +65,9 @@ The printet summary is illustrated in figure \ref{fig:lab462Pvalue}. Here we see
 
 \FloatBarrier
 
-In Listing asdfsadf we divide our training data in a training set and a test set. We use all data from 2004 and before to train our logistic model and we test in on the data from 2005.  In this implementation all predictors is used to fit the logistic model.
+In Listing \ref{lst:AllPredictors} we divide our training data in a training set and a test set. We use all data from 2004 and before to train our logistic model and we test in on the data from 2005.  In this implementation all predictors is used to fit the logistic model.
 
-\begin{lstlisting}[language=Python, caption=Logistic regression using all predictors]
+\begin{lstlisting}[language=Python, label=lst:AllPredictors, caption=Logistic regression using all predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume']]
 Y_train = data[:'2004']['Direction']
 
@@ -66,17 +78,14 @@ lr = linear_model.LogisticRegression()
 lr.fit(X_train,Y_train)
 \end{lstlisting}
 
-Based on our our test data we check how well our logistic model predicts the \emph{Direction}. The implemention is shown in Listing asdfasdf. The model only predicts correctly $48\%$ of the time. With this result changes to the model definately needs to be made.
-\begin{lstlisting}[language=Python, caption=Logistic regression using all predictors]
+Based on our our test data we check how well our logistic model predicts the \emph{Direction}. In Listing \ref{lst:LRscore} a score method is called for the logistic regression model. This function returns the mean accuracy of the model. The score shows that the model only predicts correctly $48.8\%$ of the time. Based on this result the model needs to be approved upon.
+\begin{lstlisting}[language=Python, label=lst:LRscore, caption=Logistic regression using all predictors]
 print(lr.score(X_test, Y_test))
-print(pd.crosstab(Y_test, lr.predict(X_test),rownames=['True'], colnames=['Predicted'], margins=True))
-
-print(metrics.classification_report(Y_test, lr.predict(X_test)))
 \end{lstlisting}
 
-In Listing asdfas we now only use the predictors \emph{Lag1} and \emph{Lag2}. These are the two predictors with the lowest p-value. 
+In Listing \ref{lst:OnlyLag1Lag2} we now only use the predictors \emph{Lag1} and \emph{Lag2}. These are the two predictors with the lowest p-value. 
 
-\begin{lstlisting}[language=Python, caption=Logistic regression using only Lag1 and Lag2 as predictors]
+\begin{lstlisting}[language=Python, label=lst:OnlyLag1Lag2, caption=Logistic regression using only Lag1 and Lag2 as predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
 Y_train = data[:'2004']['Direction']
 
@@ -87,7 +96,8 @@ lr = linear_model.LogisticRegression()
 lr.fit(X_train,Y_train)
 \end{lstlisting}
 
-Running the python code in Listing aasdfda for this implementation gave a better result. It predicted correctly $52\%$ of the time. 
+Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed that a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model have been approved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}.
+
 
 
 

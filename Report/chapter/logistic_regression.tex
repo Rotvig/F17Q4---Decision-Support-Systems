@@ -2,11 +2,11 @@
 \label{chp:logreg}
 Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem:
 \begin{centering}
-Predicting whether a tumor is maligant or not based on the size of the tumor
+Predicting whether a tumor is malignant or not based on the size of the tumor
 \end{centering}
-With a binary classification problem, linear regression could be used by converting our wanted qualitative response variable into a quantitative response.We could convert our quantitative response into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as maligant if the the probability is higher than 0.5. 
+With a binary classification problem, linear regression could be used by converting our wanted qualitative response variable into a quantitative response.We could convert our quantitative response into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the the probability is higher than 0.5. 
 
-A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a multiple classification problem, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap betweens some classes than others. This would make it difficult to make an accurate model using a linear function.
+A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap betweens some classes than others. This would make it difficult to make an accurate model using a linear function.
 
 Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used.
 

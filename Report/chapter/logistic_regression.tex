@@ -88,7 +88,7 @@ Based on our our test data we check how well our logistic model predicts the \em
 print(lr.score(X_test, Y_test))
 \end{lstlisting}
 
-In Listing \ref{lst:OnlyLag1Lag2} we now only use the predictors \emph{Lag1} and \emph{Lag2}. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor. It has little correlation with \emph{Lag1} and is also the third lowest p-value. Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value.
+In Listing \ref{lst:OnlyLag1Lag2} we now only use the predictors \emph{Lag1} and \emph{Lag2}. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor. It has a very low correlation with \emph{Lag1} and also the third lowest p-value. Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}
 
 \begin{lstlisting}[language=Python, label=lst:OnlyLag1Lag2, caption=Logistic regression using only Lag1 and Lag2 as predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
@@ -101,7 +101,7 @@ lr = linear_model.LogisticRegression()
 lr.fit(X_train,Y_train)
 \end{lstlisting}
 
-Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed that a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model have been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important an provides a information about the association when multiple predictors are used.
+Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed that a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model have been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important an provides information about the association when multiple predictors  are used.
 \todo{Hvorfor er volume ikke bedre... ? Den har lavere p-value}
 
 

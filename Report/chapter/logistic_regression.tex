@@ -22,10 +22,13 @@ By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equ
 
 
 \todo{måske indsæt en figur der viser grafer med linear og logistic}
-\section{Lab 4.6.1 - The Stock Market Data}
-In this lab the data will first be examined before the regression coefficients are estimated. 
 
-With the following python code shown in Listing \ref{lst:correlation} a matrix with the pairwise correlation among the predictors is printet. Numpy is used for calculating the correlation matrix. Pandas is used creating a table based on the calculated correlation matrix.
+In the following lab exercises a logistic regression model will implemented based on stock market data. The model will be used to predict if the market is going up or down on a particular day. Before creating the model the data will first be examined.
+
+\section{Lab 4.6.1 - The Stock Market Data}
+In this lab the correlation between the predictors and todays return value is examined. Todays return value describes the direction, if the number is negative the stock went down and if its positive the stock went up The available predictors are 5 lagging indicators \emph{Lag1, Lag2, Lag3, Lag4} and \emph{Lag5} and \emph{Volume} which describes the number of shares traded in billions.
+
+With the python code shown in Listing \ref{lst:correlation} a matrix with the pairwise correlation among the predictors and todays return is printet. Numpy is used for calculating the correlation matrix. Pandas is used creating a table based on the calculated correlation matrix.
 \begin{lstlisting}[language=Python, label=lst:correlation, caption=print correlation matrix]
 cor = np.corrcoef(preparedData)
 labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 
@@ -34,9 +37,9 @@ df = pd.DataFrame(cor, columns=labels, index=labels)
 print df
 \end{lstlisting}
 
-The printet correlation matrix is illustrated in figure \ref{fig:lab461}. Here it is shown that there is very little correlation between the different Lag variables and todays return. A interesting correlation can though be seen between year and volume. This indicates that each year the average number of traded stocks increases. 
+The printed correlation matrix is illustrated in figure \ref{fig:lab461}. Here it is shown that there is very little correlation between the different Lag variables and todays return. This also makes sense because the variables are lagging indicators and therefore it only changes after the economy has already changed. For example \emph{Lag1} describes how if the market went up yesterday then its less likely to go up today. An interesting correlation can be seen between \emph{Year} and \emph{Volume}. This indicates that each year the average number of traded stocks increases. 
 
-\myFigure{461.png}{bla}{fig:lab461}{1} 
+\myFigure{461.png}{Pairwise correlation matrix between predictors and todays return}{fig:lab461}{1} 
 \FloatBarrier
 
 With the python code in listing \ref{lst:plotVolume} we can plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
@@ -47,23 +50,25 @@ plt.xlabel('Index')
 plt.show()
 \end{lstlisting}
 
-\myFigure{461_plot.png}{bla}{fig:lab461Plot}{0.6} 
+\myFigure{461_plot.png}{Correlation between Volume and year, higher index describes forward in time}{fig:lab461Plot}{0.6} 
+
+When choosing predictors in our logistic regression model we must note that a correlation matrix not necessarily describes the best predictors, at least not if we are choosing multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. In the following lab we will therefore further examine the data to find good predictors.
 
 \section{Lab 4.6.2 - Logistic Regression}
 In this lab a logistic regression model is made based on the stock market data. The predictors were examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.
 
 In the exercise the P-values will first be examined. This is done by fitting a logistic model with the predictors \emph{Lag1, Lag2, Lag3, Lag4, Lag5} and \emph{Volume} to predict the \emph{direction}.  The statsmodels python library is used to print a summary of the fitted model. This is shown in listing \ref{lst:summary}
-\begin{lstlisting}[language=Python, label=lst:summary caption=print correlation matrix]
+\begin{lstlisting}[language=Python, label=lst:summary, caption=print correlation matrix]
 formula = 'Direction ~ Lag1+Lag2+Lag3+Lag4+Lag5+Volume'
 model = smf.glm(formula=formula, data=data, family=sm.families.Binomial())
 print(model.fit().summary())
 \end{lstlisting}
 
-\myFigure{Lab462Pvalue.PNG}{bla}{fig:lab462Pvalue}{0.6} 
-
-The printet summary is illustrated in figure \ref{fig:lab462Pvalue}. Here we see that the lowest p-value is \emph{Lag1} but it still has a value of 0.145, which is still quite high and it presents no evidence of any association between \emph{Lag1} and \emph{Direction}. But note here that only using the predictors with the lowest p-value would probably yield the most accurate result when predicting the \emph{Direction}. The reason for this is that some predictors have so little assocation with the \emph{Direction} that they will only make the prediction less accurate. This will also be shown in the following examples.
-
+\myFigure{Lab462Pvalue.PNG}{summary of data with associated p-value describing good predictors}{fig:lab462Pvalue}{0.6} 
 \FloatBarrier
+
+The printed summary is illustrated in figure \ref{fig:lab462Pvalue}. Here we see that the lowest p-value is \emph{Lag1} but it still has a value of 0.145, which is still quite high and it presents no evidence of any association between \emph{Lag1} and \emph{Direction}. But note here that only using the predictors with the lowest p-value would probably yield the most accurate result when predicting the \emph{Direction}. The reason for this is that some predictors have so little association with the \emph{Direction} that they will only make the prediction less accurate. This will also be shown in the following examples.
+
 
 In Listing \ref{lst:AllPredictors} we divide our training data in a training set and a test set. We use all data from 2004 and before to train our logistic model and we test in on the data from 2005.  In this implementation all predictors is used to fit the logistic model.
 
@@ -83,7 +88,7 @@ Based on our our test data we check how well our logistic model predicts the \em
 print(lr.score(X_test, Y_test))
 \end{lstlisting}
 
-In Listing \ref{lst:OnlyLag1Lag2} we now only use the predictors \emph{Lag1} and \emph{Lag2}. These are the two predictors with the lowest p-value. 
+In Listing \ref{lst:OnlyLag1Lag2} we now only use the predictors \emph{Lag1} and \emph{Lag2}. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor. It has little correlation with \emph{Lag1} and is also the third lowest p-value. Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value.
 
 \begin{lstlisting}[language=Python, label=lst:OnlyLag1Lag2, caption=Logistic regression using only Lag1 and Lag2 as predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
@@ -96,7 +101,8 @@ lr = linear_model.LogisticRegression()
 lr.fit(X_train,Y_train)
 \end{lstlisting}
 
-Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed that a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model have been approved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}.
+Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed that a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model have been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important an provides a information about the association when multiple predictors are used.
+\todo{Hvorfor er volume ikke bedre... ? Den har lavere p-value}
 
 
 

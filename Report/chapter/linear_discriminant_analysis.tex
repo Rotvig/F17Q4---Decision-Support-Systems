@@ -1,0 +1,55 @@
+\chapter{Linear Discriminant analysis}
+\label{chp:lindisana}
+
+In the last chapter it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes. The reason for this is that the model does not perform very stable under some circumstance. One big problem with logistic regression is it might not converge if the classes are well-separated. An example could be the data in the table below. Here we see that the classes is well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
+\begin{center}
+	\begin{tabular}{rll}
+		\multicolumn{1}{c}{\textbf{Y}} &
+		\multicolumn{1}{c}{\textbf{X}} \\ \hline
+		0     &  -2  \\[0.05cm] 
+		0     &  -3  \\[0.05cm] 
+		0     &  -1  \\[0.05cm] 
+		0     &  -5  \\[0.05cm] 
+		1     &    3  \\[0.05cm] 
+		1     &    1  \\[0.05cm] 
+		1     &    5  \\[0.05cm] 
+		1     &    6  \\[0.05cm] 
+	\end{tabular}
+\end{center}
+
+Instead method called Linear Discriminant Analysis(LDA) is used. In logistic regression we directly model $Pr(Y|X)$. With LDA $P(X|Y)$ is modeled and prediction is done by using Bayes theorem to achieve $P(Y|X)$ and find the most probable class given predictors. The following variables are used:
+
+\begin{itemize}
+	\item Let $\pi_k$ represent the prior probability $P(Y=k)$ for K classes.
+	\item Let $f_k(x))$ represent the probability $P(X=x|Y=k)$. So $f_k(x)$ is probability of the predictors when the class Y is given.
+\end{itemize} 
+
+By inserting these in Bayes formula and normalizing to get $P(Y=k|X=x)$ the following can be written.
+
+\begin{center}
+	$P(Y=k|X = x) = \dfrac{\pi_k f_k(x)}{\sum_{l=1}^{K} \pi_l f_l(x)}$
+\end{center}
+
+For the equation the two variables $\pi_k$ and $f_k(x)$ still needs to be estimated. $pi_k$ can be estimated by computing the fraction of the training data that belongs to the kth class. While $f_k(x)$ can be estimated as a Gaussian. This means that the equation differs when using only 1 predictor to using multiple. When only using one predictor and taking log of the equation it can be rewritten as the following
+
+\begin{center}
+	$\delta_k(x) = x  \dfrac{\mu_k}{\sigma^2} - \dfrac{\mu_k^2}{2\sigma^2} + log(\pi_k)$
+\end{center}
+
+Then the equation is calculated for each class k and is classified for the k that results in the highest probability. The equation for multiple predictors instead uses a $mu$ matrix and a covariance matrix and can be written as following
+
+\begin{center}
+	$\delta_k(x) = x^T \Sigma^{-1} \mu_k -  \frac{1}{2} \mu_k^{T} \Sigma^{-1} \mu_k + log \pi_k$
+\end{center}
+
+Note here that LDA assumes the observation to have a Gaussian distribution. If this is the case then LDA is likely to outperform logistic regression, while if it is not, then Logistic regression is likely to outperform LDA.
+
+LDA assumes that all data can be represented as a Gaussian 
+The means is simply calculated by summing all values with a specific class and dividing by the total number.
+Variance is calculated across all the data with a specific class 
+
+
+\section{Lab 4.6.3}
+\section{Lab 4.6.4}
+\section{Lab 4.6.5}
+

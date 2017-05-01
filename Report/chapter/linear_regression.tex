@@ -119,10 +119,42 @@ The basis for Multiple Linear Regression is the same as for Simple Linear Regres
 
 \myFigure{relation.PNG}{Relationship between predictor variables "P.V" and response variables "R.V" in Simple- and Multiple Linear Regression}{fig:relation}{0.8}
 
-As specified in Lab 3.6.2, the predictors are called X, while Y is our response. This means for Multiple Linear Regression, the relationship between X and Y is expressed as:
+\FloatBarrier
+As specified in Lab 3.6.2, the predictors are called X, while Y is the response. This means for Multiple Linear Regression, the relationship between X and Y is expressed as:
 
 \begin{equation}
 Y \approx \beta_0 + \beta_1 * X_1 + \beta_2 * X_2 + … + \beta_k * X_k
 \end{equation}
 
+The different features of the Boston dataset can be singled out by writing the syntax in Listing \ref{lst:feat}. 
 
+\begin{lstlisting}[caption={Boston features}, label=lst:feat, mathescape=true]
+boston.data[:, np.newaxis, 6] # Feature: age
+boston.data[:, np.newaxis, 12] # Feature: lstat
+\end{lstlisting}
+
+However as this exercise will fit all the features it is not necessary to take every single feature out of the dataset, just to put it back together. Instead, the whole dataset is called for the linear regression as shown in Listing \ref{lst:mul_lin_reg}.
+
+\begin{lstlisting}[caption={Linear Regression of multiple predictors}, label=lst:mul_lin_reg, mathescape=true]
+boston_X_train = boston.data
+boston_X_test = boston.data
+boston_Y_train = boston.target
+boston_Y_test = boston.target
+
+lm = linear_model.LinearRegression()
+lm.fit(boston_X_train, boston_Y_train)
+\end{lstlisting}
+
+When the linear regression object \emph{lm} is created, it can be used to fit all the data. By the use of the \emph{coef\_} and \emph{intercept\_} attributes, and the \emph{score} method, an overview of the regression can be output. This is shown in Listing \ref{lst:print}.
+
+\begin{lstlisting}[caption={Printing regression overview}, label=lst:print, mathescape=true]
+print("Coefficients:")
+print(lm.coef_)
+print("Intercept: ")
+print(lm.intercept_)
+print("Variance score: %.2f" % lm.score(boston_X_test, boston_Y_test))
+\end{lstlisting}
+
+The output of Listing \ref{lst:print} fits the results from the exercise and can be seen in Figure \ref{fig:multiOutput}.
+
+\myFigure{MultiLinRegOutput.PNG}{Output of Listing \ref{lst:print}}{fig:multiOutput}{0.8}

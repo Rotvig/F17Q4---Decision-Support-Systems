@@ -37,16 +37,16 @@ First Let
 (x_1, y_1), (x_2, y_2),..., (x_n, y_n)
 \end{equation}
 
-represent n observation pairs where each of them have a measurement of X and a measurement of Y. n can represent lots of thing. can be the number of different markets, or different cities. It depends on the data. 
+represent n observation pairs where each of them have a measurement of X and a measurement of Y. n can represent lots of thing. can be the number of different markets, or different cities. It depends on the data.
 
 The goal is to estimate $\hat{\beta_0}$ and  $\hat{\beta_1}$ such that the linear model fits the data as good as possible. In other words $\hat{\beta_0}$ is the intercept and  $\hat{\beta_1}$ is a slope, so the resulting line is as close as possible to n\emph{th} data points
 
 In this lab the \emph{least square} method will be used because it is the most common approach. 
 
 First the prediction for Y will be written as $\hat{y_i} = \hat{\beta_0} + \hat{\beta_1} x_i$ based on the \emph{i}th value of X.
-Then $e_i = y_i - \hat{y_i}$ will represent the \emph{i}th residual, which is the different between it \emph{i}th observed response value and the \emph{i}th response value that is predicted by the linear model
+Then $e_i = y_i - \hat{y_i}$ will represent the \emph{i}th residual, which is the difference between the \emph{i}th observed response value and the \emph{i}th response value that is predicted by the linear model.
 
-The \emph{residual sum of squares} also called RSS will be define as
+The \emph{residual sum of squares} also called RSS will be defined as
 
 \begin{equation}
 RSS = e^2_1 + e^2_2 + ... + e^2_n,
@@ -69,21 +69,36 @@ The minimization is written as:
 \hat{\beta_0} = \bar{y} -\hat{\beta_1}\bar{x}
 \end{equation}
 
-In Lab 3.6.2 the data set Boston is given. It consists of records about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house  value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
+In Lab 3.6.2 the data set Boston is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
+
+Before at linear regression can be performed the data needs to be prepared. This is shown in Listing \ref{lst:lin_reg_prep}. First the data is loaded and then the \emph{lstat} data is added to 'boston\_X\_train' and 'boston\_X\_test', and the \emph{medv} data is added to 'boston\_Y\_train' and 'boston\_Y\_test'.
+
+\begin{lstlisting}[caption={Data preparation for linear regression}, label=lst:lin_reg_prep, mathescape=true]
+boston = datasets.load_boston()
+
+#Extract 'lstat'
+boston_X_train = boston.data[:, np.newaxis, 12]
+boston_X_test = boston.data[:, np.newaxis, 12]
+
+#Extract 'medv'
+boston_Y_train = boston.target
+boston_Y_test = boston.target
+\end{lstlisting}
+
 To perform the linear regression the library sklearn is used in python. 
 
-\lstset{}
+
 \begin{lstlisting}[caption={Python Linear Regression function}, label=lst:lin_reg, mathescape=true]
 lm = linear_model.LinearRegression()
 lm.fit(boston_X_train, boston_Y_train)
 \end{lstlisting}
 
-In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the data. ‘boston\_X\_train’ is the \emph{lstat} data, and ‘boston\_Y\_train’ is the \emph{medv} data.
-The result is plotted in a graph seen in figure \ref{fig:lin_reg_plot}.
+In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the data. ‘boston\_X\_train’ and ‘boston\_Y\_train’ data.
+The result is plotted in a graph seen in Figure \ref{fig:lin_reg_plot}.
 
 \myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
 
-The code in Listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression. To plot, the python libary \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the the least squares regression. To plot the least squares regression the command 'plot' is used this is seen in line 2. Where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
+The code in Listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression line. To plot, the python libary \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the the least squares regression line. To plot the least squares regression line the command 'plot' is used this is seen in line 2. Where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
 
 \begin{lstlisting}[caption={Python Plotting of Linear Regression function}, label=lst:lin_reg_plot, mathescape=true]
 plt.scatter(boston_X_test, boston_Y_test,  color='black')
@@ -96,7 +111,7 @@ plt.yticks(())
 plt.show()
 \end{lstlisting}
 
-There are some evidence of non-linearity in the relationship between \emph{lstat} and \emph{medv}. This can be seen in Figure \ref{fig:lin_reg_plot} where a non-linear least squares regression would be a better fit to the data points.
+There are some evidence of non-linearity in the relationship between \emph{lstat} and \emph{medv}. This can be seen in Figure \ref{fig:lin_reg_plot} where a non-linear least square would be a better fit to the data points as the data points makes a curve. 
 
 
 \section{Lab 3.6.3 - Multiple Linear Regression}

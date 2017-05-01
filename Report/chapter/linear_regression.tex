@@ -98,6 +98,17 @@ plt.show()
 
 There are some evidence of non-linearity in the relationship between \emph{lstat} and \emph{medv}. This can be seen in Figure \ref{fig:lin_reg_plot} where a non-linear least squares regression would be a better fit to the data points.
 
-\section{Lab 3.6.3 - Multiple linear regression}
+
+\section{Lab 3.6.3 - Multiple Linear Regression}
+
+The basis for Multiple Linear Regression is the same as for Simple Linear Regression, as it is used to predict a quantitative response. However, where Simple Linear Regression uses a single predictor, Multiple Linear Regression uses two or more predictors. So where there before were a one-to-one relationship between the predictor variable and response variable, there is now a many-to-one relationship, as illustrated in Figure \ref{fig:relation}.
+
+\myFigure{relation.PNG}{Relationship between predictor variables "P.V" and response variables "R.V" in Simple- and Multiple Linear Regression}{fig:relation}{0.8}
+
+As specified in Lab 3.6.2, the predictors are called X, while Y is our response. This means for Multiple Linear Regression, the relationship between X and Y is expressed as:
+
+\begin{equation}
+Y \approx \beta_0 + \beta_1 * X_1 + \beta_2 * X_2 + … + \beta_k * X_k
+\end{equation}
 
 

@@ -55,7 +55,8 @@ The result is plotted in a graph seen in figure \ref{fig:lin_reg_plot}.
 
 \myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
 
-The code in Listing \ref{lst:lin_reg_plot} is used to plot the Linear Regression. First it plots the test data to see how it corresponds to the  
+The code in Listing \ref{lst:lin_reg_plot} is used to plot the Linear Regression. To plot, the python libary \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the linear function. To plot the linear function the command 'plot' is used this is seen in line 2. Where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
+
 \begin{lstlisting}[caption={Python Plotting of Linear Regression function}, label=lst:lin_reg_plot, mathescape=true]
 plt.scatter(boston_X_test, boston_Y_test,  color='black')
 plt.plot(boston_X_test, lm.predict(boston_X_test), color='blue',

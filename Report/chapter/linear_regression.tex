@@ -10,9 +10,9 @@ which is the most commonly used to fit this model
 Simple linear regression is used for predicting a quantitative response, that is often called Y, based on a single predictor, which is often called X.
 The relationship between X and Y can be expressed as:
 
-\begin{center}
-	$Y \approx \beta_0 + \beta_1X$
-\end{center}
+\begin{equation}
+	Y \approx \beta_0 + \beta_1X
+\end{equation}
 
 This means that Y is approximately modeled as X or in other word Y regressing on X. 
 $\beta_0$ and $\beta_1$ are two unknown constant that represent the intercept and slope in the linear model. They are also known as model coefficients or parameters. 
@@ -20,11 +20,26 @@ To be able to predict, the training data is used to produce
 an estimation of $\hat{\beta_0}$ and $\hat{\beta_1}$ for the model coefficients. 
 The mathematically expression for the computation is:
 
-\begin{center}
-	$\hat{\beta_0} = \hat{\beta_0} + \hat{\beta_1}x$
-\end{center}
+\begin{equation}
+	\hat{\beta_0} = \hat{\beta_0} + \hat{\beta_1}x
+\end{equation}
+
 
 $\hat{y}$ is the prediction of Y based on X = x. The \textit{hat} symbol is used to estimate value for an unknown parameter or coefficient or to predict a value of the response.
+
+\subsection{Estimation the coefficients}
+
+The coefficients 
+$\hat{\beta_0}$ and  $\hat{\beta_1}$ are in practice unknown. So in order to use (2.1) to make predictions, $\hat{\beta_0}$ and  $\hat{\beta_1}$ needs to be estimated so the data can be used. 
+
+First Let 
+\begin{equation}
+(x_1, y_1), (x_2, y_2),..., (x_n, y_n)
+\end{equation}
+
+represent n observation pairs where each of them have a measurement of X and a measurement of Y.
+
+
 
 In Lab 3.6.2 the data set Boston is given. It consists of records about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house  value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
 To perform the linear regression the library sklearn is used in python. 
@@ -53,4 +68,6 @@ plt.show()
 \end{lstlisting}
  
 
-\section{Lab 3.6.3}
+\section{Lab 3.6.3 - Multiple linear regression}
+
+

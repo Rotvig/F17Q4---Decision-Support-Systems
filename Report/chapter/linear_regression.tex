@@ -39,6 +39,18 @@ In listing \ref{lst:lin_reg} it is shown how a linear regression object is creat
 The result is plotted in a graph seen in figure \ref{fig:lin_reg_plot}.
 
 \myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
+
+The code in Listing \ref{lst:lin_reg_plot}
+\begin{lstlisting}[caption={Python Plotting of Linear Regression function}, label=lst:lin_reg_plot, mathescape=true]
+plt.scatter(boston_X_test, boston_Y_test,  color='black')
+plt.plot(boston_X_test, lm.predict(boston_X_test), color='blue',
+linewidth=3)
+
+plt.xticks(())
+plt.yticks(())
+
+plt.show()
+\end{lstlisting}
  
 
 \section{Lab 3.6.3}

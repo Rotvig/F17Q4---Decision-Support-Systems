@@ -55,7 +55,7 @@ The result is plotted in a graph seen in figure \ref{fig:lin_reg_plot}.
 
 \myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
 
-The code in Listing \ref{lst:lin_reg_plot} is used to plot the Linear Regression. To plot, the python libary \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the linear function. To plot the linear function the command 'plot' is used this is seen in line 2. Where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
+The code in Listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression. To plot, the python libary \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the the least squares regression. To plot the least squares regression the command 'plot' is used this is seen in line 2. Where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
 
 \begin{lstlisting}[caption={Python Plotting of Linear Regression function}, label=lst:lin_reg_plot, mathescape=true]
 plt.scatter(boston_X_test, boston_Y_test,  color='black')
@@ -67,7 +67,8 @@ plt.yticks(())
 
 plt.show()
 \end{lstlisting}
- 
+
+There are some evidence of non-linearity in the relationship between \emph{lstat} and \emph{medv}. This can be seen in Figure \ref{fig:lin_reg_plot} where a non-linear least squares regression would be a better fit to the data points.
 
 \section{Lab 3.6.3 - Multiple linear regression}
 

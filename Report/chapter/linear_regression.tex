@@ -31,11 +31,11 @@ To perform the linear regression the library sklearn is used in python.
 
 \lstset{}
 \begin{lstlisting}[caption={Python Linear Regression function}, label=lst:lin_reg, mathescape=true]
-regr = linear_model.LinearRegression()
-regr.fit(predXData, predYData)
+lm = linear_model.LinearRegression()
+lm.fit(boston_X_train, boston_Y_train)
 \end{lstlisting}
 
-In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the data. ‘predXData’ is the \emph{lstat} data, and ‘predYData’ is the \emph{medv} data.
+In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the data. ‘boston\_X\_train’ is the \emph{lstat} data, and ‘boston\_Y\_train’ is the \emph{medv} data.
 The result is plotted in a graph seen in figure \ref{fig:lin_reg_plot}.
 
 \myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}

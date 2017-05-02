@@ -69,6 +69,9 @@ The minimization is written as:
 \hat{\beta_0} = \bar{y} -\hat{\beta_1}\bar{x}
 \end{equation}
 
+In (3.4) $\hat{y} \equiv \dfrac{1}{n}\sum\limits_{i=1}^ny_i$ and 
+$\hat{x}\equiv \dfrac{1}{n}\sum\limits_{i=1}^nx_i$ are the sample means and the function is used to define the least squares coefficient estimates for a simple linear regression 
+
 In Lab 3.6.2 the data set Boston is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
 
 Before at linear regression can be performed the data needs to be prepared. This is shown in Listing \ref{lst:lin_reg_prep}. First the data is loaded and then the \emph{lstat} data is added to 'boston\_X\_train' and 'boston\_X\_test', and the \emph{medv} data is added to 'boston\_Y\_train' and 'boston\_Y\_test'.

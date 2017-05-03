@@ -3,15 +3,13 @@
 
 Linear regression is an approach in supervised learning. It is used for predicting a quantitative response and it is widely used for statistical learning methods. It may seem that it is a bit simple compared to some of the more modern statistical learning approaches, but it serves as a good base as newer approaches can be seen as an generalization or extensions of the linear regression. 
 In this chapter the key ideas in linear regression model and it will describe the least squares approach
-which is the most commonly used to fit this model
-
-\section{Lab 3.6.2 - Simple Linear Regression}
+which is the most commonly used to fit this model\\
 
 Simple linear regression is used for predicting a quantitative response, that is often called Y, based on a single predictor, which is often called X.
 The relationship between X and Y can be expressed as:
 
 \begin{equation}
-	Y \approx \beta_0 + \beta_1X
+Y \approx \beta_0 + \beta_1X
 \end{equation}
 
 This means that Y is approximately modeled as X or in other word Y regressing on X. 
@@ -21,7 +19,7 @@ an estimation of $\hat{\beta_0}$ and $\hat{\beta_1}$ for the model coefficients.
 The mathematically expression for the computation is:
 
 \begin{equation}
-	\hat{\beta_0} = \hat{\beta_0} + \hat{\beta_1}x
+\hat{\beta_0} = \hat{\beta_0} + \hat{\beta_1}x
 \end{equation}
 
 
@@ -71,6 +69,10 @@ The minimization is written as:
 
 In (3.4) $\hat{y} \equiv \dfrac{1}{n}\sum\limits_{i=1}^ny_i$ and 
 $\hat{x}\equiv \dfrac{1}{n}\sum\limits_{i=1}^nx_i$ are the sample means and the function is used to define the least squares coefficient estimates for a simple linear regression 
+
+
+\section{Lab 3.6.2 - Simple Linear Regression}
+
 
 In Lab 3.6.2 the data set Boston is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
 

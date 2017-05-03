@@ -1,4 +1,4 @@
-\chapter{Linear Discriminant analysis}
+\chapter{Linear Discriminant Analysis}
 \label{chp:lindisana}
 
 In the last chapter it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes. The reason for this is that the model does not perform very stable under some circumstance. One big problem with logistic regression is it might not converge if the classes are well-separated. An example could be the data in the table below. Here we see that the classes is well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
@@ -44,12 +44,34 @@ Then the equation is calculated for each class k and is classified for the k tha
 
 Note here that LDA assumes the observation to have a Gaussian distribution. If this is the case then LDA is likely to outperform logistic regression, while if it is not, then Logistic regression is likely to outperform LDA.
 
-LDA assumes that all data can be represented as a Gaussian 
+LDA assumes that all data can be represented as a Gaussian. 
 The means is simply calculated by summing all values with a specific class and dividing by the total number.
 Variance is calculated across all the data with a specific class 
 
 
-\section{Lab 4.6.3}
-\section{Lab 4.6.4}
-\section{Lab 4.6.5}
+\section{Lab 4.6.3 - Linear Discriminant Analysis}
+In this Lab the goal is to perform a LDA on the \emph{Smarket} data. To fit the LDA model, the Python library \emph{sklearn} is used. The model is fitted with the data before 2005, and thereby testing with the data after 2005. This is seen in Listing \ref{lst:lda_data}. The python library \emph{panda} is used to read the \emph{Smarket} data. 
+
+\begin{lstlisting}[caption={Preparation of data for LDA fitting}, label=lst:lda_data, mathescape=true]
+data = pd.read_csv('Smarket.csv', usecols=range(1,10), index_col=0, 
+	parse_dates=True)
+# Traning data before 2005
+x_train = data[:'2004'][['Lag1', 'Lag2']]
+y_train = data[:'2004']['Direction']
+
+# Test data after 2005
+x_test = data['2005':][['Lag1', 'Lag2']]
+y_test = data['2005':]['Direction']
+\end{lstlisting}
+
+When the data is prepared, the creation of the model can commence. This is seen in Listing \ref{lst:lda_model}.
+
+\begin{lstlisting}[caption={Creation of LDA model}, label=lst:lda_model, mathescape=true]
+lda = LinearDiscriminantAnalysis()
+lda_result = lda.fit(x_train, y_train)
+\end{lstlisting}
+
+
+\section{Lab 4.6.4 - Quadratic Discriminant Analysis}
+\section{Lab 4.6.5 - K-Nearest Neighbors}
 

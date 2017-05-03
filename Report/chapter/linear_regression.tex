@@ -162,3 +162,9 @@ print("Variance score: %.2f" % lm.score(boston_X_test, boston_Y_test))
 The output of Listing \ref{lst:print} fits the results from the exercise and can be seen in Figure \ref{fig:multiOutput}.
 
 \myFigure{MultiLinRegOutput.PNG}{Output of Listing \ref{lst:print}}{fig:multiOutput}{0.8}
+
+The output first shows the estimated coefficients for the linear regression problem. It can be seen that the first coefficient is -1.07 while the next is 4.64. These values are the estimated coefficients for \emph{crim} and \emph{zn} respectively, and since their values are so diffenrent, they will influence their predictors very differently. The \emph{crim} predictor will be multiplied by -1.07 while the \emph{zn} predictor will be multiplied by 4.64. 
+
+The next thing that can be seen in the output is the intercept. This is a value showing where the regression intercepts the y-axis. 
+
+Lastly the variance score is shown. This is the coefficient of determination $R^2$ of the prediction. The best possible score is 1. 

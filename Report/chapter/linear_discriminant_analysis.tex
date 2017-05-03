@@ -53,3 +53,22 @@ Variance is calculated across all the data with a specific class
 \section{Lab 4.6.4}
 \section{Lab 4.6.5}
 
+In this lab exercise the method \emph{K-nearest Neighbors} used. To perfrom this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number og n neighbors. After this the function fit is called, that fits the data.
+The code is shown in listing
+
+\begin{lstlisting}[caption={Python K-Nearest neighbors function, where K is set to 1}, label=lst:kneighbor, mathescape=true]
+X_train = data[:'2004'][['Lag1', 'Lag2']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2']]
+Y_test = data['2005':]['Direction']
+
+
+knn = KNeighborsClassifier(n_neighbors=1)
+fit = knn.fit(X_train, Y_train)
+\end{lstlisting}
+
+The function is used to predict the market's movement from the dates in 2005. If the value K is set to 1, 50\% of the predictions are correctly predicted which is not very good.
+If K is change to 3, the predictions turns out to be correct in 53\% of the cases. So increasing the number of k from 1 to 3 has made the model a bit better. All kinds of different values can be chosen for K, but it is important not to change the number to often because the model then will be customized to the training data which is not good.
+
+If the results are compared with the results that \emph{QDA} produces, the \emph{QDA} provides a better results than K-nearest neighbors.

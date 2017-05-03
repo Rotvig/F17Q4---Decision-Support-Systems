@@ -73,7 +73,7 @@ $\hat{x}\equiv \dfrac{1}{n}\sum\limits_{i=1}^nx_i$ are the sample means and the 
 \section{Lab 3.6.2 - Simple Linear Regression}
 
 
-In Lab 3.6.2 the data set Boston is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
+In Lab 3.6.2 the data set \emph{Boston} is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
 
 Before at linear regression can be performed the data needs to be prepared. This is shown in Listing \ref{lst:lin_reg_prep}. First the data is loaded and then the \emph{lstat} data is added to 'boston\_X\_train' and 'boston\_X\_test', and the \emph{medv} data is added to 'boston\_Y\_train' and 'boston\_Y\_test'.
 
@@ -96,12 +96,12 @@ lm = linear_model.LinearRegression()
 lm.fit(boston_X_train, boston_Y_train)
 \end{lstlisting}
 
-In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the data. ‘boston\_X\_train’ and ‘boston\_Y\_train’ data.
-The result is plotted in a graph seen in Figure \ref{fig:lin_reg_plot}.
+In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the ‘boston\_X\_train’ data and the ‘boston\_Y\_train’ data.
+The result is plotted in Figure \ref{fig:lin_reg_plot}.
 
-\myFigure{lin_reg_plot.PNG}{Linear regression plot of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
+\myFigure{lin_reg_plot.PNG}{Linear regression of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
 
-The code in Listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression line. To plot, the python libary \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the the least squares regression line. To plot the least squares regression line the command 'plot' is used this is seen in line 2. Where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
+The code in Listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression line. To plot this in python, the library \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the least squares regression line. To plot the least squares regression line the command 'plot' is used. This is seen in line 2 where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
 
 \begin{lstlisting}[caption={Python Plotting of Linear Regression function}, label=lst:lin_reg_plot, mathescape=true]
 plt.scatter(boston_X_test, boston_Y_test,  color='black')

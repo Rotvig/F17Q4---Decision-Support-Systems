@@ -1,4 +1,4 @@
-\chapter{Linear Discriminant analysis}
+\chapter{Linear Discriminant Analysis}
 \label{chp:lindisana}
 
 In the chapter \ref{chp:logreg} it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes. Furthermore a problem with logistic regression is that it does not perform very stable under some circumstance. One big problem with logistic regression is that it might not converge if the classes are well-separated. An example could be the data in the table below. Here we see that the classes is well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
@@ -47,8 +47,9 @@ Note here that LDA assumes the observation to have a Gaussian distribution. If t
 The means of the Gaussian is simply calculated by summing all values with a specific class and dividing by the total number.
 The variance is calculated across all the data with a specific class.
 
-\section{Lab 4.6.3}
+\section{Lab 4.6.3 - Linear Discriminant Analysis}
 First a model linear discriminant analysis model is created with the python library sklean. The model is created based on the two predictors \emph{Lag1} and \emph{Lag2}. 
+
 
 \begin{lstlisting}[language=Python, label=lst:ldaModel, caption=creating linear discriminant analysis model sklearn]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
@@ -113,3 +114,35 @@ print(lda.score(X_test, Y_test))
 
 \section{Lab 4.6.5}
 
+%\begin{center}
+%	$\mu_k 
+%\end{center}
+
+The first column in group means is for \emph{Lag1} where 0.04279022 is \emph{Down} and -0.03954635 is \emph{Up}. The next column is for \emph{Lag2}. The group means suggest there is a tendency for the previous two days' returns to be negative on days when the market increases, and the opposite when the market decreases. 
+
+\myFigure{lda_result.PNG}{LDA results}{fig:lda_result}{0.6}
+
+The prior probabilities of groups tells us that 49.198397 \% of the training observations corresponds to days which the market went down. 
+
+\section{Lab 4.6.4 - Quadratic Discriminant Analysis}
+\section{Lab 4.6.5 - K-Nearest Neighbors}
+
+In this lab exercise the method \emph{K-nearest Neighbors} used. To perfrom this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number og n neighbors. After this the function fit is called, that fits the data.
+The code is shown in listing
+
+\begin{lstlisting}[caption={Python K-Nearest neighbors function, where K is set to 1}, label=lst:kneighbor, mathescape=true]
+X_train = data[:'2004'][['Lag1', 'Lag2']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2']]
+Y_test = data['2005':]['Direction']
+
+
+knn = KNeighborsClassifier(n_neighbors=1)
+fit = knn.fit(X_train, Y_train)
+\end{lstlisting}
+
+The function is used to predict the market's movement from the dates in 2005. If the value K is set to 1, 50\% of the predictions are correctly predicted which is not very good.
+If K is change to 3, the predictions turns out to be correct in 53\% of the cases. So increasing the number of k from 1 to 3 has made the model a bit better. All kinds of different values can be chosen for K, but it is important not to change the number to often because the model then will be customized to the training data which is not good.
+
+If the results are compared with the results that \emph{QDA} produces, the \emph{QDA} provides a better results than K-nearest neighbors.

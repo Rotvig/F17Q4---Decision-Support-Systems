@@ -2,11 +2,11 @@
 \label{chp:logreg}
 Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem:
 \begin{centering}
-Predicting whether a tumor is malignant or not based on the size of the tumor
+Predicting whether a tumor is malignant or not based on the size of the tumor.
 \end{centering}
-with a binary classification problem, linear regression could be used by converting our wanted qualitative response variable into a quantitative response. We could convert our quantitative response into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the the probability is higher than 0.5. 
+Linear regression could be used by converting the wanted qualitative response variable into a quantitative response. The quantitative response can be converted into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the probability is higher than 0.5. 
 
-A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap betweens some classes than others. This would make it difficult to make an accurate model using a linear function.
+A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap between some classes than others. This would make it difficult to make an accurate model using a linear function.
 
 Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used.
 
@@ -23,13 +23,13 @@ By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equ
 
 \todo{måske indsæt en figur der viser grafer med linear og logistic}
 
-In the following lab exercises a logistic regression model will implemented based on stock market data. The model will be used to predict if the market is going up or down on a particular day. Before creating the model the data will first be examined.
+In the following lab exercises a logistic regression model will be implemented based on stock market data. The model will be used to predict if the market is going up or down on a particular day. Before creating the model the data will first be examined.
 
 \section{Lab 4.6.1 - The Stock Market Data}
-In this lab the correlation between the predictors and todays return value is examined. Todays return value describes the direction, if the number is negative the stock went down and if its positive the stock went up. The available predictors are 5 lagging indicators \emph{Lag1, Lag2, Lag3, Lag4} and \emph{Lag5} and a \emph{Volume} which describes the number of shares traded in billions.
+In this lab the correlation between the predictors and todays return value is examined. Todays return value describes the direction. If the number is negative the stock went down and if its positive the stock went up. The available predictors are 5 lagging indicators \emph{Lag1, Lag2, Lag3, Lag4} and \emph{Lag5} and a \emph{Volume} which describes the number of shares traded in billions.
 
 With the python code shown in Listing \ref{lst:correlation} a matrix with the pairwise correlation among the predictors and todays return is printet. Numpy is used for calculating the correlation matrix. Pandas is used for creating a table based on the calculated correlation matrix.
-\begin{lstlisting}[language=Python, label=lst:correlation, caption=print correlation matrix]
+\begin{lstlisting}[language=Python, label=lst:correlation, caption=Print correlation matrix]
 cor = np.corrcoef(preparedData)
 labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 
 'Today']
@@ -43,7 +43,7 @@ The printed correlation matrix is illustrated in figure \ref{fig:lab461}. Here i
 \FloatBarrier
 
 With the python code in listing \ref{lst:plotVolume} we can plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
-\begin{lstlisting}[language=Python, label=lst:plotVolume, caption=print correlation matrix]
+\begin{lstlisting}[language=Python, label=lst:plotVolume, caption=Plot Volume]
 plt.plot(preparedData[6], 'ro')
 plt.ylabel('Volume')
 plt.xlabel('Index')
@@ -52,25 +52,25 @@ plt.show()
 
 \myFigure{461_plot.png}{Correlation between Volume and year, higher index describes forward in time}{fig:lab461Plot}{0.6} 
 
-When choosing predictors in our logistic regression model we must note that a correlation matrix not necessarily describes the best predictors, at least not if we are choosing multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. In the following lab we will therefore further examine the data to find good predictors.
+When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if we are choosing multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. In the following lab we will therefore further examine the data to find good predictors.
 
 \section{Lab 4.6.2 - Logistic Regression}
 In this lab a logistic regression model is made based on the stock market data. The predictors were examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.
 
 In the exercise the P-values will first be examined. This is done by fitting a logistic model with the predictors \emph{Lag1, Lag2, Lag3, Lag4, Lag5} and \emph{Volume} to predict the \emph{direction}. The statsmodels python library is used to print a summary of the fitted model. This is shown in listing \ref{lst:summary}
-\begin{lstlisting}[language=Python, label=lst:summary, caption=print correlation matrix]
+\begin{lstlisting}[language=Python, label=lst:summary, caption=Print summary]
 formula = 'Direction ~ Lag1+Lag2+Lag3+Lag4+Lag5+Volume'
 model = smf.glm(formula=formula, data=data, family=sm.families.Binomial())
 print(model.fit().summary())
 \end{lstlisting}
 
-\myFigure{Lab462Pvalue.PNG}{summary of data with associated p-value describing good predictors}{fig:lab462Pvalue}{0.6} 
+\myFigure{Lab462Pvalue.PNG}{Summary of data with associated p-value describing good predictors}{fig:lab462Pvalue}{0.6} 
 \FloatBarrier
 
-The printed summary is illustrated in figure \ref{fig:lab462Pvalue}. Here we see that the lowest p-value is \emph{Lag1} but it still has a value of 0.145, which is still quite high and it presents no evidence of any association between \emph{Lag1} and \emph{Direction}. But note here that only using the predictors with the lowest p-value would probably yield the most accurate result when predicting the \emph{Direction}. The reason for this is that some predictors have so little association with the \emph{Direction} that they will only make the prediction less accurate. This will also be shown in the following examples.
+The printed summary is illustrated in figure \ref{fig:lab462Pvalue}. Here it is  seen that the lowest p-value is \emph{Lag1} but it still has a value of 0.145, which is still quite high and it presents no evidence of any association between \emph{Lag1} and \emph{Direction}. But note here that only using the predictors with the lowest p-value would probably yield the most accurate result when predicting the \emph{Direction}. The reason for this is that some predictors have so little association with the \emph{Direction} that they will only make the prediction less accurate. This will also be shown in the following examples.
 
 
-In Listing \ref{lst:AllPredictors} the training data is divide in a training set and a test set. then all tbe data from 2004 and before is used to train our logistic model and then it is tested on the data from 2005. In this implementation all predictors is used to fit the logistic model.
+In Listing \ref{lst:AllPredictors} the training data is divided into a training set and a test set. Then all the data from 2004 and before is used to train our logistic model and then it is tested on the data from 2005. In this implementation all predictors is used to fit the logistic model.
 
 \begin{lstlisting}[language=Python, label=lst:AllPredictors, caption=Logistic regression using all predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume']]
@@ -83,12 +83,12 @@ lr = linear_model.LogisticRegression()
 lr.fit(X_train,Y_train)
 \end{lstlisting}
 
-Based on our our test data we check how well our logistic model predicts the \emph{Direction}. In Listing \ref{lst:LRscore} a score method is called for the logistic regression model. This function returns the mean accuracy of the model. The score shows that the model only predicts correctly $48.8\%$ of the time. Based on this result the model needs to be approved upon.
-\begin{lstlisting}[language=Python, label=lst:LRscore, caption=Logistic regression using all predictors]
+Based on the test data it is examined how well our logistic model predicts the \emph{Direction}. In Listing \ref{lst:LRscore} a score method is called for the logistic regression model. This function returns the mean accuracy of the model. The score shows that the model only predicts correctly $48.8\%$ of the time. Based on this result the model needs to be approved upon.
+\begin{lstlisting}[language=Python, label=lst:LRscore, caption=Print mean accuracy]
 print(lr.score(X_test, Y_test))
 \end{lstlisting}
 
-In Listing \ref{lst:OnlyLag1Lag2} we now only use the predictors \emph{Lag1} and \emph{Lag2}. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor. It has a very low correlation with \emph{Lag1} and also the third lowest p-value. Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}
+In Listing \ref{lst:OnlyLag1Lag2} only the predictors \emph{Lag1} and \emph{Lag2} are now used. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor. It has a very low correlation with \emph{Lag1} and also the third lowest p-value. Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}
 
 \begin{lstlisting}[language=Python, label=lst:OnlyLag1Lag2, caption=Logistic regression using only Lag1 and Lag2 as predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
@@ -101,7 +101,7 @@ lr = linear_model.LogisticRegression()
 lr.fit(X_train,Y_train)
 \end{lstlisting}
 
-Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed that a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model have been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important an provides information about the association when multiple predictors  are used.
+Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model has been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important and provides information about the association when multiple predictors  are used.
 \todo{Hvorfor er volume ikke bedre... ? Den har lavere p-value}
 
 

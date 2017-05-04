@@ -87,7 +87,7 @@ This shows how linear discriminant analysis performs very similar to logistic re
 \section{Quadratic discriminant analysis}
 Similar to lda the Quadratic discriminant analysis (qda) also assumes that the observations are drawn from a Gaussian distribution and also uses Bayes theorem for prediction. It differentiates from lda by 
 
-\section{Lab 4.6.4}
+\subsection{Lab 4.6.4}
 Again the stock market data is used for prediction with \emph{Lag1} and \emph{Lag2} as predictors. The qda model is estimated with sklearn. This is shown in listing \ref{lst:qdaModel}.
 
 \begin{lstlisting}[language=Python, label=lst:qdaModel, caption=creating quadratic discriminant analysis model sklearn]
@@ -106,26 +106,9 @@ Print the score for the qda model shows that on the test data it predicted corre
 print(lda.score(X_test, Y_test))
 \end{lstlisting}
 
+\section{K-Nearest Neighbors}
 
-
-
-
-\section{K-nearest neigbor}
-
-\section{Lab 4.6.5}
-
-%\begin{center}
-%	$\mu_k 
-%\end{center}
-
-The first column in group means is for \emph{Lag1} where 0.04279022 is \emph{Down} and -0.03954635 is \emph{Up}. The next column is for \emph{Lag2}. The group means suggest there is a tendency for the previous two days' returns to be negative on days when the market increases, and the opposite when the market decreases. 
-
-\myFigure{lda_result.PNG}{LDA results}{fig:lda_result}{0.6}
-
-The prior probabilities of groups tells us that 49.198397 \% of the training observations corresponds to days which the market went down. 
-
-\section{Lab 4.6.4 - Quadratic Discriminant Analysis}
-\section{Lab 4.6.5 - K-Nearest Neighbors}
+\subsection{Lab 4.6.5}
 
 In this lab exercise the method \emph{K-nearest Neighbors} used. To perfrom this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number og n neighbors. After this the function fit is called, that fits the data.
 The code is shown in listing

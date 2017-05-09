@@ -48,7 +48,7 @@ The means of the Gaussian are simply calculated by summing all values with a spe
 The variance is calculated across all the data with a specific class.
 
 \section{Lab 4.6.3 - Linear Discriminant Analysis}
-First a model linear discriminant analysis model is created with the python library sklean. The model is created based on the two predictors \emph{Lag1} and \emph{Lag2}. 
+First a model linear discriminant analysis model is created with the python library sklearn. The model is created based on the two predictors \emph{Lag1} and \emph{Lag2}. 
 
 
 \begin{lstlisting}[language=Python, label=lst:ldaModel, caption=creating linear discriminant analysis model sklearn]
@@ -62,7 +62,7 @@ lda = LinearDiscriminantAnalysis()
 fit = lda.fit(X_train,Y_train)
 \end{lstlisting}
 
-After creating the model the calculated prior probability, means and coefficients can be read. The prior probability for \emph{Down} is $\pi_1=0.492$ while the prior probability for \emph{Up} is $\pi_2=0.508$. So based on the data there is more days were the stock market went up than down. 
+After creating the model the calculated prior probability, means and coefficients can be read. The prior probability for \emph{Down} is $\pi_1=0.492$ while the prior probability for \emph{Up} is $\pi_2=0.508$. So based on the data there are more days where the stock market went up than down. 
 
 The means $\mu_k$ are described by a matrix. The matrix describes a separate mean for both \emph{Lag1} and \emph{Lag2} and for each predictor a mean for \emph{Up} and \emph{Down}. The mean value for \emph{Lag1} and \emph{Lag2} has a tendency to be positive on days when the stock went up while they are negative when the stock went down.  $\bigl( \begin{smallmatrix} 	 & Lag1 & Lag2	\\ 	 Down & 0.0428 & 0.0339 \\ 	 Up & -0.0395 & -0.0313 \end{smallmatrix} \bigr) $. The coefficients are estimated to $-0.0554$ and $-0.0443$. These are the multipliers for \emph{Lag1} and \emph{Lag2}.
 
@@ -85,25 +85,29 @@ print(lda.score(X_test, Y_test))
 This shows how linear discriminant analysis performs very similar to logistic regression on the stock market data.
 
 \section{Quadratic discriminant analysis}
-Similar to lda the Quadratic discriminant analysis (qda) also assumes that the observations are drawn from a Gaussian distribution and also uses Bayes theorem for prediction. It differentiates from lda by 
+Similar to lda the Quadratic discriminant analysis (qda) also assumes that the observations are drawn from a Gaussian distribution and also uses Bayes theorem for prediction. 
+
+\myFigure{lda_vs_qda.PNG}{lda vs qda}{fig:qdaCompare}{0.6}
+
+In Figure \ref{fig:qdaCompare} the difference between lda and qda is illustrated. The bottom row shows that the lda can only learn linear boundaries, while the qda can learn quadratic boundaries. This makes the qda more flexible. 
 
 \subsection{Lab 4.6.4}
 Again the stock market data is used for prediction with \emph{Lag1} and \emph{Lag2} as predictors. The qda model is estimated with sklearn. This is shown in listing \ref{lst:qdaModel}.
 
-\begin{lstlisting}[language=Python, label=lst:qdaModel, caption=creating quadratic discriminant analysis model sklearn]
+\begin{lstlisting}[language=Python, label=lst:qdaModel, caption=Creating quadratic discriminant analysis model sklearn]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
 Y_train = data[:'2004']['Direction']
 
 X_test = data['2005':][['Lag1', 'Lag2']]
 Y_test = data['2005':]['Direction']
 
-lda = LinearDiscriminantAnalysis()
-fit = lda.fit(X_train,Y_train)
+qda = QuadraticDiscriminantAnalysis()
+fit = qda.fit(X_train,Y_train)
 \end{lstlisting}
 
-Print the score for the qda model shows that on the test data it predicted correctly in $59.9\%$ of the cases. With the stock market data it actually performed better than both logistic regression and linear discriminant analysis.
-\begin{lstlisting}[language=Python, label=lst:qdaScore, caption=printing lda score]
-print(lda.score(X_test, Y_test))
+In listing \ref{lst:qdaScore} the score for the qda model is printed. The print shows that on the test data it predicted correctly in $59.9\%$ of the cases. With the stock market data it actually performed better than both logistic regression and linear discriminant analysis. 
+\begin{lstlisting}[language=Python, label=lst:qdaScore, caption=Printing qda score]
+print(qda.score(X_test, Y_test))
 \end{lstlisting}
 
 \section{K-Nearest Neighbors}
@@ -128,4 +132,4 @@ fit = knn.fit(X_train, Y_train)
 The function is used to predict the market's movement from the dates in 2005. If the value K is set to 1, 50\% of the predictions are correctly predicted which is not very good.
 If K is change to 3, the predictions turns out to be correct in 53\% of the cases. So increasing the number of k from 1 to 3 has made the model a bit better. All kinds of different values can be chosen for K, but it is important not to change the number to often because the model then will be customized to the training data which is not good.
 
-If the results are compared with the results that \emph{QDA} produces, the \emph{QDA} provides a better results than K-nearest neighbors.
+If the results are compared with the results that \emph{QDA} produces, the \emph{QDA} provides better results than K-nearest neighbors.

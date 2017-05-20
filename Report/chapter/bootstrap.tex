@@ -18,3 +18,42 @@ With all $\alpha$ values estimated the mean and standard deviation can be estima
 
 \section{Lab 5.3.4}
 
+The goal with lab 5.3.4 is to illustrate the use of bootstrap on the simple example used in Section 5.2\citep{ISLR}. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
+
+\subsection{Estimating the Accuracy of a Statistic of Interest}
+
+The first part of lab 5.3.4 is to use the bootstrap approach on the \emph{Portfolio} data set described in section 5.2\citep{ISLR}.
+
+First of all a function for calculating $\alpha$ is required. The function is shown i Listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
+With the X and Y value the $\alpha$ can now be calculated and returned.
+
+\begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
+def alpha(data,index):
+	X = data['X'][index]
+	Y = data['Y'][index]
+	return ((np.var(Y) - np.cov(X,Y)) / (np.var(X) + np.var(Y) - ...
+		2*np.cov(X,Y)))[0,1]
+\end{lstlisting}
+
+The next step is too bootstrap the \emph{Portfolio} data set.
+
+To perform a bootstrap a second function is needed which is seen in listing \ref{lst:bootstrap}.
+
+\begin{lstlisting}[caption={Bootstrap function in python}, label=lst:bootstrap, mathescape=true]
+def boot_python(data, function, num_of_iteration):
+	n = data.shape[0]
+	idx = np.random.randint(0, n, (num_of_iteration, n))
+	stat = np.zeros((num_of_iteration, 2))
+	for i in xrange(len(idx)):
+		stat[i] = function(data, idx[i])
+	return {'Mean intercept': np.mean(stat[:,1]), 
+	'std. error intercept': np.std(stat[:,1]), 
+	'Mean slope': np.mean(stat[:,0]), 
+	'std. error slope': np.std(stat[:,0])}
+\end{lstlisting}
+
+The bootstrap method receives three arguments \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of bootstrap data set that should be created.  
+
+Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1000. the results are $\hat{\alpha}$ is 0.5834 and the standard deviation $SE(\hat{\alpha})$ is 0.0895.
+
+\subsection{Estimating the Accuracy of a linear Regression Model}

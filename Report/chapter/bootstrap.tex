@@ -5,8 +5,12 @@ The bootstrap is an extremely powerful statistical tool that can be used to quan
 
 It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. However, the power of the bootstrap lies in the fact that it easily can be applied to a wide range of statistical learnings methods.
 
-Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once in the bootstrap data set.
+Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set.
+
+The reason for doing this is if there is a case where there aren't enough samples. Then bootstrap can be used to generate simulated data from the original data set.
  
 
+\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach on a small sample containing n = 3 observations}{fig:bootstrap}{0.8}
 
+Figure \ref{fig:bootstrap} illustrates an example of the bootstrap approach on a small sample containing n = 3 observations. Each bootstrap contains n observations. These observations are sampled with replacement from the original data set. Each bootstrap data set is used to obtain an estimate of $\alpha$.
 \section{Lab 5.3.4}

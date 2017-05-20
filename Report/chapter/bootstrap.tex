@@ -7,10 +7,14 @@ It can be used to estimate the standard errors of the coefficients from a linear
 
 Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set.
 
-The reason for doing this is if there is a case where there aren't enough samples. Then bootstrap can be used to generate simulated data from the original data set.
- 
+The reason for doing this is if there is a case where there aren't enough samples. Then bootstrap approach can be used to generate simulated data from the original data set.
 
-\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach on a small sample containing n = 3 observations}{fig:bootstrap}{0.8}
+%Link til billede: https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#G0Bw37nIXex8aXSl91SjQ4MjlvNXc
+\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach on a small sample containing n = 3 observations}{fig:bootstrap}{0.6}
 
-Figure \ref{fig:bootstrap} illustrates an example of the bootstrap approach on a small sample containing n = 3 observations. Each bootstrap contains n observations. These observations are sampled with replacement from the original data set. Each bootstrap data set is used to obtain an estimate of $\alpha$.
+Figure \ref{fig:bootstrap} illustrates an example of the bootstrap approach on a small sample containing n = 3 observations. Each bootstrap contains n observations. These observations are sampled with replacement from the original data set. Each bootstrap data set is used to obtain an estimate of $\hat{\alpha}$.
+
+With all $\alpha$ values estimated the mean and standard deviation can be estimated too reason about the accuracy of the bootstrap data sets.
+
 \section{Lab 5.3.4}
+

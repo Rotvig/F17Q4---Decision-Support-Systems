@@ -41,6 +41,38 @@ lm.fit(X_train, Y_train)
 
 The train and test sets from Listing \ref{lst:lst_valid} are further used in Listing \ref{lst:fit_valid}. Here the \emph{horsepower} and \emph{mpg} data of the splits are further split into X and Y training and test sets. This is to be able to fit a linear model to the training splits, using \emph{X\_train} as the training data and \emph{Y\_train} as the target values.
 
+\begin{lstlisting}[language=Python, label=lst:print_valid, caption=Fit linear regression]
+print("Linear Model")
+print("Mean squared error: %.2f" 
+		% np.mean((lm.predict(X_test) - Y_test) ** 2))
+\end{lstlisting}
+
+In Listing \ref{lst:print_valid} the Mean Squared Error is computed by applying the fitted model to the test sets. It is then printed, which is shown in Figure \ref{fig:result_valid}. The error is 24,42. 
+
+To improve upon this it is possible to use polynomials in the linear regression. This is shown in Listing \ref{lst:poly2_valid}.
+
+\begin{lstlisting}[language=Python, label=lst:poly2_valid, caption=Polynomial features with degree = 2]
+poly = PolynomialFeatures(degree=2)
+X_poly_train_deg2 = poly.fit_transform(X_train)
+X_poly_test_deg2 = poly.fit_transform(X_test)
+
+lm.fit(X_poly_train_deg2, Y_train)
+\end{lstlisting}
+
+Both second and third degree polynomials are used on the model, but Listing \ref{lst:poly2_valid} only shows the code for the second degree polynomial. However the walkthrough is the same. The training data is fitted to the model, like in Listing \ref{lst:fit_valid}, but the training and test set for \emph{horsepower} has been fitted to a second order polynomial. 
+
+\begin{lstlisting}[language=Python, label=lst:poly_print_valid, caption=Printing polynomial features with degree = 2]
+print("Mean squared error: %.2f" 
+% np.mean((lm.predict(X_poly_test_deg2) - Y_test) ** 2))
+\end{lstlisting}
+
+The Mean Squared Error is printed as in Listing \ref{lst:poly_print_valid}, and the result is shown in Figure \ref{fig:result_valid}.
+
+\myFigure{validationSetApproach_result.png}{Result of Validation Set Approach}{fig:result_valid}{0.4}
+
+The result shows a clear improvement of the Mean Squared Error, but not continuously. Using the second degree polynomial shows a drop in the Mean Squared Error from 24,42 to 19,46, but using the third degree polynomial shows a slight increase from 19,46 to 19,55. This follows the graph in Figure \ref{fig:poly_valid} from the book. 
+
+\myFigure{validationSetApproach_poly.png}{Validation error estimates for a single split}{fig:poly_valid}{0.6}
 \section{Leave-one-out cross validation}
 
 

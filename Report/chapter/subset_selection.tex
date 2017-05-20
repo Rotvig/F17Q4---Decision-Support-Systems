@@ -1,8 +1,121 @@
-\chapter{Subset Selection}
+\chapter{Model Selection}
 \label{chp:subsel}
 
-\section{Lab 6.5.1}
+In the previous chapters the chosen number of predictors in the models have not been discussed very throughly. The P-value was used for selecting the best predictor in Lab 4.6.2 in section \ref{sec:lab462}. The question though remains how many predictors should be included when creating a model. This chapter discusses three different methods for selecting a subset of the predictors for a model.
 
-\section{Lab 6.5.2}
+\section{Best subset}
+Best subset selection is a method for choosing the best possible subset of predictors. In this approach a model is fitted for each possible combination of the predictors.
 
-\section{Lab 6.5.3}
+The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First a the null models is created in step 1. Then in line 2 the algorithm it iterates from 1 predictor and up till the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best models with k predictors is chosen. When all iteration are done the single best model is chosen.
+
+% Insert the algorithm
+\begin{algorithm}
+	\caption{Best subset selection}
+	\label{algo:bestsubset}
+	\begin{algorithmic}[1]
+		\State Let $M_0$ denote null model, containing no predictors. Which means that $M_0$ contains the sample mean for each observation.
+		\For {each $k$ from $0$ to $length(p)$}
+		\State Fit all the different models with a combinations of k predictors.
+		\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent}{Pick the best model with k predictors. Best can be defined as smallest RSS or largest $R^2$}
+		\State $M_k = best\_model$
+		\EndFor
+		\State Choose a single best models from all the best models in $M_0,...M_k$. This best model is chosen based $C_p$, $BIC$ or adjusted $R^2$ if the whole data set is used for choosing the best subset.
+	\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Lab 6.5.1 Best subset selection}
+In this exercise a best subset selection is performed on a dataset called Hitters. The dataset is used for predicting the salary of baseball players
+
+In listing \ref{lst:bestsubsetdata} the data is spitted into predictors and response. Dummy variables are created for categorical predictors.
+
+\begin{lstlisting}[language=Python, label=lst:bestsubsetdata, caption=Data is splitet into predictors and response]
+data = pd.read_csv('Hitters.csv', usecols=range(0,21)).dropna()
+
+X = pd.get_dummies(data.drop('Salary', axis=1).drop('Name', axis=1))
+.drop(["League_A", "Division_E", "NewLeague_A"], axis=1)
+Y = data['Salary']
+\end{lstlisting}
+
+
+A function for choosing the best subset is then defined in listing \ref{lst:best_subset_selection}. In the line 3 it iterates through all combinations of the predictors with k number of predictors. A function process\_subset is called which returns the subset with calculated model, RSS etc. In line 4 all the different combinations are appended to the results array. In line 7 the best model is picked based on lowest RSS and the returned.
+
+\begin{lstlisting}[language=Python, label=lst:best_subset_selection, caption=function for choosing best subset]
+def best_subset_selection(k):
+	results = []
+	for combo in combinations(X.columns, k):
+		results.append(process_subset(combo))
+	models = pd.DataFrame(results)
+	best_model = models.loc[models['RSS'].argmin()]
+	return best_model
+\end{lstlisting}
+
+In listing \ref{lst:process_subset} the function called in listing \ref{lst:best_subset_selection} is shown. It calculates both the RSS, $R^2$, Cp and BIC for model.
+
+\begin{lstlisting}[language=Python, label=lst:process_subset, caption=Calculating metrics for subset]
+def process_subset(feature_set):
+	d = len(feature_set)
+	n = X.shape[0]
+	# Fit model on feature_set  
+	model = lm.LinearRegression().fit(X[[i for i in feature_set]], Y)
+	Y_hat = model.predict(X[list(feature_set)])
+	
+	rss = metricsUtil.RSS(Y, Y_hat)  
+	rsquared = metrics.r2_score(Y, Y_hat)
+	
+	cp = metricsUtil.Cp(rss, d, Y_hat, n, Y)
+	bic = metricsUtil.Bic(n, rss, d, Y_hat)
+	
+	return {"model":model, 
+		"RSS":rss,
+		"features": feature_set,
+		"rsquared": rsquared,
+		"bic": bic,
+		"cp":cp }
+\end{lstlisting}
+
+For calculating $R^2$, Cp and BIC a selfimplemented python file called metrisUtil is used with defined functions for calculating these values.
+
+\begin{lstlisting}[language=Python, label=lst:metricsUtil, caption=metricsUtil for calculating Cp\, BIC and RSS]
+def RSS(Y, Y_hat):
+	residual = Y - Y_hat
+	return (residual ** 2).sum()
+
+def A_rsquare(RSS, Y, Y_hat, n, d):
+	TSS = ((Y - Y.mean()) ** 2).sum()
+	return 1.0 - ((RSS / (n - d - 1)) / (TSS / (n - 1)))
+
+def Cp(RSS, d, Y_hat, n):
+	return  (1.0 / n) * (RSS + 2 * d * Y_hat.var())
+
+def Bic(n, RSS, d, Y_hat)
+	return (1.0 / n) * (RSS + math.log(n) * d * Y_hat.var())
+\end{lstlisting}
+
+In listing \ref{lst:best_subset9} a best subset selection is run for the the 19 possible predictors.
+
+\begin{lstlisting}[language=Python, label=lst:best_subset9, caption=metricsUtil for calculating Cp\, BIC and RSS]
+for i in xrange(1,20):
+	subsets.loc[i] = best_subset_selection(i)
+	print i
+\end{lstlisting}
+
+Plotting the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. In the figure it can be seen how RSS and and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp and BIC can be used for estimating the optimal amount of predictors. We can see that the lowest BIC is given by a model with only 6 predictors.
+
+\myFigure{subset_all_graph.PNG}{Best subset selection 1-19 predictors}{fig:best_plottet}{1}
+
+
+The best models were returned from the best\_subset\_selection function. This also returns the features that were selected for the best model with k predictors. The best model with 6 predictors include \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{OutOuts} while the best model with 10 predictors include \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. We can also see that the set of 6 predictors is not just a subset of the 10 predictors. This is because every combinations is tried for every number of features. This also means that a drawback of this method is the computation time. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
+
+\begin{equation}
+\sum_{n=1}^{19} \dfrac{19!}{n!(19-n)!} = 524287
+\end{equation}
+
+The following chapter presents two different algorithms that can be used for selecting predictors with fewer computations than just described for best subset selection.
+
+\section{forward and backward}
+Instead of best subset selection Forward and Backward Stepwise selcetion can be used
+\subsection{Lab 6.5.2}
+
+\section{cross validation}
+\subsection{Lab 6.5.3}

@@ -1,11 +1,45 @@
 \chapter{Unsupervised Learning}
 \label{chp:unsuplea}
-In unsupervised learning there is no response variable Y. Ther is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find interesting things about the measurements on the features. In this section about the unsupervised learning technique called \emph{clustering} which is used to discover unknown subgroups in data.
+In unsupervised learning there is no response variable Y. Ther is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find interesting things about the measurements on the features.
 Compared to supervised learning unsupervised learning comes with some challenges.the tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no universally accepted mechanism for performing cross validation and how to validate the results on a data set due to there is no Y to check results up against with.
-But it is an important tool to predict subgroups when the number of them are unknown.  
+But it is an important tool to predict subgroups when the number of them are unknown.
+In this section the focus will be on the  technique called \emph{clustering} which is a used to discover unknown \emph{subgroups} or \emph{clusters}in data set. This is done to divide the data set into distinct groups so that the observations in the data within each of the groups are similar to each other and the observations belonging to other groups are different compared to other groups. 
+The problem is to determine if observations are similar or different to each other.
+ 
 \chapter{K-means clustering}
 \label{chp:clus}
+K-means clustering is a simple technique to partition the observation in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is spcified the K-means algorithm wil assign each of the observations to one of the \emph{k} clusters.
+Figure 9.1 shows a result of a K-mean algorithm where \emph{k} is set to 3. The data set contains of 50 observation which is divide into three cluster. each cluster is marked in a color. The cross is the center points of a cluster. This point is also called \emph{centroids}.
 
+\myFigure{K-mean.PNG}{Example on the K-mean algorithm where K is 3}{fig:K-meanex}{0.8}
+
+K-Means Clustering needs to satisfy two properties. namely
+\begin{itemize}
+	\item Each observation need to belongs to at least one of the \emph{k} clusters
+	\item Cluster cannot overlap, meaning that no observation can belong to more than one cluster.
+\end{itemize} 
+
+To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. In other words the algorithm will partition the observation into K clusters, such that the total sum of all within-cluster variation is as small as possible. The within-cluster variation is common calculated with \emph{squared Euclidean distance}.
+So the within-cluster variation for the \emph{k}th cluster is the sum of all pairwise squared Eclidean distances between each of the observation in the \emph{k}th cluster divided by the number of observations in the \emph{k}th cluster.
+So the algorithm tries to minimize the total within-cluster variation, summed over all \emph{k}th cluster.
+The K-means Clustering algorithm can then be written as.
+
+% Insert the algorithm
+\begin{algorithm}
+	\caption{K-Means Clustering}
+	\label{algo:KMeansClustering}
+	\begin{algorithmic}[1]
+		\State Randomly assign a number, from 1 to K, to each of the observations. These servce as initial cluster assignments for the observations. 
+		\State Iterate until the cluster assignments stop changing:
+		\begin{enumerate}[label=(\alph*)]
+			\item For each of the K cluster, compute the cluster \emph{centroid}. The \emph{k}th cluster centroids is the vector of the p feature means for the observations in the \emph{k}th cluster.
+			\item Assign each observation to the cluster whose centroid is closet (where closest is defined using Euclidean distance) 
+		\end{enumerate}
+	\end{algorithmic}
+\end{algorithm}
+
+ In step 2(a) the means for each feature are those who minimize the sum of squared deviations. In step 2(b) the reallocating means, that the observations can only improve.
+ So when the algorithm run the clustering will continually improve until the result no longer changes. This is called a \emph{local optimum}.
 \subsection{Lab 10.5.1}
 
 \chapter{Hierarchical clustering}

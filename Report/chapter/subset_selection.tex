@@ -147,5 +147,44 @@ Looking at the best models with forward and bacward stepwise selection and best 
 \end{itemize}
 
 \section{cross validation}
-In the previous exercises $C_p$, BIC and $R^2$ could be used for picking the right amount of predictors. In this exercise the validation set approach and cross-validation is used.
+In the previous exercises $C_p$, AIC, BIC and adjusted $R^2$ was used for picking the right amount of predictors. This was needed because the models were trained on the complete data set and so the test error would not provide an underestimate of the true error
+
+In this exercise the validation set approach and cross-validation is used. Therefore instead of using $C_p$, AIC, BIC and adjusted $R^2$ the test error can be directly calculated. 
 \subsection{Lab 6.5.3}
+
+Firstly the validation set approach will be used in combination with best subset selection. This is shown in listing \ref{lst:validationsetapproach}. First the data is split into a training and testing set. When this is done the best subset selection is run from 1 to 19 predictors. A small modification of the functions were needed so that the training and test sets were appropriately.
+
+\begin{lstlisting}[language=Python, label=lst:validationsetapproach, caption=Validation set approach for choosing predictors]
+train, test = train_test_split(data, test_size = 0.5)
+
+.......
+
+for i in xrange(1, 20):
+	subsets.loc[i] = best_subset_selection(i, X_train, Y_train,
+	X_test, Y_test)
+\end{lstlisting}
+
+TThis gave some results.. \todo{Add results when computation is done...}
+
+The validation set approach splits the data equally in two parts. By doing this it is not possible to train on very much data and the test error is therefore very likely an overestimate for the model fit on the entire data. Another approach is k-fold Cross-Validation. In this exercise a 10-fold Cross-Validation is run on the data set in combination with best subset selection.
+
+The implementation of 10-fold Cross-Validation is shown in listing \ref{lst:crossvalidation}. First the a 10 fold split of the data is done. Then a for loop iterates through the folds and gives a train and test index for each iteration. These indexes are used to create a training and test set for each fold. Then for each fold a best subset selection is performed from 1 to 19 predictors. After perfoming the best subset selection 10 times, one for each fold, then a means is taken for all the folds.
+
+\begin{lstlisting}[language=Python, label=lst:crossvalidation, caption=Cross-validation and best subset selection for choosing predictors]
+kf = KFold(n_splits=10, shuffle=True)
+kf.get_n_splits(X)
+j = 0
+mse = np.zeros((kf.n_splits, 19))
+for train_index, test_index in kf.split(X):
+    X_train = X.iloc[train_index]
+    Y_train = Y.iloc[train_index]
+    X_test = X.iloc[test_index]
+    Y_test = Y.iloc[test_index]
+    for i in xrange(1, 20):
+		subset = best_subset_selection(i, X_train, Y_train, X_test, Y_test)
+        mse[j,i-1] = subset["mse"]
+    j = j+1
+print mse.mean(axis=0)    
+\end{lstlisting}
+
+The results gives a mean squared error for each number of predictors. This is shown somewhere.. \todo{indsæt noget resultat}

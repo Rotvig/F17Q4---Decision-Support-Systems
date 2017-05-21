@@ -1,12 +1,13 @@
-\chapter{Cross Validation}
+\chapter{Cross-validation}
 \label{chp:crossval}
-Cross Validation is one of two resampling methods in Statistical Learning, the other being the Bootstrap which will be covered in the next chapter. As the original dataset is a sample, resampling means taking a sample from the dataset and use that in the learning process. This is done by splitting up the data set in different ways, so that the training is done on varying samples. 
+Cross-validation is one of two resampling methods in Statistical Learning, the other being the Bootstrap which will be covered in the next chapter. As the original dataset is a sample, resampling means taking a sample from the dataset and use that in the learning process. This is done by splitting up the data set in different ways, so that the training is done on varying samples. 
+
 
 \section{The validation set approach}
 \label{sec:VSA}
 In the Validation Set Approach the available set of samples are randomly divided into two parts of approximately equal size. One is the training set and the other is the validation set. The idea is then to fit the model on the training set, and then apply the model to the validation set. The resulting error of the validation set is then used as an estimate of the test error. This error is typically found as the Mean Squared Error. 
 
-\myFigure{validationSetApproach.png}{Splitting data randomly}{fig:valid}{0.8} 
+\myFigure{validationSetApproach.png}{Splitting data randomly}{fig:valid}{0.6} 
 
 The concept of randomly splitting the dataset is illustrated in Figure \ref{fig:valid}. The dataset is a series of numbers from 1 to n, and the result is here two almost equally sized parts with the numbers from the original dataset randomly distributed. 
 
@@ -77,14 +78,14 @@ The result shows a clear improvement of the Mean Squared Error, but not continuo
 
 
 \section{Leave-one-out cross validation}
-Leave-one-out Cross Validation, or \emph{LOOCV}, is closely related to the Validation Set Approach specified in Section \ref{sec:VSA}. The thought process is the same. Split the data into to parts, a training set and a test set. However, where Validation Set Approach split the data into two subsets of comparable size, the LOOCV uses a single observation as the test set, and the remaining observations are used as the training set. This is illustrated in Figure \ref{fig:loocv}. 
+Leave-one-out Cross-validation, or \emph{LOOCV}, is closely related to the Validation Set Approach specified in Section \ref{sec:VSA}. The thought process is the same, as you split the data into two parts, a training set and a test set. However, where Validation Set Approach split the data into two subsets of comparable size, the LOOCV uses a single observation as the test set, and the remaining observations are used as the training set. This is illustrated in Figure \ref{fig:loocv}. 
 
-\myFigure{LOOCV.png}{Leave-one-out Cross Validation}{fig:loocv}{0.6}
+\myFigure{LOOCV.png}{Leave-one-out Cross-validation}{fig:loocv}{0.5}
 
 \subsection{Lab 5.3.2}
 For the lab exercise for LOOCV, the \emph{Auto} data is read just like in Lab 5.3.1, but not split into two halves of random values. The \emph{horsepower} and \emph{mpg} data parts are though still distributed into respectively \emph{X\_train} and \emph{Y\_train}.
 
-\begin{lstlisting}[language=Python, label=lst:LOOCV, caption=Leave-one-out Cross Validation loop]
+\begin{lstlisting}[language=Python, label=lst:LOOCV, caption=Leave-one-out Cross-validation loop]
 for i in range(1, 6):
 	lm = linear_model.LinearRegression()
 	poly = PolynomialFeatures(degree=i)
@@ -103,13 +104,17 @@ In Listing \ref{lst:LOOCV} the LOOCV loop is done. Lines 2-4 are the same functi
 
 It is then all used in the \emph{cross\_val\_score} function. It uses the fitted model, the \emph{horsepower} training set fitted to an i'th degree polynomial, the \emph{mpg} training set and the folds to evaluate a score by Cross Validating.
 
-The Mean Squared Error is lastly printed from the result of the Cross Validation, and is illustrated in Figure \ref{fig:result_LOOCV}.
+The Mean Squared Error is lastly printed from the result of the Cross-validation, and is illustrated in Figure \ref{fig:result_LOOCV}.
 
-\myFigure{LOOCV_result.png}{Result of the Leave-one-out Cross Validation}{fig:result_LOOCV}{0.3}
+\myFigure{LOOCV_result.png}{Result of the Leave-one-out Cross-validation}{fig:result_LOOCV}{0.3}
 
 Once again it is clear that there is improvement when going to second degree polynomial, but from there no clear improvement can be seen. 
 
-\section{K-fold cross-validation}
 
+\section{K-fold Cross-validation}
+K-fold Cross-validation is a lot like the LOOCV. However, instead of using only one observation as the validation set, the dataset is split into k roughly equal-sized parts, called \emph{folds}, and one of these folds is the validation set. All other folds are used as training set. It is then possible to iterate through which fold is the validation set to get the best results, but this can be computationally expensive. The idea behind K-fold Cross-validation is illustrated in Figure \ref{fig:K_fold}, where the blue folds are the training sets and the orange fold is the validation set. 
+
+\myFigure{K_fold.png}{Representation of K-fold Cross-validation}{fig:K_fold}{0.5}
 
 \subsection{Lab 5.3.3}
+

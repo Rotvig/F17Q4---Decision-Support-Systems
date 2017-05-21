@@ -6,7 +6,7 @@ But it is an important tool to predict subgroups when the number of them are unk
 In this section the focus will be on the  technique called \emph{clustering} which is a used to discover unknown \emph{subgroups} or \emph{clusters}in data set. This is done to divide the data set into distinct groups so that the observations in the data within each of the groups are similar to each other and the observations belonging to other groups are different compared to other groups. 
 The problem is to determine if observations are similar or different to each other.
  
-\chapter{K-means clustering}
+\section{K-means clustering}
 \label{chp:clus}
 K-means clustering is a simple technique to partition the observation in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is spcified the K-means algorithm wil assign each of the observations to one of the \emph{k} clusters.
 Figure 9.1 shows a result of a K-mean algorithm where \emph{k} is set to 3. The data set contains of 50 observation which is divide into three cluster. each cluster is marked in a color. The cross is the center points of a cluster. This point is also called \emph{centroids}.
@@ -24,7 +24,6 @@ So the within-cluster variation for the \emph{k}th cluster is the sum of all pai
 So the algorithm tries to minimize the total within-cluster variation, summed over all \emph{k}th cluster.
 The K-means Clustering algorithm can then be written as.
 
-% Insert the algorithm
 \begin{algorithm}
 	\caption{K-Means Clustering}
 	\label{algo:KMeansClustering}
@@ -42,13 +41,13 @@ The K-means Clustering algorithm can then be written as.
  So when the algorithm run the clustering will continually improve until the result no longer changes. This is called a \emph{local optimum}.
 \subsection{Lab 10.5.1}
 
-\chapter{Hierarchical clustering}
+section{Hierarchical clustering}
 K-means clustering has one potential disadvantage namely that it require a pre-specify number of clusters \emph{k}. Here Hierarchical clustering can provide an alternative approach which does not require a pre-specified \emph{k}.
 Furthermore Hierarchical clustering results in a tree based representation of the observation in the data set called a \emph{dendrogram}
 This section will have focus on the \emph{bottom-up} approach also called \emph{agglomerative} clustering and it is the most common type of hierarchical clustering It is called the \emph{bottom-up} because the dendrogram is built starting from the leaves and combing clusters up to the trunk. 
 First the dendrogram and how to build them will be describe then the hierarchical clustering algorithm will be shown.
 
-\section{Dendrogram}
+\subsection{Dendrogram}
 The easiest way of explaining a dendrogram is to show one. So figure 10.1 is a dengrogram which shows a data set with 50 observations in two-dimensional space.
 The true class labels for each observation are shown in distinct colors. But if these true class labels where not available and the data was observed without them then all will be labeled with the same distinct color. 
 One of the leaf represents one of the 50 observations. 
@@ -57,16 +56,20 @@ Observations that fuse close to the top of the tree tends to be quite different 
 
 \myFigure{Dendrogram.PNG}{Dendrogram with 50 observations}{fig:dendrogram}{1}
 
-To show how this is build a simple data set containing 8 observations are shown in figure XX.
-Then it can be seen that observations 4 and 6 are quite similar to each other and observations 2 and 7 are also quite similar to each other. These are the bottom of the dendrogram. Now the dendrogram is expand by looking at the next observation that are close to 4 and 6. It can be seen that 8 are close to them, so this is the next leaf. The same is done for observation 2 and 7. At the end the dendrogram will look like figure XX
+To show how this is build a simple data set containing 7 observations are shown in figure 8.3 to the right.
+Then it can be seen that observations 5 and 7 are quite similar to each other and observations 1 and 6 are also quite similar to each other. These are the bottom of the dendrogram. Now the dendrogram is expand by looking at the next observation that are close to 5 and 7. It can be seen that 3 are close to them, so this is the next leaf. The same is done for observation 1 and 6. At the end the dendrogram will look like fingure on the left in figure 8.3 
 
-\section{The Hierarchical Clustering Algorithm}
- 
- % Insert the algorithm
- \begin{algorithm}
- 	\caption{Hierarchical Clustering}
- 	\label{algo:HierarchicalClustering}
- 	\begin{algorithmic}[1]
+\myFigure{DendrogramData.PNG}{Illustration of a dendrogram and its data set}{fig:dendrogramdata}{1}
+
+\subsection{The Hierarchical Clustering Algorithm}
+The dendrogram is obtained via a simple algorithm. The first thing it does is to defining some sort of dissimilarities measture between each pair. This is often Euclidean distance that is used. Then the algorithm proceeds iteratively. It starts at the bottom of the dendrogram and each of the n observations is treaded as its own cluster. Then it finds the two cluster that are closed and fused those two so that there now are n - 1 clusters. Then the next two cluster that are most similar is fused so now there is n - 2 clusters. This is proceeded until all of the observations belongs to one single cluster and the dendrogram is complete.
+
+The Hierarchical Clustering algorithm is shown below.
+
+\begin{algorithm}
+	\caption{Hierarchical Clustering}
+	\label{algo:HierarchicalClustering}
+	\begin{algorithmic}[1]
  		\State Begin with n observations and a measure (such as Euclidean distance) of all the $(\dfrac{n}{2}) =n(n-1)/2 $ pairwise dissimilarities. Treat each observation as its own cluster 
  		\State for \emph{i} $= n,n-1,...,2:$
  		\begin{enumerate}[label=(\alph*)]
@@ -76,5 +79,24 @@ Then it can be seen that observations 4 and 6 are quite similar to each other an
  	\end{algorithmic}
  \end{algorithm}
 
+But one issue has bot been addressed. How does the algorithm determine that cluster 5 and 7 should be fused with cluster 3? The algorithm needs to be cable of define the dissimilarities between two cluster if one or both contains multiple observations. This is done with a extension by using \emph{linkage} which defines dissimilarities between two groups of observations. The most common types of linkage is \emph{complete}, \emph{average}, \emph{single} and
+\emph{centroid}.
 
-\subsection{Lab 10.5.2}
+These are explained in table XX
+\begin{center}
+	\begin{tabular}{ | l | p{12cm} |}
+		\hline
+		Linkage & Description \\ \hline
+		Complete & Maximal intercluster dissimilarity. Record the largest of these dissimilarities in cluster A and B \\ \hline
+		Single & Minimal intercluster dissimilarity. Record the smallest of these dissimilarities in cluster A and B \\ \hline
+		Average & Mean intercluster dissimilarity. record the average of pairwise dissimilarities in cluster A and B\\
+		\hline
+		Centroid & Dissimiliarity between the centroid for cluser A and B and record the average of these dissimilarities
+		\\
+		\hline
+	\end{tabular}
+\end{center}
+
+Complete and average linakge are generally the most preferred linakge as they produce more balanced dendrograms. 
+
+Sometimes you need to scale your data set to obtain standard deviation. Then there arise new problems, because which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.

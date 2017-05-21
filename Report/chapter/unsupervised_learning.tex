@@ -139,3 +139,48 @@ Complete and average linakge are generally the most preferred linakge as they pr
 Sometimes you need to scale your data set to obtain standard deviation. Then there arise new problems, because which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.
 
 \subsection{Lab 10.5.2}
+A data set containing 50 observations are randomly generated and assigned in X and Y coordinates. So it is the same data set structure from lab 10.5.1.
+The hierarchical clustering dendrogram will be produced using complete, single and average linkage clustering with Euclidean distance.
+To perform the hierarchical clustering the library scipy in imported. This provide the functions for creating dendrograms with the linkage that is needed. 
+The code for creating the three types of linkage are shown in listing
+\ref{lst:Linkage}
+
+\begin{lstlisting}[language=Python, label=lst:Linkage, caption=The code that apllies the three different linkage on the data set]
+complete = linkage(zip(X,Y), method='complete', metric='euclidean')
+single = linkage(zip(X,Y), method='single', metric='euclidean') 
+average = linkage(zip(X,Y), method='average', metric='euclidean')
+\end{lstlisting}
+
+As it can been seen, the linkage functions look a lot like each other. The only difference is the method. The two other parameters are the data set and specifies that the linkage should use Euclidean distance. 
+Now is it time for creating the dendrograms. To create them the function \emph{dendrogram} from the scipy library is used. The only parameter that is needed to build them is the three linkage objects that was made in listing \ref{lst:Linkage}
+The code that plots the three dendrograms are listed in listing \ref{lst:plottingDendrogram}
+
+\begin{lstlisting}[language=Python, label=lst:plottingDendrogram, caption=The python code that plots the dendrograms for the three different linakge]
+plt.figure(figsize=(25, 10))
+plt.title('Dendrogram for Compplete')
+plt.xlabel('sample index')
+plt.ylabel('distance')
+dendrogram(complete)
+
+plt.figure(figsize=(25, 10))
+plt.title('Dendrogram for single')
+plt.xlabel('sample index')
+plt.ylabel('distance')
+dendrogram(single)
+
+plt.figure(figsize=(25, 10))
+plt.title('Dendrogram for average')
+plt.xlabel('sample index')
+plt.ylabel('distance')
+dendrogram(average)
+\end{lstlisting}
+
+The construction of the diagram is the same for the three different linkage. First the figure size is set, then the title of the dendrogram and in line 3 and 4 the labels for the X-axis and the Y-axis is set. 
+The only thing that differ these diagrams is which linkage object that are send as a parameter to the dendrogram function.
+The result of each of the three different dendrogram can be seen in figure- \ref{fig:dendrogramcomplete}, \ref{fig:dendrogramsingle} and \ref{fig:dendrogramaverage}
+
+\myFigure{DendrogramComplete.PNG}{The dendrogram for the linkage method complete}{fig:dendrogramcomplete}{0.}
+
+\myFigure{DendrogramSingle.PNG}{The dendrogram for the linkage method single}{fig:dendrogramsingle}{0.5}
+
+\myFigure{DendrogramAverage.PNG}{The dendrogram for the linkage method average}{fig:dendrogramaverage}{0.5}

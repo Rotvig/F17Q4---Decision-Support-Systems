@@ -43,6 +43,36 @@ To perform a bootstrap a second function is needed which is seen in listing \ref
 def boot_python(data, function, num_of_iteration):
 	n = data.shape[0]
 	idx = np.random.randint(0, n, (num_of_iteration, n))
+	stat = np.zeros(num_of_iteration)
+	for i in xrange(len(idx)):
+		stat[i] = function(data, idx[i])
+	return {'Mean': np.mean(stat), 'std. error': np.std(stat)}
+\end{lstlisting}
+
+The bootstrap method receives three arguments \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of bootstrap data set that should be created.  
+
+Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1000. the results are $\hat{\alpha}$ is 0.5834 and the standard error $SE(\hat{\alpha})$ is 0.09102.
+
+\subsection{Estimating the Accuracy of a linear Regression Model}
+
+In the next part of lab 5.3.4 the goal is to asses the variability of the estimates for $\beta_0$ and $\beta_1$, the intercept and slope terms for the linear regression model that uses \emph{horsepower} to predict \emph{mpg} in the \emph{Auto} data set.
+
+First step is to create a function to calculate the intercept and slope, this is seen in listing \ref{lst:boot}. The function \emph{boot} performs a linear regression fit on X and Y. 
+
+\begin{lstlisting}[caption={boot function in python}, label=lst:boot, mathescape=true]
+def boot(data, index):
+	X = data['horsepower'][index]
+	Y = data['mpg'][index]
+	slope, intercept, r_value, p_value, std_err = stats.linregress(X,Y)
+	return [intercept, slope]
+\end{lstlisting}
+
+The next step is to adjust the bootstrap function from the last part. the modified bootstrap function is seen in Listing \ref{lst:bootstrap2}. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
+
+\begin{lstlisting}[caption={boot function in python}, label=lst:bootstrap2, mathescape=true]
+def boot_python2(data, function, num_of_iteration):
+	n = data.shape[0]
+	idx = np.random.randint(0, n, (num_of_iteration, n))
 	stat = np.zeros((num_of_iteration, 2))
 	for i in xrange(len(idx)):
 		stat[i] = function(data, idx[i])
@@ -52,8 +82,6 @@ def boot_python(data, function, num_of_iteration):
 	'std. error slope': np.std(stat[:,0])}
 \end{lstlisting}
 
-The bootstrap method receives three arguments \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of bootstrap data set that should be created.  
+Now the standard errors of 1,000 bootstrap estimates for the intercept and slope can be computed.
+The bootstrap estimates for the standard error intercept $SE(\hat{\beta_0})$ is 0.8601 and the standard error slope $SE(\hat{\beta_1})$ is 0.007335.
 
-Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1000. the results are $\hat{\alpha}$ is 0.5834 and the standard deviation $SE(\hat{\alpha})$ is 0.0895.
-
-\subsection{Estimating the Accuracy of a linear Regression Model}

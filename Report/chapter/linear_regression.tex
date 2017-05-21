@@ -1,61 +1,57 @@
 \chapter{Linear Regression}
 \label{chp:linreg}
 
-Linear regression is an approach in supervised learning. It is used for predicting a quantitative response and it is widely used for statistical learning methods. It may seem that it is a bit simple compared to some of the more modern statistical learning approaches, but it serves as a good base as newer approaches can be seen as a generalization or extension of the linear regression. 
-This chapter presents the key ideas of a linear regression model and it will describe the least squares approach
-which is the most commonly used to fit this model\\
+%Linear regression is an approach in supervised learning. It is used for predicting a quantitative response and it is widely used for statistical learning methods. It may seem that it is a bit simple compared to some of the more modern statistical learning approaches, but it serves as a good base as newer approaches can be seen as a generalization or extension of the linear regression. 
+%This chapter presents the key ideas of a linear regression model and it will describe the least squares approach
+%which is the most commonly used to fit this model\\
 
-Simple linear regression is used for predicting a quantitative response, often called Y, based on a single predictor, often called X.
+This chapter presents Linear regression which is an approach in supervised learning that can be used for predicting a quantitative response. Furthermore the least squares approach is explained as the most commonly used method for fitting a linear regression model.
+
+\section{Simple linear regression}
+
+Simple linear regression is used for predicting a quantitative response, often denoted Y, based on a single predictor, often denoted X.
 The relationship between X and Y can be expressed as:
 
 \begin{equation}
 Y \approx \beta_0 + \beta_1X
 \end{equation}
 
-This means that Y is approximately modeled as X or in other words Y is regressing on X. 
-$\beta_0$ and $\beta_1$ are two unknown constants that represent the intercept and slope in the linear model. They are also known as model coefficients or parameters. 
-To be able to predict, the training data is used to produce
-an estimation of $\hat{\beta_0}$ and $\hat{\beta_1}$ for the model coefficients. 
+In the equation $\beta_0$ represents the intercept and $\beta_1$ which is multiplied with X represents the slope.
+%This means that Y is approximately modeled as X or in other words Y is regressing on X. 
+%$\beta_0$ and $\beta_1$ are two unknown constants that represent the intercept and slope in the linear model. They are also known as model coefficients or parameters. 
+In linear regression training data containing observations of X and Y is used to estimate $\hat{\beta_0}$ and $\hat{\beta_1}$. 
 The mathematically expression for the computation is:
 
 \begin{equation}
 \hat{y} = \hat{\beta_0} + \hat{\beta_1}x
 \end{equation}
 
-$\hat{y}$ is the prediction of Y based on X = x. The \textit{hat} symbol is used to denote the estimated value for an unknown parameter or coefficient or to predict a value of the response.
+%$\hat{y}$ is the prediction of Y based on X = x. The \textit{hat} %symbol is used to denote the estimated value for an unknown parameter or coefficient or to predict a value of the response.
 
-\subsection{Estimation the coefficients}
+%When estimating the coefficients 
+%$\hat{\beta_0}$ and  $\hat{\beta_1}$ are in practice unknown. So %in order to use (2.1) to make predictions, $\hat{\beta_0}$ and  %$\hat{\beta_1}$ needs to be estimated so the data can be used. 
 
-The coefficients 
-$\hat{\beta_0}$ and  $\hat{\beta_1}$ are in practice unknown. So in order to use (2.1) to make predictions, $\hat{\beta_0}$ and  $\hat{\beta_1}$ needs to be estimated so the data can be used. 
+%First Let 
+%\begin{equation}
+%(x_1, y_1), (x_2, y_2),..., (x_n, y_n)
+%\end{equation}
 
-First Let 
-\begin{equation}
-(x_1, y_1), (x_2, y_2),..., (x_n, y_n)
-\end{equation}
+%represent n observation pairs where each of them have a measurement of X and a measurement of Y. n can represent lots of thing. can be the number of different markets, or different cities. It depends on the data.
 
-represent n observation pairs where each of them have a measurement of X and a measurement of Y. n can represent lots of thing. can be the number of different markets, or different cities. It depends on the data.
+$\hat{\beta_0}$ and  $\hat{\beta_1}$ must be estimated to fit the all the observations as good as possible. This can be ensured by using the least squared approach..
+%In other words $\hat{\beta_0}$ is the intercept and  $\hat{\beta_1}$ is a slope, so the resulting line is as close as possible to n\emph{th} data points
 
-The goal is to estimate $\hat{\beta_0}$ and  $\hat{\beta_1}$ such that the linear model fits the data as good as possible. In other words $\hat{\beta_0}$ is the intercept and  $\hat{\beta_1}$ is a slope, so the resulting line is as close as possible to n\emph{th} data points
+%First the prediction for Y will be written as $\hat{y_i} = \hat{\beta_0} + \hat{\beta_1} x_i$ based on the \emph{i}th value of X.
+%Then $e_i = y_i - \hat{y_i}$ will represent the \emph{i}th residual, which is the difference between the \emph{i}th observed response value and the \emph{i}th response value that is predicted by the linear model.
 
-In this lab the \emph{least square} method will be used because it is the most common approach. 
-
-First the prediction for Y will be written as $\hat{y_i} = \hat{\beta_0} + \hat{\beta_1} x_i$ based on the \emph{i}th value of X.
-Then $e_i = y_i - \hat{y_i}$ will represent the \emph{i}th residual, which is the difference between the \emph{i}th observed response value and the \emph{i}th response value that is predicted by the linear model.
-
-The \emph{residual sum of squares} also called RSS will be defined as
+Least squares approach determines the $\hat{\beta_0}$ and  $\hat{\beta_1}$ to minimizes the residual sum of squares.
+The residual is defined as the difference between the predicted and the true response value $y-\hat{y}$. $\hat{y}$ can be replaced with $\hat{\beta_0} + \hat{\beta_1}x$ and the residual sum of squares can then be defined as:
 
 \begin{equation}
-RSS = e^2_1 + e^2_2 + ... + e^2_n,
+RSS = (y_1 - (\hat{\beta_0} + \hat{\beta_1}X_1))^2 + (y_2 - (\hat{\beta_0} + \hat{\beta_1}X_2))^2 + ... + (y_n - (\hat{\beta_0} + \hat{\beta_1}X_n))^2
 \end{equation}
 
-which can be translated to
-
-\begin{equation}
-RSS = (y_1 - \hat{\beta_0} - \hat{\beta_1}X_1)^2 + (y_2 - \hat{\beta_0} - \hat{\beta_1}X_2)^2 + ... + (y_n - \hat{\beta_0} - \hat{\beta_1}X_n)^2
-\end{equation}
-
-Now the least squares approach can be used to choose $\hat{\beta_0}$ and $\hat{\beta_1}$ to minimize the RSS (2.5).
+The least squares approach can then be used to choose $\hat{\beta_0}$ and $\hat{\beta_1}$ to minimize the RSS (2.5).
 The minimization is written as:
 
 \begin{equation}
@@ -71,7 +67,6 @@ $\hat{x}\equiv \dfrac{1}{n}\sum\limits_{i=1}^nx_i$ are the sample means and the 
 
 
 \section{Lab 3.6.2 - Simple Linear Regression}
-
 
 In Lab 3.6.2 the data set \emph{Boston} is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
 

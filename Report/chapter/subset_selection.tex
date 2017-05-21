@@ -126,7 +126,7 @@ This means that instead of fitting 524,288 models with best subset selection, fo
 1+ \sum_{k=0}^{18}(19-k) = 191
 \end{equation}
 
-\subsection{Lab 6.5.3}
+\subsection{Lab 6.5.2}
 The exercise for 6.5.3 is very similar to 6.5.2 and a function for forward and bacward stepwise selection was implemented and used instead of best\_subset\_selection implemented in listing \ref{lst:best_subset_selection}. The rest of the code could be reused. In listing \ref{lst:forwardselection} the implemented function for forward stepwise selection is shown. First the remaining predictors to choose from are extracted. \emph{X.columns} is all the predictors while \emph{predictors} is passed as a parameter and contains the already chosen predictors. It then runs a for loop iterating through all the remaining predictors and adding them to the model. The best model is then selected based on RSS.
 
 \begin{lstlisting}[language=Python, label=lst:forwardselection, caption=Function for forward stepwise selection]
@@ -152,7 +152,7 @@ Similar a function for backward stepwise selection was implemented. Comparing th
 In the previous exercises $C_p$, AIC, BIC and adjusted $R^2$ was used for picking the right amount of predictors. This was needed because the models were trained on the complete data set and so the test error would provide an underestimate of the true error
 
 In this exercise the validation set approach and cross-validation is used. Therefore instead of using $C_p$, AIC, BIC and adjusted $R^2$ the test error can be directly calculated. 
-\subsection{Lab 6.5.3}
+\subsection{Lab 6.5.3 }
 
 Firstly the validation set approach will be used in combination with best subset selection. This is shown in listing \ref{lst:validationsetapproach}. First the data is split into a training and testing set. When this is done the best subset selection is run from 1 to 19 predictors. A small modification of the functions were needed so that the training and test sets were used appropriately.
 

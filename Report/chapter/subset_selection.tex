@@ -6,7 +6,7 @@ In the previous chapters the chosen number of predictors in the models have not 
 \section{Best subset}
 Best subset selection is a method for choosing the best possible subset of predictors. In this approach a model is fitted for each possible combination of the predictors.
 
-The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First a the null models is created in step 1. Then in line 2 the algorithm it iterates from 1 predictor and up till the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best models with k predictors is chosen. When all iteration are done the single best model is chosen.
+The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First the null models is created in step 1. In line 2 it iterates from 1 predictor and up till the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best model with k predictors is chosen. When all iteration are done the single best model is chosen.
 
 % Insert the algorithm
 \begin{algorithm}
@@ -38,7 +38,7 @@ Y = data['Salary']
 \end{lstlisting}
 
 
-A function for choosing the best subset is then defined in listing \ref{lst:best_subset_selection}. In the line 3 it iterates through all combinations of the predictors with k number of predictors. A function process\_subset is called which returns the subset with calculated model, RSS etc. In line 4 all the different combinations are appended to the results array. In line 7 the best model is picked based on lowest RSS and the returned.
+A function for choosing the best subset is then defined in listing \ref{lst:best_subset_selection}. In line 3 it iterates through all combinations of the predictors with k number of predictors. A function process\_subset is called which returns the subset with calculated model, RSS, $R^2$, BIC and $C_p$. In line 4 all the different combinations are appended to the results array. In line 7 the best model is picked based on lowest RSS and then returned.
 
 \begin{lstlisting}[language=Python, label=lst:best_subset_selection, caption=function for choosing best subset]
 def best_subset_selection(k):
@@ -50,7 +50,7 @@ def best_subset_selection(k):
 	return best_model
 \end{lstlisting}
 
-In listing \ref{lst:process_subset} the function called in listing \ref{lst:best_subset_selection} is shown. It calculates both the RSS, $R^2$, Cp and BIC for model.
+In listing \ref{lst:process_subset} the function called in listing \ref{lst:best_subset_selection} on line 4 is shown. It fits a linear regression model and computes RSS, $R^2$, $C_p$ and BIC for model.
 
 \begin{lstlisting}[language=Python, label=lst:process_subset, caption=Calculating metrics for subset]
 def process_subset(feature_set):
@@ -74,7 +74,7 @@ def process_subset(feature_set):
 		"cp":cp }
 \end{lstlisting}
 
-For calculating $R^2$, Cp and BIC a selfimplemented python file called metrisUtil is used with defined functions for calculating these values.
+For calculating RSS, $R^2$, $C_p$ and BIC a self implemented python file called metrisUtil is used with defined functions for calculating these values.
 
 \begin{lstlisting}[language=Python, label=lst:metricsUtil, caption=metricsUtil for calculating Cp\, BIC and RSS]
 def RSS(Y, Y_hat):
@@ -92,38 +92,42 @@ def Bic(n, RSS, d, Y_hat)
 	return (1.0 / n) * (RSS + math.log(n) * d * Y_hat.var())
 \end{lstlisting}
 
-In listing \ref{lst:best_subset9} a best subset selection is run for the the 19 possible predictors.
+After having these functions defined the best subset selection is computed. In listing \ref{lst:best_subset9} a best subset selection is run for the the 19 possible predictors.
 
 \begin{lstlisting}[language=Python, label=lst:best_subset9, caption=metricsUtil for calculating Cp\, BIC and RSS]
 for i in xrange(1,20):
 	subsets.loc[i] = best_subset_selection(i)
-	print i
 \end{lstlisting}
 
-Plotting the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. In the figure it can be seen how RSS and and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp and BIC can be used for estimating the optimal amount of predictors. We can see that the lowest BIC is given by a model with only 6 predictors.
+Plotting RSS, $R^2$, $C_p$ and BIC for the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. It shows how RSS and and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp and BIC can be used for estimating the optimal amount of predictors.
 
 \myFigure{subset_all_graph.PNG}{Best subset selection 1-19 predictors}{fig:best_plottet}{1}
+\FloatBarrier
 
 
-The best models were returned from the best\_subset\_selection function. This also returns the features that were selected for the best model with k predictors. The best model with 6 predictors include \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{OutOuts} while the best model with 10 predictors include \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. We can also see that the set of 6 predictors is not just a subset of the 10 predictors. This is because every combinations is tried for every number of features. This also means that a drawback of this method is the computation time. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
+BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{OutOuts}. $C_p$ indicates that the best model contains 10 predictors. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combinations is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
 
 \begin{equation}
 2^{19} = 524288
 \end{equation}
 
-The following chapter presents two different algorithms that can be used for selecting predictors with fewer computations than just described for best subset selection.
+The following section presents two different algorithms that can be used for selecting predictors with fewer computations than just described for best subset selection.
 
-\section{forward and backward stepwise selection}
-Forward and Backward Stepwise selection is two similar algorithms for stepwise selection of a subset. They are both more efficient than best subset selection.
+\section{Forward and backward stepwise selection}
+Forward and backward stepwise selection is two similar algorithms for stepwise selection of a subset. They are both more computationally efficient than the best subset selection.
 
-The forward and backward stepwise selection algorithm differs from best subset selection by continuously adding predictors one-by-one to the model with the previously chosen predictors. This means that the k'th best model will always be a subset of the k+n'th model. The predictor that improves most upon the model is the always the on added. This means that instead of fitting 524,288 models with best subset selection forward and backward stepwise selection only has to fit 191 models as calculated in equation 7.2. This is a significant difference in models that must be fitted and this was also experienced when running the exercises for best subset selection compared to forward and backward stepwise selection.
+The forward stepwise selection algorithm adds predictors to the model one by one. When computing the k+1'th model, the predictors chosen for the k'th model defines the first k predictors and then one new predictor is added. This means that the k'th best model will always be a subset of the k+n'th best model. The predictor that improves most upon the model is always the one added
+
+Backward stepwise selction works very similar to forward stepwise selection. Instead the model starts by containing all predictors and at each step a predictor is removed. The predictor that is removed is chosen by which gives the best model.
+
+This means that instead of fitting 524,288 models with best subset selection, forward and backward stepwise selection only has to fit 191 models as calculated in equation 7.2. This is a significant difference in models that must be fitted.  This was also obvious when executing the exercises for best subset selection compared to forward and backward stepwise selection.
 
 \begin{equation}
-\sum_{k=}^{p-1}(p-k) = 191
+1+ \sum_{k=0}^{18}(19-k) = 191
 \end{equation}
 
 \subsection{Lab 6.5.3}
-The exercise for 6.5.3 is very similar to 6.5.2 and a function for forward and bacward stepwise selection was implemented and used instead of best\_subset\_selection implemented in listing \ref{lst:best_subset_selection}.The rest of the code could be reused. In listing \ref{lst:forwardselection} the implemented function for forward stepwise selection is shown. First the remaining predictors to choose from a extracted. X columns is all the predictors while predictors is passed as parameter and contains the already chosen predictors. It then runs a for loop iterating through all the remaining predictors and adding them to the model. The best model is then selected based on RSS and returned.
+The exercise for 6.5.3 is very similar to 6.5.2 and a function for forward and bacward stepwise selection was implemented and used instead of best\_subset\_selection implemented in listing \ref{lst:best_subset_selection}. The rest of the code could be reused. In listing \ref{lst:forwardselection} the implemented function for forward stepwise selection is shown. First the remaining predictors to choose from are extracted. \emph{X.columns} is all the predictors while \emph{predictors} is passed as a parameter and contains the already chosen predictors. It then runs a for loop iterating through all the remaining predictors and adding them to the model. The best model is then selected based on RSS.
 
 \begin{lstlisting}[language=Python, label=lst:forwardselection, caption=metricsUtil for calculating Cp\, BIC and RSS]
 def forward_stepwise_selection(predictors):
@@ -136,9 +140,7 @@ def forward_stepwise_selection(predictors):
 	return best_model
 \end{lstlisting}
 
-With forward stepwise selection the best remaining predictor is added at each iteration. With backward stepwise selection the algorithms start by containing all predictors and then removes the a predictor each time. 
-
-Looking at the best models with forward and bacward stepwise selection and best subset selection many are identical. For example the models with predictors from 1 to 6 are identical while the model with 7 predictors differs. This is not the case with backward stepwise selection which differs in all these. When choosing 7 predictors the three different algorithm choose the following predictors as the best subset.
+Similar a function for backward stepwise selection was implemented. Comparing the models for best subset selection, forward and backward stepwise selection it was shown that some models were identical while other differed. For example the models with predictors from 1 to 6 for both best subset selection and forward stepwise selection were identical while the model with 7 predictors differs. This is not the case with backward stepwise selection which differs in all these. Actually the best model with 7 predictors differs with the three algorithm. The following 7 predictors were chosen:
 
 \begin{itemize}
 \item Forward stepwise: \emph{CRBI, Hits, PutOuts, Division\_W, AtBat, Walks} and \emph{CWalks}
@@ -146,13 +148,13 @@ Looking at the best models with forward and bacward stepwise selection and best 
 \item Backward stepwise: \emph{AtBat, Hits, Walks, CRuns, CWalks, PutOuts} and \emph{Division\_W}
 \end{itemize}
 
-\section{cross validation}
-In the previous exercises $C_p$, AIC, BIC and adjusted $R^2$ was used for picking the right amount of predictors. This was needed because the models were trained on the complete data set and so the test error would not provide an underestimate of the true error
+\section{Validation set approach and cross-validation}
+In the previous exercises $C_p$, AIC, BIC and adjusted $R^2$ was used for picking the right amount of predictors. This was needed because the models were trained on the complete data set and so the test error would provide an underestimate of the true error
 
 In this exercise the validation set approach and cross-validation is used. Therefore instead of using $C_p$, AIC, BIC and adjusted $R^2$ the test error can be directly calculated. 
 \subsection{Lab 6.5.3}
 
-Firstly the validation set approach will be used in combination with best subset selection. This is shown in listing \ref{lst:validationsetapproach}. First the data is split into a training and testing set. When this is done the best subset selection is run from 1 to 19 predictors. A small modification of the functions were needed so that the training and test sets were appropriately.
+Firstly the validation set approach will be used in combination with best subset selection. This is shown in listing \ref{lst:validationsetapproach}. First the data is split into a training and testing set. When this is done the best subset selection is run from 1 to 19 predictors. A small modification of the functions were needed so that the training and test sets were used appropriately.
 
 \begin{lstlisting}[language=Python, label=lst:validationsetapproach, caption=Validation set approach for choosing predictors]
 train, test = train_test_split(data, test_size = 0.5)
@@ -164,11 +166,11 @@ for i in xrange(1, 20):
 	X_test, Y_test)
 \end{lstlisting}
 
-TThis gave some results.. \todo{Add results when computation is done...}
+The mean squared error for different numbers of predictors is shown in table \ref{table:mse_validation}. By using this validation set approach and best subset selection the optimal number of predictors is computed to 10. The optimal number of predictors is based on the model with lowest mean squared error. It is important to note that a different split of train and test data can give a different number of optimal predictors.
 
-The validation set approach splits the data equally in two parts. By doing this it is not possible to train on very much data and the test error is therefore very likely an overestimate for the model fit on the entire data. Another approach is k-fold Cross-Validation. In this exercise a 10-fold Cross-Validation is run on the data set in combination with best subset selection.
+The validation set approach splits the data equally in two parts. This does not leave much data for training and the test error is therefore very likely an overestimate for the model fit on the entire data. Another approach is K-fold cross-validation. In this exercise a 10-fold cross-validation is executed on the data set in combination with best subset selection.
 
-The implementation of 10-fold Cross-Validation is shown in listing \ref{lst:crossvalidation}. First the a 10 fold split of the data is done. Then a for loop iterates through the folds and gives a train and test index for each iteration. These indexes are used to create a training and test set for each fold. Then for each fold a best subset selection is performed from 1 to 19 predictors. After perfoming the best subset selection 10 times, one for each fold, then a means is taken for all the folds.
+The implementation of 10-fold cross-validation is shown in listing \ref{lst:crossvalidation}. First a 10-fold random split of the data is done. Then a for loop iterates through the folds and gives a train and test index for each iteration. These indexes are used to create a training and test set for each fold. For each fold a best subset selection is performed from 1 to 19 predictors. After performing the best subset selection 10 times, one for each fold, then a mean of the MSE is calculated for all the folds.
 
 \begin{lstlisting}[language=Python, label=lst:crossvalidation, caption=Cross-validation and best subset selection for choosing predictors]
 kf = KFold(n_splits=10, shuffle=True)
@@ -187,4 +189,83 @@ for train_index, test_index in kf.split(X):
 print mse.mean(axis=0)    
 \end{lstlisting}
 
-The results gives a mean squared error for each number of predictors. This is shown somewhere.. \todo{indsæt noget resultat}
+
+The results for cross-validation and best subset selection is shown in table \ref{table:mse_cross}. Using this approach the best model is achieved using a model with 11 predictors. Similar to the best subset selection, this method is even more computationally expensive because it runs the best subset selection one time for each fold.
+
+\begin{table}	
+	\centering
+	\begin{subtable}[t]{2in}
+		\centering
+		\begin{tabular}{ p{3cm} p{3cm}  }
+			\textbf{Predictors} & \text{MSE} \\
+			\hline 
+			\\
+			1 & 134,849 \\\hline
+			\\
+			2 & 115,458 \\\hline
+			\\
+			3 & 110,083 \\\hline
+			\\
+			4 & 106,295  \\\hline
+			\\
+			5 & 104,190  \\\hline
+			\\
+			6 & 103,703  \\\hline
+			\\
+			7 & 102,753  \\\hline
+			\\
+			8 & 102,521  \\\hline
+			\\
+			9 & 102,549  \\\hline
+			\\
+			10 & 103,466  \\\hline
+			\\
+			11 & 105,327  \\\hline
+			\\
+			12 & 106,295  \\\hline
+			\\
+			13 & 106,295  \\\hline
+		\end{tabular}
+		\caption{Validation set approach}\label{table:mse_validation}
+	\end{subtable}
+	\quad
+	\begin{subtable}[t]{2in}
+		\centering
+	\begin{tabular}{ p{3cm} p{3cm}  }
+		\textbf{Predictors} & \text{MSE} \\
+		\hline 
+		\\
+		1 & 127,856 \\\hline
+		\\
+		2 & 101,343 \\\hline
+		\\
+		3 & 89,222 \\\hline
+		\\
+		4 & 83,120  \\\hline
+		\\
+		5 & 80,205  \\\hline
+		\\
+		6 & 78,654  \\\hline
+		\\
+		7 & 78,360  \\\hline
+		\\
+		8 & 77,971  \\\hline
+		\\
+		9 & 77,944  \\\hline
+		\\
+		10 & 77,895 \\\hline
+		\\
+		\textbf{11} & \textbf{78,352}  \\\hline
+		\\
+		12 & 78,795 \\\hline
+		\\
+		13 & 80,686 \\\hline
+	\end{tabular}
+		\caption{Cross-validation}\label{table:mse_cross}
+	\end{subtable}
+	\caption{Calculated Mean squared error from 1 to 12 predictors.}\label{table:mse}
+\end{table}
+
+When choosing among the different techniques for subset selection it is often a matter of how much computation power is available.  The best subset selection is a lot more expensive than forward and backward stepwise selection. Combining best subset selection with cross-validation also makes the process even more computationally expensive. If many predictors are available, then best subset selection might simply be too expensive, even for very fast modern computers. If the amount of predictors available are more than 40, then best subset selection is rarely feasible and it might be relevant to use forward and backward stepwise selection instead.
+
+Another important aspect of subset selection is that it does not always make sense to choose the best model. The best model might be more complex while another simpler model might perform approximately as good. So when choosing subset of predictors complexity vs simplicity should also be included in the final choice of predictors

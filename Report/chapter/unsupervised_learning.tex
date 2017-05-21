@@ -1,6 +1,6 @@
 \chapter{Unsupervised Learning}
 \label{chp:unsuplea}
-In unsupervised learning there is no response variable Y. Ther is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find interesting things about the measurements on the features.
+In unsupervised learning there is no response variable Y. There is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find interesting things about the measurements on the features.
 Compared to supervised learning unsupervised learning comes with some challenges.the tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no universally accepted mechanism for performing cross validation and how to validate the results on a data set due to there is no Y to check results up against with.
 But it is an important tool to predict subgroups when the number of them are unknown.
 In this section the focus will be on the  technique called \emph{clustering} which is a used to discover unknown \emph{subgroups} or \emph{clusters}in data set. This is done to divide the data set into distinct groups so that the observations in the data within each of the groups are similar to each other and the observations belonging to other groups are different compared to other groups. 
@@ -8,20 +8,18 @@ The problem is to determine if observations are similar or different to each oth
  
 \section{K-means clustering}
 \label{chp:clus}
-K-means clustering is a simple technique to partition the observation in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is spcified the K-means algorithm wil assign each of the observations to one of the \emph{k} clusters.
-Figure \ref{fig:K-meanex} shows a result of a K-mean algorithm where \emph{k} is set to 3. The data set contains of 50 observation which is divide into three cluster. each cluster is marked in a color. The cross is the center points of a cluster. This point is also called \emph{centroids}.
+K-means clustering is a technique to divide some observations in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is specified it will give each of the observations to one of the clusters within 1 - \emph{k}. To understand this it is easier to look at a example. In
+Figure \ref{fig:K-meanex} a data set is assign to three clusters. This meaning that \emph{k} is equal to 3. The data set contains of 50 observation. Each cluster is marked in a color and the cross is the center points of a cluster. This point is also called \emph{centroids}.
 
 \myFigure{K-mean.PNG}{Example on the K-mean algorithm where K is 3}{fig:K-meanex}{0.8}
 
 K-Means Clustering needs to satisfy two properties. namely
 \begin{itemize}
-	\item Each observation need to belongs to at least one of the \emph{k} clusters
-	\item Cluster cannot overlap, meaning that no observation can belong to more than one cluster.
+	\item Each observation need to belongs to at least one cluster
+	\item Clusters cannot overlap, meaning that no observation can belong to more than one cluster.
 \end{itemize} 
 
-To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. In other words the algorithm will partition the observation into K clusters, such that the total sum of all within-cluster variation is as small as possible. The within-cluster variation is common calculated with \emph{squared Euclidean distance}.
-So the within-cluster variation for the \emph{k}th cluster is the sum of all pairwise squared Eclidean distances between each of the observation in the \emph{k}th cluster divided by the number of observations in the \emph{k}th cluster.
-So the algorithm tries to minimize the total within-cluster variation, summed over all \emph{k}th cluster.
+To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. So the algorithm will divide the observation into K clusters, such that the total sum of all within-cluster variation is as small as possible. The within-cluster variation is common calculated with \emph{squared Euclidean distance}. To obtain the correct result all Euclidean distances are divided by the number of observations in the given cluster. Now it will try to minimize the total within-cluster variation summed over all clusters.
 The K-means Clustering algorithm can then be written as.
 
 \begin{algorithm}
@@ -40,8 +38,6 @@ The K-means Clustering algorithm can then be written as.
 	\end{algorithmic}
 \end{algorithm}
 
- In step 2(a) the means for each feature are those who minimize the sum of squared deviations. In step 2(b) the reallocating means, that the observations can only improve.
- So when the algorithm run the clustering will continually improve until the result no longer changes. This is called a \emph{local optimum}.
 \subsection{Lab 10.5.1}
 First a random data set consisting of 50 observations is generated. After this, the \emph{KMeans} from the sklearn library is used to perform the K-mean clustering.
 After the algorithm is used, the labels and the centroids are saved. The code is showed in listing \ref{lst:kmeanscode} below with the value of 2 for k
@@ -82,14 +78,13 @@ The centroids are marked with crosses and each observation a either a blue or a 
 
 
 \section{Hierarchical clustering}
-K-means clustering has one potential disadvantage namely that it require a pre-specify number of clusters \emph{k}. Here Hierarchical clustering can provide an alternative approach which does not require a pre-specified \emph{k}.
-Furthermore Hierarchical clustering results in a tree based representation of the observation in the data set called a \emph{dendrogram}
-This section will have focus on the \emph{bottom-up} approach also called \emph{agglomerative} clustering and it is the most common type of hierarchical clustering It is called the \emph{bottom-up} because the dendrogram is built starting from the leaves and combing clusters up to the trunk. 
-First the dendrogram and how to build them will be describe then the hierarchical clustering algorithm will be shown.
+K-means clustering has one  disadvantage namely that it needs to have a k value at the beginning. Here Hierarchical clustering can help because it does not require a pre-specified \emph{k} value at the beginning.
+Furthermore Hierarchical clustering produce a \emph{dendrogram} which shows the observations as a three structure.
+The \emph{bottom-up} approach also called \emph{agglomerative} clustering are the most common type it is called the \emph{bottom-up}
 
-\subsection{Dendrogram}
-The easiest way of explaining a dendrogram is to show one. So figure 10.1 is a dengrogram which shows a data set with 50 observations in two-dimensional space.
-The true class labels for each observation are shown in distinct colors. But if these true class labels where not available and the data was observed without them then all will be labeled with the same distinct color. 
+\subsection{Dendrograms}
+The easiest way of explaining a dendrogram is to show one. So figure 10.1 is a dengrogram which shows a data set with 50 observations.
+The labels are shown in different colors. But if these labels where not available and the data was observed without them then all will be labeled with the same color. 
 One of the leaf represents one of the 50 observations. 
 Depending on the data set and the observations the dendrogram can help to determine the number of clusters k that fits this data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the no of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters whould be three.
 Observations that fuse close to the top of the tree tends to be quite different where observations in the bottom tends to be quite similar. 

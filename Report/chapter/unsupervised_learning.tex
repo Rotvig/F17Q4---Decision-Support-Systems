@@ -1,2 +1,80 @@
 \chapter{Unsupervised Learning}
 \label{chp:unsuplea}
+In unsupervised learning there is no response variable Y. Ther is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find interesting things about the measurements on the features.
+Compared to supervised learning unsupervised learning comes with some challenges.the tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no universally accepted mechanism for performing cross validation and how to validate the results on a data set due to there is no Y to check results up against with.
+But it is an important tool to predict subgroups when the number of them are unknown.
+In this section the focus will be on the  technique called \emph{clustering} which is a used to discover unknown \emph{subgroups} or \emph{clusters}in data set. This is done to divide the data set into distinct groups so that the observations in the data within each of the groups are similar to each other and the observations belonging to other groups are different compared to other groups. 
+The problem is to determine if observations are similar or different to each other.
+ 
+\chapter{K-means clustering}
+\label{chp:clus}
+K-means clustering is a simple technique to partition the observation in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is spcified the K-means algorithm wil assign each of the observations to one of the \emph{k} clusters.
+Figure 9.1 shows a result of a K-mean algorithm where \emph{k} is set to 3. The data set contains of 50 observation which is divide into three cluster. each cluster is marked in a color. The cross is the center points of a cluster. This point is also called \emph{centroids}.
+
+\myFigure{K-mean.PNG}{Example on the K-mean algorithm where K is 3}{fig:K-meanex}{0.8}
+
+K-Means Clustering needs to satisfy two properties. namely
+\begin{itemize}
+	\item Each observation need to belongs to at least one of the \emph{k} clusters
+	\item Cluster cannot overlap, meaning that no observation can belong to more than one cluster.
+\end{itemize} 
+
+To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. In other words the algorithm will partition the observation into K clusters, such that the total sum of all within-cluster variation is as small as possible. The within-cluster variation is common calculated with \emph{squared Euclidean distance}.
+So the within-cluster variation for the \emph{k}th cluster is the sum of all pairwise squared Eclidean distances between each of the observation in the \emph{k}th cluster divided by the number of observations in the \emph{k}th cluster.
+So the algorithm tries to minimize the total within-cluster variation, summed over all \emph{k}th cluster.
+The K-means Clustering algorithm can then be written as.
+
+% Insert the algorithm
+\begin{algorithm}
+	\caption{K-Means Clustering}
+	\label{algo:KMeansClustering}
+	\begin{algorithmic}[1]
+		\State Randomly assign a number, from 1 to K, to each of the observations. These servce as initial cluster assignments for the observations. 
+		\State Iterate until the cluster assignments stop changing:
+		\begin{enumerate}[label=(\alph*)]
+			\item For each of the K cluster, compute the cluster \emph{centroid}. The \emph{k}th cluster centroids is the vector of the p feature means for the observations in the \emph{k}th cluster.
+			\item Assign each observation to the cluster whose centroid is closet (where closest is defined using Euclidean distance) 
+		\end{enumerate}
+	\end{algorithmic}
+\end{algorithm}
+
+ In step 2(a) the means for each feature are those who minimize the sum of squared deviations. In step 2(b) the reallocating means, that the observations can only improve.
+ So when the algorithm run the clustering will continually improve until the result no longer changes. This is called a \emph{local optimum}.
+\subsection{Lab 10.5.1}
+
+\chapter{Hierarchical clustering}
+K-means clustering has one potential disadvantage namely that it require a pre-specify number of clusters \emph{k}. Here Hierarchical clustering can provide an alternative approach which does not require a pre-specified \emph{k}.
+Furthermore Hierarchical clustering results in a tree based representation of the observation in the data set called a \emph{dendrogram}
+This section will have focus on the \emph{bottom-up} approach also called \emph{agglomerative} clustering and it is the most common type of hierarchical clustering It is called the \emph{bottom-up} because the dendrogram is built starting from the leaves and combing clusters up to the trunk. 
+First the dendrogram and how to build them will be describe then the hierarchical clustering algorithm will be shown.
+
+\section{Dendrogram}
+The easiest way of explaining a dendrogram is to show one. So figure 10.1 is a dengrogram which shows a data set with 50 observations in two-dimensional space.
+The true class labels for each observation are shown in distinct colors. But if these true class labels where not available and the data was observed without them then all will be labeled with the same distinct color. 
+One of the leaf represents one of the 50 observations. 
+Depending on the data set and the observations the dendrogram can help to determine the number of clusters k that fits this data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the no of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters whould be three.
+Observations that fuse close to the top of the tree tends to be quite different where observations in the bottom tends to be quite similar. 
+
+\myFigure{Dendrogram.PNG}{Dendrogram with 50 observations}{fig:dendrogram}{1}
+
+To show how this is build a simple data set containing 8 observations are shown in figure XX.
+Then it can be seen that observations 4 and 6 are quite similar to each other and observations 2 and 7 are also quite similar to each other. These are the bottom of the dendrogram. Now the dendrogram is expand by looking at the next observation that are close to 4 and 6. It can be seen that 8 are close to them, so this is the next leaf. The same is done for observation 2 and 7. At the end the dendrogram will look like figure XX
+
+\section{The Hierarchical Clustering Algorithm}
+ 
+ % Insert the algorithm
+ \begin{algorithm}
+ 	\caption{Hierarchical Clustering}
+ 	\label{algo:HierarchicalClustering}
+ 	\begin{algorithmic}[1]
+ 		\State Begin with n observations and a measure (such as Euclidean distance) of all the $(\dfrac{n}{2}) =n(n-1)/2 $ pairwise dissimilarities. Treat each observation as its own cluster 
+ 		\State for \emph{i} $= n,n-1,...,2:$
+ 		\begin{enumerate}[label=(\alph*)]
+ 			\item Examine all pairwise inter-cluster dissimilarities among the \emph{i} clusters and identify the pair of clusters that are least dissimilar (that is, most similar). Fuse these two clusters. The dissimilarity between these two clusters indicates the height in the dendrogram at which the fusion should be placed 
+ 			\item Compute the new pairwise inter-clusterdissimilarities among the $\emph{i}-1$ remaining clusters  
+ 		\end{enumerate}
+ 	\end{algorithmic}
+ \end{algorithm}
+
+
+\subsection{Lab 10.5.2}

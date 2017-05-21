@@ -1,7 +1,7 @@
 \chapter{Model Selection}
 \label{chp:subsel}
 
-In the previous chapters the chosen number of predictors in the models have not been discussed very throughly. The P-value was used for selecting the best predictor in Lab 4.6.2 in section \ref{sec:lab462}. The question though remains how many predictors should be included when creating a model. This chapter discusses three different methods for selecting a subset of the predictors for a model.
+In the previous chapters the chosen number of predictors in the models have not been discussed very thoroughly. The P-value was used for selecting the best predictor in Lab 4.6.2 in section \ref{sec:lab462}. The question though remains how many predictors should be included when creating a model. This chapter discusses three different methods for selecting a subset of the predictors for a model.
 
 \section{Best subset}
 Best subset selection is a method for choosing the best possible subset of predictors. In this approach a model is fitted for each possible combination of the predictors.
@@ -29,7 +29,7 @@ In this exercise a best subset selection is performed on a dataset called Hitter
 
 In listing \ref{lst:bestsubsetdata} the data is spitted into predictors and response. Dummy variables are created for categorical predictors.
 
-\begin{lstlisting}[language=Python, label=lst:bestsubsetdata, caption=Data is splitet into predictors and response]
+\begin{lstlisting}[language=Python, label=lst:bestsubsetdata, caption=Data is split into predictors and response]
 data = pd.read_csv('Hitters.csv', usecols=range(0,21)).dropna()
 
 X = pd.get_dummies(data.drop('Salary', axis=1).drop('Name', axis=1))
@@ -50,7 +50,7 @@ def best_subset_selection(k):
 	return best_model
 \end{lstlisting}
 
-In listing \ref{lst:process_subset} the function called in listing \ref{lst:best_subset_selection} on line 4 is shown. It fits a linear regression model and computes RSS, $R^2$, $C_p$ and BIC for model.
+The function in listing \ref{lst:process_subset} is called in listing \ref{lst:best_subset_selection} on line 4. It fits a linear regression model and computes RSS, $R^2$, $C_p$ and BIC for model.
 
 \begin{lstlisting}[language=Python, label=lst:process_subset, caption=Function for computing metrics for subset]
 def process_subset(feature_set):
@@ -74,7 +74,7 @@ def process_subset(feature_set):
 		"cp":cp }
 \end{lstlisting}
 
-For calculating RSS, $R^2$, $C_p$ and BIC a python module called metrisUtil was implemented. The module has defined functions for calculating these values.
+For calculating RSS, $R^2$, $C_p$ and BIC a python module called metricsUtil was implemented. The module has defined functions for calculating these values.
 
 \begin{lstlisting}[language=Python, label=lst:metricsUtil, caption={metricsUtil module for calculating RSS, $R^2$, $C_p$, BIC and RSS}]
 def RSS(Y, Y_hat):
@@ -92,7 +92,7 @@ def Bic(n, RSS, d, Y_hat)
 	return (1.0 / n) * (RSS + math.log(n) * d * Y_hat.var())
 \end{lstlisting}
 
-After having these functions defined the best subset selection is computed. In listing \ref{lst:best_subset9} a best subset selection is run for the the 19 possible predictors.
+After these functions are defined the best subset selection is computed. In listing \ref{lst:best_subset9} a best subset selection is performed for the 19 possible predictors.
 
 \begin{lstlisting}[language=Python, label=lst:best_subset9, caption=Calculating the best subset from 1 to 19 predictors]
 for i in xrange(1,20):
@@ -105,7 +105,7 @@ Plotting RSS, $R^2$, $C_p$ and BIC for the best models from 1-19 predictors give
 \FloatBarrier
 
 
-BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{OutOuts}. $C_p$ indicates that the best model contains 10 predictors. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combinations is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
+BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{PutOuts}. $C_p$ indicates that the best model contains 10 predictors. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combinations is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
 
 \begin{equation}
 2^{19} = 524288

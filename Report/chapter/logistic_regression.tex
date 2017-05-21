@@ -55,6 +55,7 @@ plt.show()
 When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if we are choosing multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. In the following lab we will therefore further examine the data to find good predictors.
 
 \section{Lab 4.6.2 - Logistic Regression}
+\label{sec:lab462}
 In this lab a logistic regression model is made based on the stock market data. The predictors were examined in Lab 4.6.1 and some of the predictors will be chosen to predict the direction of the stock market. The direction can either be \emph{up} or \emph{down} and hence this is a binary classification problem.
 
 In the exercise the P-values will first be examined. This is done by fitting a logistic model with the predictors \emph{Lag1, Lag2, Lag3, Lag4, Lag5} and \emph{Volume} to predict the \emph{direction}. The statsmodels python library is used to print a summary of the fitted model. This is shown in listing \ref{lst:summary}

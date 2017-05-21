@@ -1,11 +1,11 @@
 \chapter{Cross-validation}
 \label{chp:crossval}
-Cross-validation is one of two resampling methods in Statistical Learning, the other being the Bootstrap which will be covered in the next chapter. As the original dataset is a sample, resampling means taking a sample from the dataset and use that in the learning process. This is done by splitting up the data set in different ways, so that the training is done on varying samples. 
+Cross-validation is one of two resampling methods in Statistical Learning, the other being the Bootstrap which will be covered in the next chapter. As the original dataset is a sample, resampling means taking a further sample from the dataset and use that in the learning process. This is done by splitting up the data set in different ways, so that the training is done on varying samples. 
 
 
 \section{The validation set approach}
 \label{sec:VSA}
-In the Validation Set Approach the available set of samples are randomly divided into two parts of approximately equal size. One is the training set and the other is the validation set. The idea is then to fit the model on the training set, and then apply the model to the validation set. The resulting error of the validation set is then used as an estimate of the test error. This error is typically found as the Mean Squared Error. 
+In the Validation Set Approach the available set of samples is randomly divided into two parts of approximately equal size. One is the training set and the other is the validation set. The idea is then to fit the model on the training set, and then apply the model to the validation set. The resulting error of the validation set is then used as an estimate of the test error. This error is typically found as the Mean Squared Error. 
 
 \myFigure{validationSetApproach.png}{Splitting data randomly}{fig:valid}{0.6} 
 
@@ -14,7 +14,7 @@ The concept of randomly splitting the dataset is illustrated in Figure \ref{fig:
 The blue half of the dataset is the training set, meaning the part that the model is fit to, and the orange half is the validation set, meaning the part that the model is applied to, in order to predict observations. 
 
 \subsection{Lab 5.3.1}
-In this lab exercise the goal is to use the Validation Set Approach. So as described in the section above the first thing to do is to split the data randomly in two halves. The data used here is the \emph{Auto} dataset, containing a list of car informations. 
+In this lab exercise the goal is to use the Validation Set Approach. So as described in the section above the first thing to do is to split the data randomly in two halves. The data used here is the \emph{Auto} dataset, containing a list of car information. 
 
 \begin{lstlisting}[language=Python, label=lst:lst_valid, caption=Auto dataset randomly split]
 data = pd.read_csv('Auto.csv', usecols=range(0, 8), na_values='?',
@@ -26,8 +26,7 @@ df = pd.DataFrame({'mpg': data['mpg'], 'horsepower':
 train, test = train_test_split(df, test_size = 0.5)
 \end{lstlisting}
 
-Listing \ref{lst:lst_valid} shows the \emph{Auto} data being first read into the program using the pandas library. Since there are some "?" values that are unusable, these are removed by the \emph{.dropna()} function.
-
+Listing \ref{lst:lst_valid} shows the \emph{Auto} data being first read into the program. Since there are some "?"-values that are unusable, these are removed by the \emph{.dropna()} function.
 Afterwards a dataframe is created containing the \emph{horsepower} and \emph{mpg} information from the dataset. This dataframe is then split randomly in half by the \emph{train\_test\_split()} function. 
 
 \begin{lstlisting}[language=Python, label=lst:fit_valid, caption=Fit linear regression]
@@ -61,7 +60,7 @@ X_poly_test_deg2 = poly.fit_transform(X_test)
 lm.fit(X_poly_train_deg2, Y_train)
 \end{lstlisting}
 
-Both second and third degree polynomials are used on the model, but Listing \ref{lst:poly2_valid} only shows the code for the second degree polynomial. However the walkthrough is the same. The training data is fitted to the model, like in Listing \ref{lst:fit_valid}, but the training and test set for \emph{horsepower} has been fitted to a second order polynomial. 
+Both second and third degree polynomials are used on the model, but Listing \ref{lst:poly2_valid} only shows the code for the second degree polynomial. However the walkthrough is the same for third degree polynomial. The training data is fitted to the model, like in Listing \ref{lst:fit_valid}, but the training and test set for \emph{horsepower} has been fitted to a second order polynomial. 
 
 \begin{lstlisting}[language=Python, label=lst:poly_print_valid, caption=Printing polynomial features with degree = 2]
 print("Mean squared error: %.2f" 
@@ -74,7 +73,7 @@ The Mean Squared Error is printed as in Listing \ref{lst:poly_print_valid}, and 
 
 The result shows a clear improvement of the Mean Squared Error, but not continuously. Using the second degree polynomial shows a drop in the Mean Squared Error from 24,42 to 19,46, but using the third degree polynomial shows a slight increase from 19,46 to 19,55. This follows the graph in Figure \ref{fig:poly_valid} from the book. 
 
-\myFigure{validationSetApproach_poly.png}{Validation error estimates for a single split}{fig:poly_valid}{0.6}
+\myFigure{validationSetApproach_poly.png}{Validation error estimates for a single split}{fig:poly_valid}{0.6} \todo{Needs to be removed if we can't use figures from the book}
 
 
 \section{Leave-one-out cross validation}
@@ -102,7 +101,7 @@ In Listing \ref{lst:LOOCV} the LOOCV loop is done. Lines 2-4 are the same functi
 
 \emph{KFold} is used to split the set in as many folds as there are rows, i.e. making 392 folds. This is the "Leave-one-out" part, as there are now as many folds as there are observations. 
 
-It is then all used in the \emph{cross\_val\_score} function. It uses the fitted model, the \emph{horsepower} training set fitted to an i'th degree polynomial, the \emph{mpg} training set and the folds to evaluate a score by Cross Validating.
+It is then all used in the \emph{cross\_val\_score} function. It uses the fitted model, the \emph{horsepower} training set fitted to an i'th degree polynomial, the \emph{mpg} training set and the folds to evaluate a score by Cross Validation.
 
 The Mean Squared Error is lastly printed from the result of the Cross-validation, and is illustrated in Figure \ref{fig:result_LOOCV}.
 
@@ -117,4 +116,15 @@ K-fold Cross-validation is a lot like the LOOCV. However, instead of using only 
 \myFigure{K_fold.png}{Representation of K-fold Cross-validation}{fig:K_fold}{0.5}
 
 \subsection{Lab 5.3.3}
+The only difference from Lab 5.3.2 to this lab exercise is that now the number of folds is set by k, and not the amount of observations. In Listing \ref{lst:K_fold} it can be seen that the number of splits is set to 10, as the exercise specifies $k=10$, and the loop now runs 10 times. The rest is similar to Listing \ref{lst:LOOCV}.
 
+\begin{lstlisting}[language=Python, label=lst:K_fold, caption=K-fold Cross-validation loop]
+for i in range(1, 11):
+	...
+	kf = KFold(n_splits=10) 
+	...
+\end{lstlisting}
+
+In Figure \ref{fig:result_K_fold} the result of the K-fold Cross-validation is shown. The Mean Squared Error is higher than the result of both the Validation Set Approach, shown in Figure \ref{fig:result_valid}, and the Leave-one-out Cross-validation, shown in Figure \ref{fig:result_LOOCV}, but shows the same tendency to oscillate after the initial improvement. 
+
+\myFigure{K_fold_result.png}{Result of K-fold Cross-validation}{fig:result_K_fold}{0.3}

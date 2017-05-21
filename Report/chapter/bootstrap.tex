@@ -1,30 +1,31 @@
 \chapter{Bootstrap}
 \label{chp:boots}
 
-The bootstrap is an extremely powerful statistical tool that can be used to quantify the uncertainty associated with a given estimator or statistical learning method.
+This chapter is about the bootstrap method which is a statistical tool that can be used to calculate uncertainty associated to estimators or statistical learning methods.
 
-It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. However, the power of the bootstrap lies in the fact that it easily can be applied to a wide range of statistical learnings methods.
+It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. Bootstrap is a simple approach which can be adapted and applied to many different statistical learning methods.
 
 Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set.
 
-The reason for doing this is if there is a case where there aren't enough samples. Then bootstrap approach can be used to generate simulated data from the original data set.
+The reason for doing this is if there is a case where there aren't enough samples, then the bootstrap approach can be used to generate simulated data from the original data set.
 
 %Link til billede: https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#G0Bw37nIXex8aXSl91SjQ4MjlvNXc
-\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach on a small sample containing n = 3 observations}{fig:bootstrap}{0.6}
+\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach on a sample containing 3 observations}{fig:bootstrap}{0.6}
 
-Figure \ref{fig:bootstrap} illustrates an example of the bootstrap approach on a small sample containing n = 3 observations. Each bootstrap contains n observations. These observations are sampled with replacement from the original data set. Each bootstrap data set is used to obtain an estimate of $\hat{\alpha}$.
+\todo{skriv om}
+Figure \ref{fig:bootstrap} is a graphical example of the bootstrap approach on a sample containing n = 3 observations. Each bootstrap contains n observations. These observations are sampled with replacement from the original data set. Each bootstrap data set is used to get an estimate of $\hat{\alpha}$.
 
 With all $\alpha$ values estimated the mean and standard deviation can be estimated too reason about the accuracy of the bootstrap data sets.
 
 \section{Lab 5.3.4 - The Bootstrap}
 
-The goal with lab 5.3.4 is to illustrate the use of bootstrap on the simple example used in Section 5.2\citep{ISLR}. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
+The goal with lab 5.3.4 is to show the use of bootstrap on the example used in Section 5.2\citep{ISLR} which uses the \emph{Portfolio} data set. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
 
 \subsection{Estimating the Accuracy of a Statistic of Interest}
 
 The first part of lab 5.3.4 is to use the bootstrap approach on the \emph{Portfolio} data set described in section 5.2\citep{ISLR}.
 
-First of all a function for calculating $\alpha$ is required. The function is shown i Listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
+First of all a function for calculating $\alpha$ is required. The function is shown i listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
 With the X and Y value the $\alpha$ can now be calculated and returned.
 
 \begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
@@ -49,7 +50,7 @@ def boot_python(data, function, num_of_iteration):
 	return {'Mean': np.mean(stat), 'std. error': np.std(stat)}
 \end{lstlisting}
 
-The bootstrap method receives three arguments \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of bootstrap data set that should be created.  
+The bootstrap method receives three arguments \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of simulated data that should be created.  
 
 Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1,000.
 
@@ -61,10 +62,11 @@ Now everything is set to perform a bootstrap on the \emph{Portfolio} data set wi
 SE(\hat{\alpha}) = 0.09102
 \end{equation}
 
-These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. When  random sampling is used it is expected that $\hat{\alpha}$ differs from the true population. Because we cannot generate new samples from the original population. The bootstrap approach allows us to emulate the process of obtaining new sample sets.
+These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. When  random sampling is used it is expected that $\hat{\alpha}$ differs from the true population. Because it is not possible to generate new samples from the original population. The bootstrap approach emulates the process of obtaining new sample sets.
 
 \subsection{Estimating the Accuracy of a linear Regression Model}
 
+\todo{skriv om}
 In the next part of lab 5.3.4 the goal is to asses the variability of the estimates for $\beta_0$ and $\beta_1$, the intercept and slope terms for the linear regression model that uses \emph{horsepower} to predict \emph{mpg} in the \emph{Auto} data set.
 
 First step is to create a function to calculate the intercept and slope, this is seen in listing \ref{lst:boot}. The function \emph{boot} performs a linear regression fit on X and Y. 
@@ -103,6 +105,7 @@ SE(\hat{\beta_1}) = 0.007335
 
 The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtained using formulas from Section 3.1.2\citep{ISLR} are 0.717 for the intercept and 0.0064 for the slope. These are different from the results which the bootstrap estimates yielded.
 
+\todo{skriv om}
 The reason for this is that the standard formulas assume that $x_i$ are fixed, and all the variability comes from the variation in the errors $\in_i$. The bootstrap approach does not rely on any of these assumptions, and so it is likely that the bootstrap estimates of the standard errors are more accurate.
 
 Figure 3.8 on page 91 in \citep{ISLR} shows that there is a non-linear relationship in the data, so using a quadratic model to fit the data should yield a result that are closer to the bootstrap estimates.
@@ -129,4 +132,4 @@ SE(\hat{\beta_1}) = 0.0328
 SE(\hat{\beta_2}) = 0.00012
 \end{equation}
 
-There is now a better correspondence between the bootstrap estimates and the standard estimates.
+The new values from the quadratic formula shows a closer correspondence between the estimates from the bootstrap and the standard estimates.

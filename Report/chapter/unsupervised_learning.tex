@@ -9,7 +9,7 @@ The problem is to determine if observations are similar or different to each oth
 \section{K-means clustering}
 \label{chp:clus}
 K-means clustering is a simple technique to partition the observation in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is spcified the K-means algorithm wil assign each of the observations to one of the \emph{k} clusters.
-Figure 9.1 shows a result of a K-mean algorithm where \emph{k} is set to 3. The data set contains of 50 observation which is divide into three cluster. each cluster is marked in a color. The cross is the center points of a cluster. This point is also called \emph{centroids}.
+Figure \ref{fig:K-meanex} shows a result of a K-mean algorithm where \emph{k} is set to 3. The data set contains of 50 observation which is divide into three cluster. each cluster is marked in a color. The cross is the center points of a cluster. This point is also called \emph{centroids}.
 
 \myFigure{K-mean.PNG}{Example on the K-mean algorithm where K is 3}{fig:K-meanex}{0.8}
 
@@ -40,8 +40,45 @@ The K-means Clustering algorithm can then be written as.
  In step 2(a) the means for each feature are those who minimize the sum of squared deviations. In step 2(b) the reallocating means, that the observations can only improve.
  So when the algorithm run the clustering will continually improve until the result no longer changes. This is called a \emph{local optimum}.
 \subsection{Lab 10.5.1}
+First a random data set consisting of 50 observations is generated. After this, the \emph{KMeans} from the sklearn library is used to perform the K-mean clustering.
+After the algorithm is used, the labels and the centroids are saved. The code is showed in listing \ref{lst:kmeanscode} below with the value of 2 for k
+\begin{lstlisting}[language=Python, label=lst:kmeanscode, caption=The KMean function and the code who saved the labels and centroids]
+k = 2
+kmeans = KMeans(n_clusters=k, init="k-means++",n_init= 20).fit(zip(X,Y))
+Labels = kmeans.labels_
+centroids = kmeans.cluster_centers_
+\end{lstlisting}
 
-section{Hierarchical clustering}
+The Kmeans also takes two other parameters. namely the \emph{init} and the \emph{n\_init}. Init states which approach that is used, and in this case the \emph{k-means++} approach are used. The n\_init is how many time the approach should be performed. Here it is set to 20.
+Labels contains all of the observations and centroids contains the center of the clusters.
+
+Now the task is to plot the labels and the centroids so the two clusters can be visualized. 
+This is done with this code shown in listing \ref{lst:kmeansplot}
+
+\begin{lstlisting}[language=Python, label=lst:kmeansplot, caption=The code for plotting the two clusters]
+lines = plt.plot(centroids[:,0], centroids[:,1], 'kx')
+plt.setp(lines, ms=15.0)
+plt.setp(lines, mew=3.0)
+
+for i in range(k):
+dsx = X[np.where(Labels==i)]
+dsy = Y[np.where(Labels==i)]
+plt.plot(dsx, dsy, 'o')
+
+plt.show()
+\end{lstlisting}
+
+First the two centroids are plotted. this is done from line 1 to 3. The \emph{'kx'} is written so they are labeled with a cross.
+
+For plotting the observations a for loop is used. i runs through the two possible clusters. then i takes the X and Y values for the observations assigned to the current cluster. This happens from line 5 - 7 and from line 8-10 the observations are plotted and shown. the \emph{'o'} is added so they are plotted as a dot. 
+The result of this code can be seen in figure \ref{fig:kmeansResult}
+
+\myFigure{KmeansResult.PNG}{The plotted result of the lab 10.5.1}{fig:kmeansResult}{0.7}
+
+The centroids are marked with crosses and each observation a either a blue or a green dot depending on which cluster it is assign to.
+
+
+\section{Hierarchical clustering}
 K-means clustering has one potential disadvantage namely that it require a pre-specify number of clusters \emph{k}. Here Hierarchical clustering can provide an alternative approach which does not require a pre-specified \emph{k}.
 Furthermore Hierarchical clustering results in a tree based representation of the observation in the data set called a \emph{dendrogram}
 This section will have focus on the \emph{bottom-up} approach also called \emph{agglomerative} clustering and it is the most common type of hierarchical clustering It is called the \emph{bottom-up} because the dendrogram is built starting from the leaves and combing clusters up to the trunk. 
@@ -100,3 +137,5 @@ These are explained in table XX
 Complete and average linakge are generally the most preferred linakge as they produce more balanced dendrograms. 
 
 Sometimes you need to scale your data set to obtain standard deviation. Then there arise new problems, because which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.
+
+\subsection{Lab 10.5.2}

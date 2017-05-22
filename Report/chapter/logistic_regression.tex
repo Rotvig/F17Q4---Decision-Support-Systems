@@ -1,6 +1,7 @@
 \chapter{Logistic Regression}
 \label{chp:logreg}
 Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem:
+\todo{Hvorfor er det i en centering?}
 \begin{centering}
 Predicting whether a tumor is malignant or not based on the size of the tumor.
 \end{centering}
@@ -8,21 +9,29 @@ Linear regression could be used by converting the wanted qualitative response va
 
 A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap between some classes than others. This would make it difficult to make an accurate model using a linear function.
 
-Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used.
+Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used and can be seen in (3.1).
 
-\begin{center}
-	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}$ 
-\end{center}
+%\begin{center}
+%	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}$ 
+%\end{center}
 
-By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equal to or higher than 0. By dividing by the same equation + 1 the prediction will never be higher than 1. In the equation $\beta_0$ and $\beta_1$ is similar to what is used in linear regression. $\beta_0$ describes the probability when the predictor is 0 and $\beta_1$ is the regression coefficient that is multiplied  with the predictor. The equation can be extended to multiple logistic regression using multiple predictors. Instead the equation looks as following.
+\begin{equation}
+	p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\end{equation}
 
-\begin{center}
-	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}{1 + e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}$ 
-\end{center}
+By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equal to or higher than 0. By dividing by the same equation + 1 the prediction will never be higher than 1. In the equation $\beta_0$ and $\beta_1$ is similar to what is used in linear regression. $\beta_0$ describes the probability when the predictor is 0 and $\beta_1$ is the regression coefficient that is multiplied  with the predictor. The equation can be extended to multiple logistic regression using multiple predictors. Instead the equation looks as following and are shown in (3.2).
 
+%\begin{center}
+%	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}{1 + e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}$ 
+%\end{center}
+
+\begin{equation}
+	p(X) = \dfrac{e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}{1 + e^{\beta_0 + \beta_1 X_1 + ... + \beta_p X_p}}
+\end{equation}
 
 %\todo{måske indsæt en figur der viser grafer med linear og logistic}
 
+\todo{Hører det til her? er lidt i tvivl om det skal med her eller stå i lab}
 In the following lab exercises a logistic regression model will be implemented based on stock market data. The model will be used to predict if the market is going up or down on a particular day. Before creating the model the data will first be examined.
 
 \section{Lab 4.6.1 - The Stock Market Data}
@@ -42,7 +51,7 @@ The printed correlation matrix is illustrated in figure \ref{fig:lab461}. Here i
 \myFigure{461.png}{Pairwise correlation matrix between predictors and todays return}{fig:lab461}{1} 
 \FloatBarrier
 
-With the python code in listing \ref{lst:plotVolume} we can plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
+With the python code in listing \ref{lst:plotVolume} shows how to plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
 \begin{lstlisting}[language=Python, label=lst:plotVolume, caption=Plot Volume]
 plt.plot(preparedData[6], 'ro')
 plt.ylabel('Volume')
@@ -52,7 +61,7 @@ plt.show()
 
 \myFigure{461_plot.png}{Correlation between Volume and year, higher index describes forward in time}{fig:lab461Plot}{0.6} 
 
-When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if we are choosing multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. In the following lab we will therefore further examine the data to find good predictors.
+When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if it is multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. The following lab will therefore examine the data to find good predictors.
 
 \section{Lab 4.6.2 - Logistic Regression}
 \label{sec:lab462}
@@ -89,7 +98,10 @@ Based on the test data it is examined how well our logistic model predicts the \
 print(lr.score(X_test, Y_test))
 \end{lstlisting}
 
-In Listing \ref{lst:OnlyLag1Lag2} only the predictors \emph{Lag1} and \emph{Lag2} are now used. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor. It has a very low correlation with \emph{Lag1} and also the third lowest p-value. Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}
+In Listing \ref{lst:OnlyLag1Lag2} only the predictors \emph{Lag1} and \emph{Lag2} are now used. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor because it has a very low correlation with \emph{lag1} and also the third lowest p-value.
+%It has a very low correlation with \emph{Lag1} and also the third lowest p-value.
+Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}
+\todo{..this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}.. Det for står jeg ikke helt. }
 
 \begin{lstlisting}[language=Python, label=lst:OnlyLag1Lag2, caption=Logistic regression using only Lag1 and Lag2 as predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2']]

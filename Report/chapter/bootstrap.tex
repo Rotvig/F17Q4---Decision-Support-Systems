@@ -1,26 +1,26 @@
 \chapter{Bootstrap}
 \label{chp:boots}
 
-This chapter is about the bootstrap method which is a statistical tool that can be used to calculate uncertainty associated to estimators or statistical learning methods. It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. Bootstrap is a simple approach which can be adapted and applied to many different statistical learning methods. Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set. 
+This chapter is about the bootstrap method which is a statistical tool that can be used to calculate uncertainty associated with estimators or statistical learning methods. It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. Bootstrap is a simple approach which can be adapted and applied to many different statistical learning methods. Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set. 
 
 The reason for using the bootstrap appraoch is if there is a case where there aren't enough samples, then the bootstrap approach can be used to generate simulated data from the original data set.
 
 %Link til billede: https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#G0Bw37nIXex8aXSl91SjQ4MjlvNXc
-\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach}{fig:bootstrap}{0.6}
+\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach}{fig:bootstrap}{0.6} \todo{Vi skal vel lave vores egne figurer?}
 
-Figure \ref{fig:bootstrap} is a graphical example of the bootstrap approach on a sample containing 3 observations. Each bootstrap contains 3 observations. These observations are random sampled with replacement from the original data set Z. Then each bootstrap data set is used to get $\hat{\alpha}$.
+Figure \ref{fig:bootstrap} is a graphical example of the bootstrap approach on a sample containing 3 observations. Each bootstrap contains 3 observations. These observations are randomly sampled with replacement from the original data set Z. Then each bootstrap data set is used to get $\hat{\alpha}$.
 
-With all $\alpha$ values estimated the mean and standard deviation can be estimated too reason about the accuracy of the bootstrap data sets.
+With all $\alpha$ values estimated the mean and standard deviation can be estimated to reason about the accuracy of the bootstrap data sets.
 
 \section{Lab 5.3.4 - The Bootstrap}
 
 The goal with lab 5.3.4 is to show the use of bootstrap on the example used in Section 5.2\citep{ISLR} which uses the \emph{Portfolio} data set. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
 
 \subsection{Estimating the Accuracy of a Statistic of Interest}
+%Det er beskrevet lige oven over. 
+%The first part of lab 5.3.4 is to use the bootstrap approach on the \emph{Portfolio} data set described in section 5.2\citep{ISLR}.
 
-The first part of lab 5.3.4 is to use the bootstrap approach on the \emph{Portfolio} data set described in section 5.2\citep{ISLR}.
-
-First of all a function for calculating $\alpha$ is required. The function is shown i listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
+First of all a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
 With the X and Y value the $\alpha$ can now be calculated and returned.
 
 \begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
@@ -31,8 +31,7 @@ def alpha(data,index):
 		2*np.cov(X,Y)))[0,1]
 \end{lstlisting}
 
-The next step is too bootstrap the \emph{Portfolio} data set.
-
+The next step is to bootstrap the \emph{Portfolio} data set.
 To perform a bootstrap a second function is needed which is seen in listing \ref{lst:bootstrap}.
 
 \begin{lstlisting}[caption={Bootstrap function in python}, label=lst:bootstrap, mathescape=true]
@@ -45,10 +44,11 @@ def boot_python(data, function, num_of_iteration):
 	return {'Mean': np.mean(stat), 'std. error': np.std(stat)}
 \end{lstlisting}
 
-The bootstrap method receives three arguments \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of simulated data that should be created.  
+The bootstrap method receives three arguments, the first being \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of simulated data that should be created.  
 
 Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1,000.
 
+\todo{Viser vi resultater på denne måde? Det er jo ikke en udregning}
 \begin{equation}
 \hat{\alpha} = 0.5834
 \end{equation}
@@ -57,7 +57,11 @@ Now everything is set to perform a bootstrap on the \emph{Portfolio} data set wi
 SE(\hat{\alpha}) = 0.09102
 \end{equation}
 
-These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. When  random sampling is used it is expected that $\hat{\alpha}$ differs from the true population. Because it is not possible to generate new samples from the original population. The bootstrap approach emulates the process of obtaining new sample sets.
+%These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. When  random sampling is used it is expected that $\hat{\alpha}$ differs from the true population. Because it is not possible to generate new samples from the original population. The bootstrap approach emulates the process of obtaining new sample sets.
+  
+%  Er det relevant om det passer med resultatet i bogen? Vi skal vel mere bare forklare hvad resultatet betyder. fx som jeg har skrevet her
+The Standard Diviation of the estimates is roughly 0.09. This means that when looking at a random sample of the population data, the difference between $\hat{\alpha}$ and $\alpha$ is expected to be roughly 0.9 on average.
+
 
 \subsection{Estimating the Accuracy of a linear Regression Model}
 
@@ -73,7 +77,7 @@ def boot(data, index):
 	return [intercept, slope]
 \end{lstlisting}
 
-The next step is to adjust the bootstrap function from the last part. the modified bootstrap function is seen in Listing \ref{lst:bootstrap2}. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
+The next step is to adjust the bootstrap function from the last part. The modified bootstrap function is seen in Listing \ref{lst:bootstrap2}. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
 
 \begin{lstlisting}[caption={Modified boot function in python}, label=lst:bootstrap2, mathescape=true]
 def boot_python2(data, function, num_of_iteration):
@@ -90,6 +94,7 @@ def boot_python2(data, function, num_of_iteration):
 
 Now the standard errors of 1,000 bootstrap estimates for the intercept and slope can be computed.
 The bootstrap estimates for the standard error intercept and slope:
+\todo{samme som ovenfor med resultater}
 \begin{equation}
 SE(\hat{\beta_0}) = 0.8601
 \end{equation} 
@@ -112,7 +117,7 @@ def boot_fn2(data, index):
 \end{lstlisting}
 
 The results it yields with a 1,000 simulated observations:
-
+\todo{samme som ovenfor med resultater}
 \begin{equation}
 SE(\hat{\beta_0}) = 2.06
 \end{equation}

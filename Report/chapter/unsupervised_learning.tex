@@ -1,47 +1,47 @@
 \chapter{Unsupervised Learning}
 \label{chp:unsuplea}
 In unsupervised learning there is no response variable Y. There is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find the interesting parts of the measurements on the features.
-Supervised learning compared to unsupervised learning comes with some challenges. The tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no universally accepted mechanism for performing cross validation and how to validate the results on a data set due to the fact that there is no Y to check results up against with.
-But it is an important tool to predict subgroups when the number of them are unknown.
-In this section the focus will be on the  technique called \emph{clustering} which is a used to discover unknown \emph{subgroups} or \emph{clusters}in data set. This is done to divide the data set into distinct groups so that the observations in the data within each of the groups are similar to each other and the observations belonging to other groups are different compared to other groups. 
+Supervised learning compared to unsupervised learning comes with some challenges. The tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no universally accepted mechanism for performing cross validation and how to validate the results on a data set, due to the fact that there is no Y to check results up against with.
+But it is an important tool to predict subgroups when the number of subgroups are unknown.
+In this section the focus will be on the  technique called \emph{clustering} which is used to discover unknown \emph{subgroups} or \emph{clusters} in a data set. This is done to divide the data set into distinct groups so that the observations in the data within each of the groups are similar to each other, and the observations belonging to other groups are different compared to other groups \todo{FIX SÆTNING}. 
 The problem is to determine if observations are similar or different to each other.
  
-\section{K-means clustering}
+\section{K-Means Clustering}
 \label{chp:clus}
 K-means clustering is a technique to divide some observations in a data set into a pre-specified \emph{k} number of clusters. When \emph{k} is specified it will give each of the observations to one of the clusters within 1 - \emph{k}. To understand this it is easier to look at a example. In
-Figure \ref{fig:K-meanex} a data set is assign to three clusters. This meaning that \emph{k} is equal to 3. The data set contains of 50 observation. Each cluster is marked in a color and the cross is the center points of a cluster. This point is also called \emph{centroids}.
+Figure \ref{fig:K-meanex} a data set is assigned to three clusters. This means that \emph{k} is equal to 3. The data set consist of 50 observation. Each cluster is marked with a color and the cross is the center points of a cluster. This point is also called \emph{centroids}.
 
-\myFigure{K-mean.PNG}{Example on the K-mean algorithm where K is 3}{fig:K-meanex}{0.8}
+\myFigure{K-mean.PNG}{Example of the K-mean algorithm where K is 3}{fig:K-meanex}{0.8}
 
 K-Means Clustering needs to satisfy two properties. namely
 \begin{itemize}
-	\item Each observation need to belongs to at least one cluster
+	\item Each observation belongs to one of the clusters
 	\item Clusters cannot overlap, meaning that no observation can belong to more than one cluster.
 \end{itemize} 
 
-To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. So the algorithm will divide the observation into K clusters, such that the total sum of all within-cluster variation is as small as possible. The within-cluster variation is common calculated with \emph{squared Euclidean distance}. To obtain the correct result all Euclidean distances are divided by the number of observations in the given cluster. Now it will try to minimize the total within-cluster variation summed over all clusters.
+To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. So the algorithm will divide the observation into K clusters, such that the total sum of all \emph{within-cluster variation} is as small as possible. The \emph{within-cluster variation} is commonly calculated with the \emph{squared Euclidean distance}. To obtain the correct result all Euclidean distances are divided by the number of observations in the given cluster. Now it will try to minimize the total \emph{within-cluster variation} summed over all clusters.
 The K-means Clustering algorithm can then be written as.
 
 \begin{algorithm}
 	\caption{K-Means Clustering}
 	\label{algo:KMeansClustering}
 	\begin{algorithmic}[1]
-		\State A random number from 1 to K i chosen for each observations. This number will act as a initial cluster assignment for every given observation.
+		\State A random number from 1 to K is chosen for each observations. This number will act as a initial cluster assignment for every given observation.
 		
 		\State 
 		Iterate until the observations stops changing between clusters.
 		\begin{enumerate}[label=(\alph*)]
-			\item The centroids are calculated for each of the K clusters and these centroids acts as the vector for the means for each observations in the kth cluster
+			\item The centroids are calculated for each of the K clusters and these centroids acts as the vector for the means for each observations in the k'th cluster
 			
-			\item Each observation Euclidean distance to  each centroid are calculated and the  observation are assign to the closest one.
+			\item Each observation the Euclidean distance to each centroid are calculated and the observation are assign to the closest one.
 		\end{enumerate}
 	\end{algorithmic}
 \end{algorithm}
 
 \subsection{Lab 10.5.1}
 First a random data set consisting of 50 observations is generated. After this, the \emph{KMeans} from the sklearn library is used to perform the K-mean clustering.
-After the algorithm is used, the labels and the centroids are saved. The code is showed in listing \ref{lst:kmeanscode} below with the value of 2 for k
-\begin{lstlisting}[language=Python, label=lst:kmeanscode, caption=The KMean function and the code who saved the labels and centroids]
+After the algorithm is used, the labels and the centroids are saved. The code is showed in listing \ref{lst:kmeanscode} below with number of clusters are set to k = 2.
+\begin{lstlisting}[language=Python, label=lst:kmeanscode, caption=The KMean function and the code which saves the labels and the centroids]
 k = 2
 kmeans = KMeans(n_clusters=k, init="k-means++",n_init= 20).fit(zip(X,Y))
 Labels = kmeans.labels_
@@ -52,7 +52,7 @@ The Kmeans also takes two other parameters. namely the \emph{init} and the \emph
 Labels contains all of the observations and centroids contains the center of the clusters.
 
 Now the task is to plot the labels and the centroids so the two clusters can be visualized. 
-This is done with this code shown in listing \ref{lst:kmeansplot}
+This is done with this code shown in listing \ref{lst:kmeansplot}.
 
 \begin{lstlisting}[language=Python, label=lst:kmeansplot, caption=The code for plotting the two clusters]
 lines = plt.plot(centroids[:,0], centroids[:,1], 'kx')
@@ -69,38 +69,38 @@ plt.show()
 
 First the two centroids are plotted. this is done from line 1 to 3. The \emph{'kx'} is written so they are labeled with a cross.
 
-For plotting the observations a for loop is used. i runs through the two possible clusters. then i takes the X and Y values for the observations assigned to the current cluster. This happens from line 5 - 7 and from line 8-10 the observations are plotted and shown. the \emph{'o'} is added so they are plotted as a dot. 
-The result of this code can be seen in figure \ref{fig:kmeansResult}
+For plotting the observations a for loop is used. i runs through the two possible clusters. then it takes the X and Y values for the observations assigned to the current cluster. This happens from line 5 - 7 and from line 8-10 the observations are plotted and shown. the \emph{'o'} is added so they are plotted as a dot. 
+The result of this code can be seen in figure \ref{fig:kmeansResult}.
 
-\myFigure{KmeansResult.PNG}{The plotted result of the lab 10.5.1}{fig:kmeansResult}{0.7}
+\myFigure{KmeansResult.PNG}{The plotted result of lab 10.5.1}{fig:kmeansResult}{0.7}
 
-The centroids are marked with crosses and each observation a either a blue or a green dot depending on which cluster it is assign to.
+The centroids are marked with crosses and each observation are either a blue or a green dot depending on which cluster it is assigned too.
 
 
 \section{Hierarchical clustering}
- Hierarchical clustering does not require a pre-specified \emph{k} value at the beginning compared to K-means clustering.
-Furthermore Hierarchical clustering produce a \emph{dendrogram} which shows the observations as a three structure.
-The \emph{bottom-up} approach also called \emph{agglomerative} clustering are the most common type it is called the \emph{bottom-up}
+Hierarchical clustering does not require a pre-specified \emph{k} value at the beginning compared to K-means clustering.
+Furthermore Hierarchical clustering produce a \emph{dendrogram} which shows the observations as a tree structure.
+The most common type is called the \emph{agglomerative} clustering, it is also called the \emph{bottom-up} approach.
 
 \subsection{Dendrograms}
 The easiest way of explaining a dendrogram is to show one. So figure \ref{fig:dendrogram} shows a dengrogram which is constructed of a data set with 50 observations.
 The labels are shown in different colors. But if these labels where not available and the data was observed without them then all labels will be in the same color. 
-One of the leaf is equal to one of the 50 observations. 
-Depending on the data set and the observations the dendrogram can help to determine the number of clusters that fits this data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the no of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters whould be three.
-Observations that fuse close to the top of dendrogram is often more different from each other compared to  observations in the bottom. 
+One of the leafs is equal to one of the 50 observations. 
+Depending on the data set and the observations the dendrogram can help to determine the number of clusters that fits the data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the number of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters would be three.
+Observations that fuse close to the top of dendrogram is often more different from each other compared to the observations in the bottom of the dendrogram. 
 
 \myFigure{Dendrogram.PNG}{Dendrogram with 50 observations}{fig:dendrogram}{1}
 
 \FloatBarrier
-To show how this is build a simple data set containing 7 observations are shown in figure \ref{fig:dendrogramdata} to the right.
-Then it can be seen that observations 5 and 7 are quite similar to each other and observations 1 and 6 are also quite similar to each other. These are the bottom of the dendrogram as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expand by looking at the next observation that are close to 5 and 7. clearly 3 is the closest one to them, so this is the next leaf in the dendrogram. The same is done for observation 1 and 6 and at the end the dendrogram will look like the on in figure \ref{fig:dendrogramdata} to the left
+To show how this works, a simple data set containing 7 observations are shown in figure \ref{fig:dendrogramdata} to the right.
+It can be seen that the observations 5 and 7 are quite similar to each other and observations 1 and 6 are also quite similar to each other. These are the bottom of the dendrogram, as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expanded, and by looking at the next observation that are closest to 5 and 7. Clearly 3 is the closest one to them, so this is the next leaf in the dendrogram. The same is done for observation 1 and 6 and at the end the dendrogram will look like figure \ref{fig:dendrogramdata} to the left.
 
 \myFigure{DendrogramData.PNG}{Illustration of a dendrogram and its data set}{fig:dendrogramdata}{1}
 
 \FloatBarrier
 \subsection{The Hierarchical Clustering Algorithm}
-to produce the dendrogram the Hierarchical clustering algorithm is used. First thing is to find the Euclidean distance between pair of observtation and find the dissimilarities.
-Then it run iteratively trough all the observations. It starts at the bottom and finds the two observations who act as their own cluster,that are closest and fused those two so that there now are $n-1$ clusters. This continues, so the next two cluster that are most similar is fused so the number of cluster are now $n-2$. This is done until all observations belongs to one big cluster.
+to produce the dendrogram the Hierarchical clustering algorithm is used. First thing is to find the Euclidean distance between pair of observation and find the dissimilarities.
+Then it runs iteratively trough all the observations. It starts at the bottom and finds the two observations who act as their own cluster, that are closest and fused to those two, so that there now are $n-1$ clusters. This continues, so the next two clusters that are most similar are fused so the number of cluster are now $n-2$. This is done until all observations belongs to one big cluster.
 
 The Hierarchical Clustering algorithm is shown below.
 
@@ -112,7 +112,7 @@ The Hierarchical Clustering algorithm is shown below.
  		
  		\State for \emph{i} $= n,n-1,...,2:$
  		\begin{enumerate}[label=(\alph*)]
- 			\item All pairwise inter-cluster dissimilarities matching the i cluster are examined and then the pairs that are most similar identified and fused into two clusters. This indicates at which height to place the fusion in the dendrogram.
+ 			\item All pairwise inter-cluster dissimilarities matching the $i$ cluster are examined and then the pairs that are most similar identified and fused into two clusters. This indicates at which height to place the fusion in the dendrogram.
  			\item Then the new pairwise inter-cluster matching $\emph{i}-1$ remaining cluster are computed.
  		\end{enumerate}
  	\end{algorithmic}

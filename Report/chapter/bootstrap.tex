@@ -108,7 +108,7 @@ The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtain
 \todo{skriv om}
 The reason for this is that the standard formulas assume that $x_i$ are fixed, and all the variability comes from the variation in the errors $\in_i$. The bootstrap approach does not rely on any of these assumptions, and so it is likely that the bootstrap estimates of the standard errors are more accurate.
 
-Figure 3.8 on page 91 in \citep{ISLR} shows that there is a non-linear relationship in the data, so using a quadratic model to fit the data should yield a result that are closer to the bootstrap estimates.
+The \emph{Auto} data set has a non-linear relationship, so using a quadratic model to fit the data should yield a result that are closer to the bootstrap estimates.
 
 So a new function for finding the standard error is needed, this function can be seen in Listing \ref{lst:bootstrap_q}.
 

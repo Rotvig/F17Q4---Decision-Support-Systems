@@ -20,7 +20,7 @@ In the equation $\beta_0$ represents the intercept and $\beta_1$ which is multip
 %This means that Y is approximately modeled as X or in other words Y is regressing on X. 
 %$\beta_0$ and $\beta_1$ are two unknown constants that represent the intercept and slope in the linear model. They are also known as model coefficients or parameters. 
 In linear regression training data containing observations of X and Y is used to estimate $\hat{\beta_0}$ and $\hat{\beta_1}$. 
-The mathematically expression for the computation is:
+This can be mathematically expressed as:
 
 \begin{equation}
 \hat{y} = \hat{\beta_0} + \hat{\beta_1}x
@@ -38,65 +38,60 @@ The mathematically expression for the computation is:
 
 %represent n observation pairs where each of them have a measurement of X and a measurement of Y. n can represent lots of thing. can be the number of different markets, or different cities. It depends on the data.
 
-$\hat{\beta_0}$ and  $\hat{\beta_1}$ must be estimated to fit the all the observations as good as possible. This can be ensured by using the least squared approach..
+$\hat{\beta_0}$ and  $\hat{\beta_1}$ must be estimated to fit the all the observations as good as possible. This can be ensured by using the least squared approach.
 %In other words $\hat{\beta_0}$ is the intercept and  $\hat{\beta_1}$ is a slope, so the resulting line is as close as possible to n\emph{th} data points
 
 %First the prediction for Y will be written as $\hat{y_i} = \hat{\beta_0} + \hat{\beta_1} x_i$ based on the \emph{i}th value of X.
 %Then $e_i = y_i - \hat{y_i}$ will represent the \emph{i}th residual, which is the difference between the \emph{i}th observed response value and the \emph{i}th response value that is predicted by the linear model.
 
 Least squares approach determines the $\hat{\beta_0}$ and  $\hat{\beta_1}$ to minimizes the residual sum of squares.
-The residual is defined as the difference between the predicted and the true response value $y-\hat{y}$. $\hat{y}$ can be replaced with $\hat{\beta_0} + \hat{\beta_1}x$ and the residual sum of squares can then be defined as:
+The residual is defined as the difference between the predicted and the true response value: $y-\hat{y}$. $\hat{y}$ can be replaced with $\hat{\beta_0} + \hat{\beta_1}x$ and the residual sum of squares can then be defined as:
 
 \begin{equation}
 RSS = (y_1 - (\hat{\beta_0} + \hat{\beta_1}X_1))^2 + (y_2 - (\hat{\beta_0} + \hat{\beta_1}X_2))^2 + ... + (y_n - (\hat{\beta_0} + \hat{\beta_1}X_n))^2
 \end{equation}
 
-The least squares approach can then be used to choose $\hat{\beta_0}$ and $\hat{\beta_1}$ to minimize the RSS (2.5).
-The minimization is written as:
+%The least squares approach can then be used to choose $\hat{\beta_0}$ and $\hat{\beta_1}$ to minimize the RSS (2.5).
+%The minimization is written as:
 
+The least squares coefficients can then be estimated from the minimizers of RSS defined in equation in (2.4) and (2.5).
 \begin{equation}
-\dfrac{\hat{\beta_1} = \sum\limits_{i=1}^n(x_i - \bar{x})(y_i - \bar{y})}{\sum\limits_{i=1}^n(x_i - \bar{x})^2}
+\hat{\beta_1} = \dfrac{\sum\limits_{i=1}^n(x_i - \bar{x})(y_i - \bar{y})}{\sum\limits_{i=1}^n(x_i - \bar{x})^2}
 \end{equation}
 
 \begin{equation}
 \hat{\beta_0} = \bar{y} -\hat{\beta_1}\bar{x}
 \end{equation}
 
-In (3.4) $\hat{y} \equiv \dfrac{1}{n}\sum\limits_{i=1}^ny_i$ and 
-$\hat{x}\equiv \dfrac{1}{n}\sum\limits_{i=1}^nx_i$ are the sample means and the function is used to define the least squares coefficient estimates for a simple linear regression 
+%n (3.4) $\hat{y} \equiv \dfrac{1}{n}\sum\limits_{i=1}^ny_i$ and %$\hat{x}\equiv \dfrac{1}{n}\sum\limits_{i=1}^nx_i$ are the ample eans and the function is used to define the least squares coefficient estimates for a simple linear regression 
 
 
-\section{Lab 3.6.2 - Simple Linear Regression}
+\subsection{Lab 3.6.2 Simple linear regression}
 
 In Lab 3.6.2 the data set \emph{Boston} is given. It consists of records from about 506 neighborhoods around Boston. The task is to predict \emph{medv} (median house value) via the predictor \emph{lstat} (percent of households with low socioeconomic status).
 
-Before at linear regression can be performed the data needs to be prepared. This is shown in Listing \ref{lst:lin_reg_prep}. First the data is loaded and then the \emph{lstat} data is added to 'boston\_X\_train' and 'boston\_X\_test', and the \emph{medv} data is added to 'boston\_Y\_train' and 'boston\_Y\_test'.
+The data is firstly prepared before linear regression can be performed. This is shown in listing \ref{lst:lin_reg_prep}. First the data is loaded and then the \emph{lstat} data is added to \emph{boston\_X\_train} and the \emph{medv} data is added to \emph{boston\_Y\_train}.
 
 \begin{lstlisting}[caption={Data preparation for linear regression}, label=lst:lin_reg_prep, mathescape=true]
 boston = datasets.load_boston()
 
-#Extract 'lstat'
+#Extract 'lstat'-
 boston_X_train = boston.data[:, np.newaxis, 12]
-boston_X_test = boston.data[:, np.newaxis, 12]
 
 #Extract 'medv'
 boston_Y_train = boston.target
-boston_Y_test = boston.target
 \end{lstlisting}
 
-To perform the linear regression the library sklearn is used in python. 
+To perform the linear regression the library sklearn is used in python. In listing \ref{lst:lin_reg} it is shown how a linear regression model is fitted to the training data \emph{boston\_X\_train} and the \emph{boston\_Y\_train}.
 
 \begin{lstlisting}[caption={Python Linear Regression function}, label=lst:lin_reg, mathescape=true]
 lm = linear_model.LinearRegression()
 lm.fit(boston_X_train, boston_Y_train)
 \end{lstlisting}
 
-In listing \ref{lst:lin_reg} it is shown how a linear regression object is created, and how it is used to fit the ‘boston\_X\_train’ data and the ‘boston\_Y\_train’ data.
-The result is plotted in Figure \ref{fig:lin_reg_plot}.
+\FloatBarrier
 
-\myFigure{lin_reg_plot.PNG}{Linear regression of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.6}
-
-The code in Listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression line. To plot this in python, the library \emph{matplotlib} is used. In line 1 the test data is plotted to see how it corresponds to the least squares regression line. To plot the least squares regression line the command 'plot' is used. This is seen in line 2 where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. 
+The code in listing \ref{lst:lin_reg_plot} is used to plot \emph{medv} and \emph{lstat} along with the least squares regression line. In line 1 the test data is plotted to see how it corresponds to the least squares regression line. To plot the least squares regression line the command 'plot' is used. This is seen in line 2 where 'boston\_X\_test' is the test data which consist of the \emph{lstat} data. The result is plotted in Figure \ref{fig:lin_reg_plot}. The plots shows that the relations between \emph{lstat} and \emph{medv} is somewhat non-linear. 
 
 \begin{lstlisting}[caption={Python Plotting of Linear Regression function}, label=lst:lin_reg_plot, mathescape=true]
 plt.scatter(boston_X_test, boston_Y_test,  color='black')
@@ -109,42 +104,36 @@ plt.yticks(())
 plt.show()
 \end{lstlisting}
 
-There are some evidence of non-linearity in the relationship between \emph{lstat} and \emph{medv}. This can be seen in Figure \ref{fig:lin_reg_plot} where a non-linear least square would be a better fit to the data points as the data points makes a curve. 
+\myFigure{lin_reg_plot.PNG}{Linear regression of \emph{medv} and \emph{lstat}}{fig:lin_reg_plot}{0.5}
 
+\subsection{Multiple linear regression}
 
-\section{Lab 3.6.3 - Multiple Linear Regression}
-
-The basis for Multiple Linear Regression is the same as for Simple Linear Regression, as it is used to predict a quantitative response. However, where Simple Linear Regression uses a single predictor, Multiple Linear Regression uses two or more predictors. So where there before were a one-to-one relationship between the predictor variable and response variable, there is now a many-to-one relationship, as illustrated in Figure \ref{fig:relation}.
+When using simple linear regression only one predictor is used. but often more than one predictor is available. Instead multiple linear regression uses two or more predictors to predict the response variable Y. The relationship between the predictor variable and response variable with simple linear regression can be described as a one-to-one, while multiple linear regression is a many-to-one relationship, as illustrated in Figure \ref{fig:relation}.
 
 \myFigure{relation.PNG}{Relationship between predictor variables "P.V" and response variables "R.V" in Simple- and Multiple Linear Regression}{fig:relation}{0.8}
 
 \FloatBarrier
-As specified in Lab 3.6.2, the predictors are called X, while Y is the response. This means for Multiple Linear Regression, the relationship between X and Y is expressed as:
+As specified in Lab 3.6.2, the predictors are called X, while Y is the response. This means for multiple linear regression, that the relationship between X and Y is expressed as:
 
 \begin{equation}
 Y \approx \beta_0 + \beta_1 * X_1 + \beta_2 * X_2 + … + \beta_k * X_k
 \end{equation}
 
-The different features of the Boston dataset can be singled out by writing the syntax in Listing \ref{lst:feat}. 
+Similar to simple linear regression, the regression coefficients are estimated using the least squares approach so that $\beta_0$, $\beta_1$,...$\beta_p$ is chosen to minimize the RSS.
 
-\begin{lstlisting}[caption={Boston features}, label=lst:feat, mathescape=true]
-boston.data[:, np.newaxis, 6] # Feature: age
-boston.data[:, np.newaxis, 12] # Feature: lstat
-\end{lstlisting}
+\section{Lab 3.6.3 Multiple linear regression}
 
-However as this exercise will fit all the features it is not necessary to take every single feature out of the dataset, just to put it back together. Instead, the whole dataset is called for the linear regression as shown in Listing \ref{lst:mul_lin_reg}.
+In this exercise multiple linear regression is used. In Listing \ref{lst:mul_lin_reg} all 13 predictors in the Boston data set is used for performing multiple linear regression.
 
 \begin{lstlisting}[caption={Linear Regression of multiple predictors}, label=lst:mul_lin_reg, mathescape=true]
 boston_X_train = boston.data
-boston_X_test = boston.data
 boston_Y_train = boston.target
-boston_Y_test = boston.target
 
 lm = linear_model.LinearRegression()
 lm.fit(boston_X_train, boston_Y_train)
 \end{lstlisting}
 
-When the linear regression object \emph{lm} is created, it can be used to fit all the data. By the use of the \emph{coef\_} and \emph{intercept\_} attributes, and the \emph{score} method, an overview of the regression can be output. This is shown in Listing \ref{lst:print}.
+In listing \ref{lst:print} the calculated coefficients, intercept and variance for the linear regression model is printed.
 
 \begin{lstlisting}[caption={Printing regression overview}, label=lst:print, mathescape=true]
 print("Coefficients:")
@@ -154,12 +143,10 @@ print(lm.intercept_)
 print("Variance score: %.2f" % lm.score(boston_X_test, boston_Y_test))
 \end{lstlisting}
 
-The output of Listing \ref{lst:print} fits the results from the exercise and can be seen in Figure \ref{fig:multiOutput}.
+The printed output is shown in figure \ref{fig:multiOutput}. The output first shows the estimated coefficients for the linear regression model. The first value, -0.0717, is $\beta_1$ and is multiplied with the predictor \emph{crim}. The next value, 0.0464, is $\beta_2$ and is multiplied with the predictors \emph{zn}. In total there is 13 coefficients, one for each predictor.
+
+Furthermore the intercept value, $\beta_0$, is printed. This is the value of the interception with the y-axis. Lastly multiple $R^2$ is printed. The $R^2$ of the simple linear regression was only calculated to 0.544, while for the multiple linear regression model including all 13 predictors the $R^2$ coefficient improved to 0.74. This indicates that the models is improved using multiple linear regression.
 
 \myFigure{MultiLinRegOutput.PNG}{Output of Listing \ref{lst:print}}{fig:multiOutput}{0.8}
 
-The output first shows the estimated coefficients for the linear regression problem. It can be seen that the first coefficient is -0.107 while the next is 0.0464. These values are the estimated coefficients for \emph{crim} and \emph{zn} respectively, and since their values are so different, they will influence their predictors very differently. The \emph{crim} predictor will be multiplied by -0.107 while the \emph{zn} predictor will be multiplied by 0.0464. 
 
-The next thing that can be seen in the output is the intercept. This is a value showing where the regression intercepts the y-axis. 
-
-Lastly the variance score is shown. This is the coefficient of determination $R^2$ of the prediction. The best possible score is 1. 

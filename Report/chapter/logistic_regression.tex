@@ -21,7 +21,7 @@ By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equ
 \end{center}
 
 
-\todo{måske indsæt en figur der viser grafer med linear og logistic}
+%\todo{måske indsæt en figur der viser grafer med linear og logistic}
 
 In the following lab exercises a logistic regression model will be implemented based on stock market data. The model will be used to predict if the market is going up or down on a particular day. Before creating the model the data will first be examined.
 
@@ -103,7 +103,7 @@ lr.fit(X_train,Y_train)
 \end{lstlisting}
 
 Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model has been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important and provides information about the association when multiple predictors  are used.
-\todo{Hvorfor er volume ikke bedre... ? Den har lavere p-value}
+
 
 
 

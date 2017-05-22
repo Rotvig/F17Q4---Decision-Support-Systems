@@ -6,7 +6,7 @@ In the previous chapters the chosen number of predictors in the models have not 
 \section{Best subset}
 Best subset selection is a method for choosing the best possible subset of predictors. In this approach a model is fitted for each possible combination of the predictors.
 
-The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First the null models is created in step 1. In line 2 it iterates from 1 predictor and up till the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best model with k predictors is chosen. When all iteration are done the single best model is chosen.
+The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First the null models are created in step 1. In line 2 it iterates from 1 predictor and up to the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best model with k predictors is chosen. When all iterations are done the single best model is chosen.
 
 % Insert the algorithm
 \begin{algorithm}
@@ -15,7 +15,7 @@ The algorithm for best subset selection is explained in Algorithm \ref{algo:best
 	\begin{algorithmic}[1]
 		\State Let $M_0$ denote null model, containing no predictors. Which means that $M_0$ contains the sample mean for each observation.
 		\For {each $k$ from $1$ to $length(p)$}
-		\State Fit all the different models with a combinations of k predictors.
+		\State Fit all the different models with a combination of k predictors.
 		\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent}{Pick the best model with k predictors. Best can be defined as smallest RSS or largest $R^2$}
 		\State $M_k = best\_model$
 		\EndFor

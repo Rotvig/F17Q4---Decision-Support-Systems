@@ -6,7 +6,7 @@ In the previous chapters the chosen number of predictors in the models have not 
 \section{Best subset}
 Best subset selection is a method for choosing the best possible subset of predictors. In this approach a model is fitted for each possible combination of the predictors.
 
-The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First the null models is created in step 1. In line 2 it iterates from 1 predictor and up till the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best model with k predictors is chosen. When all iteration are done the single best model is chosen.
+The algorithm for best subset selection is explained in Algorithm \ref{algo:bestsubset}. First the null models are created in step 1. In line 2 it iterates from 1 predictor and up to the number of available predictors. In line 3 all possible models with k predictors are fitted and in line 4 and 5 the best model with k predictors is chosen. When all iterations are done the single best model is chosen.
 
 % Insert the algorithm
 \begin{algorithm}
@@ -15,7 +15,7 @@ The algorithm for best subset selection is explained in Algorithm \ref{algo:best
 	\begin{algorithmic}[1]
 		\State Let $M_0$ denote null model, containing no predictors. Which means that $M_0$ contains the sample mean for each observation.
 		\For {each $k$ from $1$ to $length(p)$}
-		\State Fit all the different models with a combinations of k predictors.
+		\State Fit all the different models with a combination of k predictors.
 		\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent}{Pick the best model with k predictors. Best can be defined as smallest RSS or largest $R^2$}
 		\State $M_k = best\_model$
 		\EndFor
@@ -38,16 +38,14 @@ Y = data['Salary']
 \end{lstlisting}
 
 
-A function for choosing the best subset is then defined in listing \ref{lst:best_subset_selection}. In line 3 it iterates through all combinations of the predictors with k number of predictors. A function process\_subset is called which returns the subset with calculated model, RSS, $R^2$, BIC and $C_p$. In line 4 all the different combinations are appended to the results array. In line 7 the best model is picked based on lowest RSS and then returned.
+A function for choosing the best subset is then defined in listing \ref{lst:best_subset_selection}. In line 3 it iterates through all combinations of the predictors with k number of predictors. A function process\_subset is called which returns the subset with calculated model, RSS, $R^2$, BIC and $C_p$. In line 4 all the different combinations are appended to the models array. In line 5 the best model is picked based on lowest RSS and then returned.
 
 \begin{lstlisting}[language=Python, label=lst:best_subset_selection, caption=Function for choosing best subset]
 def best_subset_selection(k):
-	results = []
+	models = []
 	for combo in combinations(X.columns, k):
-		results.append(process_subset(combo))
-	models = pd.DataFrame(results)
-	best_model = models.loc[models['RSS'].argmin()]
-	return best_model
+		models.append(process_subset(combo))
+	return models[np.argmin([r['RSS'] for r in models])]
 \end{lstlisting}
 
 The function in listing \ref{lst:process_subset} is called in listing \ref{lst:best_subset_selection} on line 4. It fits a linear regression model and computes RSS, $R^2$, $C_p$ and BIC for model.
@@ -130,14 +128,13 @@ This means that instead of fitting 524,288 models with best subset selection, fo
 The exercise for 6.5.3 is very similar to 6.5.2 and a function for forward and bacward stepwise selection was implemented and used instead of best\_subset\_selection implemented in listing \ref{lst:best_subset_selection}. The rest of the code could be reused. In listing \ref{lst:forwardselection} the implemented function for forward stepwise selection is shown. First the remaining predictors to choose from are extracted. \emph{X.columns} is all the predictors while \emph{predictors} is passed as a parameter and contains the already chosen predictors. It then runs a for loop iterating through all the remaining predictors and adding them to the model. The best model is then selected based on RSS.
 
 \begin{lstlisting}[language=Python, label=lst:forwardselection, caption=Function for forward stepwise selection]
-def forward_stepwise_selection(predictors):
-	remaining_predictors = [p for p in X.columns if p not in predictors]
-	results = []
+def forward_stepwise_selection(already_chosen_predictors):
+	remaining_predictors = [p for p in X.columns if p not in
+	already_chosen_predictors]
+	models = []
 	for p in remaining_predictors:
-		results.append(process_subset(predictors+[p]))
-	models = pd.DataFrame(results)
-	best_model = models.loc[models['RSS'].argmin()]
-	return best_model
+		models.append(process_subset(already_chosen_predictors+[p]))
+	return models[np.argmin([r['RSS'] for r in models])]
 \end{lstlisting}
 
 Similar a function for backward stepwise selection was implemented. Comparing the models for best subset selection, forward and backward stepwise selection it was shown that some models were identical while other differed. For example the models with predictors from 1 to 6 for both best subset selection and forward stepwise selection were identical while the model with 7 predictors differs. This is not the case with backward stepwise selection which differs in all these. Actually the best model with 7 predictors differs with the three algorithm. The following 7 predictors were chosen:
@@ -253,9 +250,9 @@ The results for cross-validation and best subset selection is shown in table \re
 		\\
 		9 & 77,944  \\\hline
 		\\
-		10 & 77,895 \\\hline
+		\textbf{10} & \textbf{77,895} \\\hline
 		\\
-		\textbf{11} & \textbf{78,352}  \\\hline
+		11 & 78,352  \\\hline
 		\\
 		12 & 78,795 \\\hline
 		\\

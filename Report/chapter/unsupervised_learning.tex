@@ -78,26 +78,29 @@ The centroids are marked with crosses and each observation a either a blue or a 
 
 
 \section{Hierarchical clustering}
-K-means clustering has one  disadvantage namely that it needs to have a k value at the beginning. Here Hierarchical clustering can help because it does not require a pre-specified \emph{k} value at the beginning.
+ Hierarchical clustering does not require a pre-specified \emph{k} value at the beginning compared to K-means clustering.
 Furthermore Hierarchical clustering produce a \emph{dendrogram} which shows the observations as a three structure.
 The \emph{bottom-up} approach also called \emph{agglomerative} clustering are the most common type it is called the \emph{bottom-up}
 
 \subsection{Dendrograms}
-The easiest way of explaining a dendrogram is to show one. So figure 10.1 is a dengrogram which shows a data set with 50 observations.
-The labels are shown in different colors. But if these labels where not available and the data was observed without them then all will be labeled with the same color. 
-One of the leaf represents one of the 50 observations. 
-Depending on the data set and the observations the dendrogram can help to determine the number of clusters k that fits this data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the no of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters whould be three.
-Observations that fuse close to the top of the tree tends to be quite different where observations in the bottom tends to be quite similar. 
+The easiest way of explaining a dendrogram is to show one. So figure \ref{fig:dendrogram} shows a dengrogram which is constructed of a data set with 50 observations.
+The labels are shown in different colors. But if these labels where not available and the data was observed without them then all labels will be in the same color. 
+One of the leaf is equal to one of the 50 observations. 
+Depending on the data set and the observations the dendrogram can help to determine the number of clusters that fits this data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the no of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters whould be three.
+Observations that fuse close to the top of dendrogram is often more different from each other compared to  observations in the bottom. 
 
 \myFigure{Dendrogram.PNG}{Dendrogram with 50 observations}{fig:dendrogram}{1}
 
-To show how this is build a simple data set containing 7 observations are shown in figure 8.3 to the right.
-Then it can be seen that observations 5 and 7 are quite similar to each other and observations 1 and 6 are also quite similar to each other. These are the bottom of the dendrogram. Now the dendrogram is expand by looking at the next observation that are close to 5 and 7. It can be seen that 3 are close to them, so this is the next leaf. The same is done for observation 1 and 6. At the end the dendrogram will look like fingure on the left in figure 8.3 
+\FloatBarrier
+To show how this is build a simple data set containing 7 observations are shown in figure \ref{fig:dendrogramdata} to the right.
+Then it can be seen that observations 5 and 7 are quite similar to each other and observations 1 and 6 are also quite similar to each other. These are the bottom of the dendrogram as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expand by looking at the next observation that are close to 5 and 7. clearly 3 is the closest one to them, so this is the next leaf in the dendrogram. The same is done for observation 1 and 6 and at the end the dendrogram will look like the on in figure \ref{fig:dendrogramdata} to the left
 
 \myFigure{DendrogramData.PNG}{Illustration of a dendrogram and its data set}{fig:dendrogramdata}{1}
 
+\FloatBarrier
 \subsection{The Hierarchical Clustering Algorithm}
-The dendrogram is obtained via a simple algorithm. The first thing it does is to defining some sort of dissimilarities measture between each pair. This is often Euclidean distance that is used. Then the algorithm proceeds iteratively. It starts at the bottom of the dendrogram and each of the n observations is treaded as its own cluster. Then it finds the two cluster that are closed and fused those two so that there now are n - 1 clusters. Then the next two cluster that are most similar is fused so now there is n - 2 clusters. This is proceeded until all of the observations belongs to one single cluster and the dendrogram is complete.
+to produce the dendrogram the Hierarchical clustering algorithm is used. First thing is to find the Euclidean distance between pair of observtation and find the dissimilarities.
+Then it run iteratively trough all the observations. It starts at the bottom and finds the two observations who act as their own cluster,that are closest and fused those two so that there now are $n-1$ clusters. This continues, so the next two cluster that are most similar is fused so the number of cluster are now $n-2$. This is done until all observations belongs to one big cluster.
 
 The Hierarchical Clustering algorithm is shown below.
 

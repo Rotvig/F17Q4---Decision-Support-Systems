@@ -74,19 +74,24 @@
 \usepackage{subcaption}
 \usepackage{tabularx}
 
+
+\AtBeginDocument{\renewcommand\contentsname{Contents \vspace{-1.5em}}}
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+
+
+
 \begin{document}
 
 	\begin{titlingpage}
 		% Frontpage goes here
 		\include{chapter/Frontpage}
 	\end{titlingpage}
-	
-
 
     % Table of contents
-    \tableofcontents*	% The star keeps TOC from indexing itself
-
-    \include{chapter/introduction}
+	\tableofcontents*
+	
+	\include{chapter/introduction}
     \include{chapter/linear_regression}
     \include{chapter/logistic_regression}
     \include{chapter/linear_discriminant_analysis}
@@ -98,8 +103,8 @@
     \include{chapter/Conclusion}
 	\bibliography{bibliografi}% Selects .bib file AND prints bibliography
 
-
-	\addtocontents{toc}{\protect\setcounter{tocdepth}1}
+%	\addtocontents{toc}{\protect\setcounter{tocdepth}1}
+%	\addtocontents{toc}{\setcounter{tocdepth}{1}}
     
     % Appendix
     \input{style/appendix} % Changes chapter and section style and toc adding

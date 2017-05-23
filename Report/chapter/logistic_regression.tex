@@ -2,14 +2,9 @@
 
 \section{Logistic Regression}
 \label{chp:logreg}
-Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem:
-\todo{Hvorfor er det i en centering?}
-\begin{centering}
-Predicting whether a tumor is malignant or not based on the size of the tumor.
-\end{centering}
-Linear regression could be used by converting the wanted qualitative response variable into a quantitative response. The quantitative response can be converted into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the probability is higher than 0.5. 
+Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem: Predicting whether a tumor is malignant or not based on the size of the tumor. Linear regression could be used by converting the wanted qualitative response variable into a quantitative response. The quantitative response can be converted into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the probability is higher than 0.5. 
 
-A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would yield a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and there might be a bigger gap between some classes than others. This would make it difficult to make an accurate model using a linear function.
+A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would predict a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and the gap between some classes might be bigger than others. This would make it difficult to make an accurate model using a linear regression.
 
 Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used and can be seen in (3.1).
 
@@ -33,13 +28,11 @@ By taking the exponential of $\beta_0 + \beta_1 X$ the result will always be equ
 
 %\todo{måske indsæt en figur der viser grafer med linear og logistic}
 
-\todo{Hører det til her? er lidt i tvivl om det skal med her eller stå i lab}
-In the following lab exercises a logistic regression model will be implemented based on stock market data. The model will be used to predict if the market is going up or down on a particular day. Before creating the model the data will first be examined.
-
 \section{Lab 4.6.1 - The Stock Market Data}
 In this lab the correlation between the predictors and todays return value is examined. Todays return value describes the direction. If the number is negative the stock went down and if its positive the stock went up. The available predictors are 5 lagging indicators \emph{Lag1, Lag2, Lag3, Lag4} and \emph{Lag5} and a \emph{Volume} which describes the number of shares traded in billions.
 
 With the python code shown in Listing \ref{lst:correlation} a matrix with the pairwise correlation among the predictors and todays return is printet. Numpy is used for calculating the correlation matrix. Pandas is used for creating a table based on the calculated correlation matrix.
+
 \begin{lstlisting}[language=Python, label=lst:correlation, caption=Print correlation matrix]
 cor = np.corrcoef(preparedData)
 labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 
@@ -53,15 +46,9 @@ The printed correlation matrix is illustrated in figure \ref{fig:lab461}. Here i
 \myFigure{461.png}{Pairwise correlation matrix between predictors and todays return}{fig:lab461}{1} 
 \FloatBarrier
 
-With the python code in listing \ref{lst:plotVolume} shows how to plot the volume and in figure \ref{fig:lab461Plot} the result is illustrated. Here the increase in traded stock is obvious.
-\begin{lstlisting}[language=Python, label=lst:plotVolume, caption=Plot Volume]
-plt.plot(preparedData[6], 'ro')
-plt.ylabel('Volume')
-plt.xlabel('Index')
-plt.show()
-\end{lstlisting}
+\emph{Volume} is plotted in figure \ref{fig:lab461Plot}. Here the increase in traded stock is obvious.
 
-\myFigure{461_plot.png}{Correlation between Volume and year, higher index describes forward in time}{fig:lab461Plot}{0.6} 
+\myFigure{461_plot.png}{Correlation between Volume and year, higher index describes forward in time}{fig:lab461Plot}{0.45} 
 
 When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if it is multiple predictors. When choosing predictors its important to choose the predictors that actually are associated with the response variable. The following lab will therefore examine the data to find good predictors.
 
@@ -102,8 +89,7 @@ print(lr.score(X_test, Y_test))
 
 In Listing \ref{lst:OnlyLag1Lag2} only the predictors \emph{Lag1} and \emph{Lag2} are now used. \emph{Lag1} is included because it has the lowest p-value. \emph{Lag2} is also used as predictor because it has a very low correlation with \emph{lag1} and also the third lowest p-value.
 %It has a very low correlation with \emph{Lag1} and also the third lowest p-value.
-Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}
-\todo{..this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction instead of \emph{Lag1} and \emph{Lag2}.. Det for står jeg ikke helt. }
+Note though that the p-value of \emph{Lag2} is only 0.006 higher than the second lowest p-value, which describes \emph{Volume}. \emph{Volume} also has almost twice as high correlation with \emph{Lag1} and this might lead to a better result using \emph{Lag1} and \emph{Lag2} for prediction.
 
 \begin{lstlisting}[language=Python, label=lst:OnlyLag1Lag2, caption=Logistic regression using only Lag1 and Lag2 as predictors]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
@@ -124,18 +110,25 @@ Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Runni
 \label{chp:lindisana}
 
 In chapter \ref{chp:logreg} it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  a classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes. Furthermore a problem with logistic regression is that it does not perform very stable under some circumstance. One big problem with logistic regression is that it might not converge if the classes are well-separated. An example could be the data in the table below. Here we see that the classes are well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
+%\begin{center} 
+%	\begin{tabular}{rll}
+%		\multicolumn{1}{c}{\textbf{Y}} &
+%		\multicolumn{1}{c}{\textbf{X}} \\ \hline
+%		0     &  -2  \\[0.05cm] 
+%		0     &  -1  \\[0.05cm] 
+%		0     &  -5  \\[0.05cm] 
+%		1     &    3  \\[0.05cm] 
+%		1     &    1  \\[0.05cm] 
+%		1     &    6  \\[0.05cm] 
+%	\end{tabular}
+%\end{center}
+
 \begin{center} 
-	\begin{tabular}{rll}
-		\multicolumn{1}{c}{\textbf{Y}} &
-		\multicolumn{1}{c}{\textbf{X}} \\ \hline
-		0     &  -2  \\[0.05cm] 
-		0     &  -3  \\[0.05cm] 
-		0     &  -1  \\[0.05cm] 
-		0     &  -5  \\[0.05cm] 
-		1     &    3  \\[0.05cm] 
-		1     &    1  \\[0.05cm] 
-		1     &    5  \\[0.05cm] 
-		1     &    6  \\[0.05cm] 
+	\begin{tabular}{l|llllll}
+%		\multicolumn{1}{c}{\textbf{Y}} &
+%		\multicolumn{1}{c}{\textbf{X}} \\ \hline
+		X & -2 & -1 & -5 & 3 & 1 & 6 \\[0.05cm] 
+		Y &  0 &  0 &  0 & 1 & 1 & 1  \\[0.05cm] 
 	\end{tabular}
 \end{center}
 
@@ -188,17 +181,17 @@ After creating the model the calculated prior probability, means and coefficient
 
 The means $\mu_k$ are described by a matrix. The matrix describes a separate mean for both \emph{Lag1} and \emph{Lag2} and for each predictor a mean for \emph{Up} and \emph{Down}. The mean value for \emph{Lag1} and \emph{Lag2} has a tendency to be positive on days when the stock went up while they are negative when the stock went down.  $\bigl( \begin{smallmatrix} 	 & Lag1 & Lag2	\\ 	 Down & 0.0428 & 0.0339 \\ 	 Up & -0.0395 & -0.0313 \end{smallmatrix} \bigr) $. The coefficients are estimated to $-0.0554$ and $-0.0443$. These are the multipliers for \emph{Lag1} and \emph{Lag2}.
 
-\todo{Er det vigtigt at vise hvordan vi printer disse værdier?}
-\begin{lstlisting}[language=Python, label=lst:ldaProperties, caption=printing lda prior mean and coefficients]
-print "Prior probabilities:"
-print lda.priors_
-
-print "Mean:"
-print lda.means_
-
-print "Coefficients:"
-print lda.coef_
-\end{lstlisting}
+%\todo{Er det vigtigt at vise hvordan vi printer disse værdier?}
+%\begin{lstlisting}[language=Python, label=lst:ldaProperties, %caption=printing lda prior mean and coefficients]
+%print "Prior probabilities:"
+%print lda.priors_
+%
+%print "Mean:"
+%print lda.means_
+%
+%print "Coefficients:"
+%print lda.coef_
+%\end{lstlisting}
 
 In listing \ref{lst:ldaScore} the score is printet. The score show that the LDA model predicted correctly in $56\%$ of the predictions on the test data. 
 \begin{lstlisting}[language=Python, label=lst:ldaScore, caption=printing lda score]

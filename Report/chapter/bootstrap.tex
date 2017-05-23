@@ -6,7 +6,7 @@ This chapter is about the bootstrap method which is a statistical tool that can 
 The reason for using the bootstrap appraoch is if there is a case where there aren't enough samples, then the bootstrap approach can be used to generate simulated data from the original data set.
 
 %Link til billede: https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#G0Bw37nIXex8aXSl91SjQ4MjlvNXc
-\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach}{fig:bootstrap}{0.6}
+\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach}{fig:bootstrap}{0.4}
 
 Figure \ref{fig:bootstrap} is a graphical example of the bootstrap approach on a sample containing 3 observations. These observations are randomly sampled with replacement from the original data set Z. Then each bootstrap data set is used to get $\hat{\alpha}$.
 
@@ -17,10 +17,8 @@ With all $\alpha$ values estimated the mean and standard deviation can be estima
 The goal with lab 5.3.4 is to show the use of bootstrap on the example used in Section 5.2\citep{ISLR} which uses the \emph{Portfolio} data set. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
 
 \subsection{Estimating the Accuracy of a Statistic of Interest}
-%Det er beskrevet lige oven over. 
-%The first part of lab 5.3.4 is to use the bootstrap approach on the \emph{Portfolio} data set described in section 5.2\citep{ISLR}.
 
-First of all a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
+To start with a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
 With the X and Y value the $\alpha$ can now be calculated and returned.
 
 \begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
@@ -48,19 +46,17 @@ The bootstrap method receives three arguments, the first being \emph{data} which
 
 Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1,000.
 
-\todo{Viser vi resultater på denne måde? Det er jo ikke en udregning}
-\begin{equation}
-\hat{\alpha} = 0.5834
-\end{equation}
+\begin{center}
+$\hat{\alpha} = 0.5834$
+\end{center}
 
-\begin{equation}
-SE(\hat{\alpha}) = 0.09102
-\end{equation}
+\begin{center}
+$SE(\hat{\alpha}) = 0.09102$
+\end{center}
 
-%These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. When  random sampling is used it is expected that $\hat{\alpha}$ differs from the true population. Because it is not possible to generate new samples from the original population. The bootstrap approach emulates the process of obtaining new sample sets.
-  
-%  Er det relevant om det passer med resultatet i bogen? Vi skal vel mere bare forklare hvad resultatet betyder. fx som jeg har skrevet her
-The Standard Diviation of the estimates is roughly 0.09. This means that when looking at a random sample of the population data, the difference between $\hat{\alpha}$ and $\alpha$ is expected to be roughly 0.9 on average.
+These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. 
+ 
+The Standard Deviation of the estimates is roughly 0.09. This means that when looking at a random sample of the population data, the difference between $\hat{\alpha}$ and $\alpha$ is expected to be roughly 0.9 on average.
 
 
 \subsection{Estimating the Accuracy of a linear Regression Model}
@@ -77,30 +73,17 @@ def boot(data, index):
 	return [intercept, slope]
 \end{lstlisting}
 
-The next step is to adjust the bootstrap function from the last part. The modified bootstrap function is seen in Listing \ref{lst:bootstrap2}. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
-
-\begin{lstlisting}[caption={Modified boot function in python}, label=lst:bootstrap2, mathescape=true]
-def boot_python2(data, function, num_of_iteration):
-	n = data.shape[0]
-	idx = np.random.randint(0, n, (num_of_iteration, n))
-	stat = np.zeros((num_of_iteration, 2))
-	for i in xrange(len(idx)):
-		stat[i] = function(data, idx[i])
-	return {'Mean intercept': np.mean(stat[:,1]), 
-	'std. error intercept': np.std(stat[:,1]), 
-	'Mean slope': np.mean(stat[:,0]), 
-	'std. error slope': np.std(stat[:,0])}
-\end{lstlisting}
+The next step is to adjust the bootstrap function from the last part. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
 
 Now the standard errors of 1,000 bootstrap estimates for the intercept and slope can be computed.
 The bootstrap estimates for the standard error intercept and slope:
-\todo{samme som ovenfor med resultater}
-\begin{equation}
-SE(\hat{\beta_0}) = 0.8601
-\end{equation} 
-\begin{equation}
-SE(\hat{\beta_1}) = 0.007335
-\end{equation}
+
+\begin{center}
+$SE(\hat{\beta_0}) = 0.8601$
+\end{center} 
+\begin{center}
+$SE(\hat{\beta_1}) = 0.007335$
+\end{center}
 
 The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtained by performing a linear regression on the \emph{Auto} data set are 0.717 for the intercept and 0.0064 for the slope. These are different from the results which the bootstrap estimates yielded.
 
@@ -117,15 +100,15 @@ def boot_fn2(data, index):
 \end{lstlisting}
 
 The results it yields with a 1,000 simulated observations:
-\todo{samme som ovenfor med resultater}
-\begin{equation}
-SE(\hat{\beta_0}) = 2.06
-\end{equation}
-\begin{equation}
-SE(\hat{\beta_1}) = 0.0328
-\end{equation}
-\begin{equation}
-SE(\hat{\beta_2}) = 0.00012
-\end{equation}
+
+\begin{center}
+$SE(\hat{\beta_0}) = 2.06$
+\end{center}
+\begin{center}
+$SE(\hat{\beta_1}) = 0.0328$
+\end{center}
+\begin{center}
+$SE(\hat{\beta_2}) = 0.00012$
+\end{center}
 
 The new values from the quadratic formula shows a closer correspondence between the estimates from the bootstrap and the standard estimates.

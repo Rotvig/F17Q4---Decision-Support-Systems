@@ -1,4 +1,4 @@
-\chapter{Cross-validation}
+\chapter{Resampling Methods}
 \label{chp:crossvalidation}
 In this chapter the validation set approach is presented as a simple way of estimating the test error for a model. Furthermore Cross-validation  is explained. Cross-validation is one of two resampling methods in Statistical Learning, the other being the Bootstrap which will be covered in the next chapter. Cross-validation is done by splitting up the data set in different ways, so that training and testing is done on varying samples. 
 
@@ -144,3 +144,117 @@ In table \ref{table:kfold_polynomials_mse} the result of the K-fold Cross-valida
 	\end{subtable}
 	\caption{Polynomials from 1 to 10 and calculated mean squared error.}\label{table:kfold_polynomials_mse}
 \end{table}
+
+
+\section{Bootstrap}
+This chapter is about the bootstrap method which is a statistical tool that can be used to calculate uncertainty associated with estimators or statistical learning methods. It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. Bootstrap is a simple approach which can be adapted and applied to many different statistical learning methods. Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set. 
+
+The reason for using the bootstrap appraoch is if there is a case where there aren't enough samples, then the bootstrap approach can be used to generate simulated data from the original data set.
+
+%Link til billede: https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1#G0Bw37nIXex8aXSl91SjQ4MjlvNXc
+\myFigure{bootstrap_example.PNG}{A graphical example of the bootstrap approach}{fig:bootstrap}{0.4}
+
+Figure \ref{fig:bootstrap} is a graphical example of the bootstrap approach on a sample containing 3 observations. These observations are randomly sampled with replacement from the original data set Z. Then each bootstrap data set is used to get $\hat{\alpha}$.
+
+With all $\alpha$ values estimated the mean and standard deviation can be estimated to reason about the accuracy of the bootstrap data sets.
+
+\subsection{Lab 5.3.4 - The Bootstrap}
+
+The goal with lab 5.3.4 is to show the use of bootstrap on the example used in Section 5.2\citep{ISLR} which uses the \emph{Portfolio} data set. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
+
+\subsection{Estimating the Accuracy of a Statistic of Interest}
+
+To start with a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
+With the X and Y value the $\alpha$ can now be calculated and returned.
+
+\begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
+def alpha(data,index):
+X = data['X'][index]
+Y = data['Y'][index]
+return ((np.var(Y) - np.cov(X,Y)) / (np.var(X) + np.var(Y) - ...
+2*np.cov(X,Y)))[0,1]
+\end{lstlisting}
+
+The next step is to bootstrap the \emph{Portfolio} data set.
+To perform a bootstrap a second function is needed which is seen in listing \ref{lst:bootstrap}.
+
+\begin{lstlisting}[caption={Bootstrap function in python}, label=lst:bootstrap, mathescape=true]
+def boot_python(data, function, num_of_iteration):
+n = data.shape[0]
+idx = np.random.randint(0, n, (num_of_iteration, n))
+stat = np.zeros(num_of_iteration)
+for i in xrange(len(idx)):
+stat[i] = function(data, idx[i])
+return {'Mean': np.mean(stat), 'std. error': np.std(stat)}
+\end{lstlisting}
+
+The bootstrap method receives three arguments, the first being \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of simulated data that should be created.  
+
+Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1,000.
+
+\begin{center}
+	$\hat{\alpha} = 0.5834$
+\end{center}
+
+\begin{center}
+	$SE(\hat{\alpha}) = 0.09102$
+\end{center}
+
+These results corresponds to the results from Section 5.2\citep{ISLR} where the mean $\bar{\alpha}$ for the true population is 0.6. 
+
+The Standard Deviation of the estimates is roughly 0.09. This means that when looking at a random sample of the population data, the difference between $\hat{\alpha}$ and $\alpha$ is expected to be roughly 0.9 on average.
+
+
+\subsection{Estimating the Accuracy of a linear Regression Model}
+
+In the next part of lab 5.3.4 the goal is to use the bootstrap approach to check the estimates for $\beta_0$ and $\beta_1$, which is the intercept and slope terms for the linear regression model which uses \emph{horsepower} to make a prediction of \emph{mpg}. \emph{horsepower} and \emph{mpg} are part of the \emph{Auto} data set.
+
+First step is to create a function to calculate the intercept and slope, this is seen in listing \ref{lst:boot}. The function \emph{boot} performs a linear regression fit on X and Y. 
+
+\begin{lstlisting}[caption={Boot function in python}, label=lst:boot, mathescape=true]
+def boot(data, index):
+X = data['horsepower'][index]
+Y = data['mpg'][index]
+slope, intercept, r_value, p_value, std_err = stats.linregress(X,Y)
+return [intercept, slope]
+\end{lstlisting}
+
+The next step is to adjust the bootstrap function from the last part. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
+
+Now the standard errors of 1,000 bootstrap estimates for the intercept and slope can be computed.
+The bootstrap estimates for the standard error intercept and slope:
+
+\begin{center}
+	$SE(\hat{\beta_0}) = 0.8601$
+\end{center} 
+\begin{center}
+	$SE(\hat{\beta_1}) = 0.007335$
+\end{center}
+
+The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtained by performing a linear regression on the \emph{Auto} data set are 0.717 for the intercept and 0.0064 for the slope. These are different from the results which the bootstrap estimates yielded.
+
+The reason is that the \emph{Auto} data set has a non-linear relationship, so using a quadratic model to fit the data should yield a result that are closer to the bootstrap estimates.
+
+So a new function for finding the standard error is needed, this function can be seen in Listing \ref{lst:bootstrap_q}.
+
+\begin{lstlisting}[caption={Function to calculate standard error with a qudratic model}, label=lst:bootstrap_q, mathescape=true]
+def boot_fn2(data, index):
+formula = 'mpg ~ horsepower+I(horsepower**2)'
+model = smf.glm(formula=formula, data=data, subset=index)
+result = model.fit()
+return result.params
+\end{lstlisting}
+
+The results it yields with a 1,000 simulated observations:
+
+\begin{center}
+	$SE(\hat{\beta_0}) = 2.06$
+\end{center}
+\begin{center}
+	$SE(\hat{\beta_1}) = 0.0328$
+\end{center}
+\begin{center}
+	$SE(\hat{\beta_2}) = 0.00012$
+\end{center}
+
+The new values from the quadratic formula shows a closer correspondence between the estimates from the bootstrap and the standard estimates.

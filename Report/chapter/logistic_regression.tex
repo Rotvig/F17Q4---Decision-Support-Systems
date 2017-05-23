@@ -1,4 +1,6 @@
-\chapter{Logistic Regression}
+\chapter{Classification}
+
+\section{Logistic Regression}
 \label{chp:logreg}
 Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem:
 \todo{Hvorfor er det i en centering?}
@@ -118,7 +120,141 @@ Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Runni
 
 
 
+\section{Linear Discriminant Analysis}
+\label{chp:lindisana}
 
+In the chapter \ref{chp:logreg} it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  a classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes. Furthermore a problem with logistic regression is that it does not perform very stable under some circumstance. One big problem with logistic regression is that it might not converge if the classes are well-separated. An example could be the data in the table below. Here we see that the classes are well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
+\begin{center} 
+	\begin{tabular}{rll}
+		\multicolumn{1}{c}{\textbf{Y}} &
+		\multicolumn{1}{c}{\textbf{X}} \\ \hline
+		0     &  -2  \\[0.05cm] 
+		0     &  -3  \\[0.05cm] 
+		0     &  -1  \\[0.05cm] 
+		0     &  -5  \\[0.05cm] 
+		1     &    3  \\[0.05cm] 
+		1     &    1  \\[0.05cm] 
+		1     &    5  \\[0.05cm] 
+		1     &    6  \\[0.05cm] 
+	\end{tabular}
+\end{center}
+
+Instead a method called Linear Discriminant Analysis(LDA) can be used. In logistic regression we directly model $Pr(Y|X)$. With LDA $P(X|Y)$ is modeled and prediction is done by using Bayes theorem to achieve $P(Y|X)$ and find the most probable class given the predictors. The following variables are used:
+
+\begin{itemize}
+	\item Let $\pi_k$ represent the prior probability $P(Y=k)$ for K classes.
+	\item Let $f_k(x))$ represent the probability $P(X=x|Y=k)$. So $f_k(x)$ is the probability of the predictors when the class Y is given.
+\end{itemize} 
+
+By inserting these in Bayes formula and normalizing to get $P(Y=k|X=x)$ the following can be written.
+
+\begin{equation}
+P(Y=k|X = x) = \dfrac{\pi_k f_k(x)}{\sum_{l=1}^{K} \pi_l f_l(x)}
+\end{equation}
+
+For the equation the two variables $\pi_k$ and $f_k(x)$ still needs to be estimated. $pi_k$ can be estimated by computing the fraction of the training data that belongs to the kth class. While $f_k(x)$ can be estimated as a Gaussian. This means that the equation differs when using only 1 predictor to using multiple. When only using one predictor and taking log of the equation it can be rewritten as the following
+
+\begin{equation}
+\delta_k(x) = x  \dfrac{\mu_k}{\sigma^2} - \dfrac{\mu_k^2}{2\sigma^2} + log(\pi_k)
+\end{equation}
+
+Then the equation is calculated for each class k and is classified for the k that results in the highest probability. The equation for multiple predictors instead uses a $mu$ matrix and a covariance matrix and can be written as following
+
+\begin{equation}
+\delta_k(x) = x^T \Sigma^{-1} \mu_k -  \frac{1}{2} \mu_k^{T} \Sigma^{-1} \mu_k + log \pi_k
+\end{equation}
+
+Note here that LDA assumes the observation to have a Gaussian distribution. If this is the case then LDA is likely to outperform Logistic regression, while if it is not, then Logistic regression is likely to outperform LDA. 
+
+The means of the Gaussian are simply calculated by summing all values with a specific class and dividing by the total number.
+The variance is calculated across all the data with a specific class.
+
+\section{Lab 4.6.3 - Linear Discriminant Analysis}
+First a model linear discriminant analysis model is created with the python library sklearn. The model is created based on the two predictors \emph{Lag1} and \emph{Lag2}. 
+
+
+\begin{lstlisting}[language=Python, label=lst:ldaModel, caption=creating linear discriminant analysis model sklearn]
+X_train = data[:'2004'][['Lag1', 'Lag2']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2']]
+Y_test = data['2005':]['Direction']
+
+lda = LinearDiscriminantAnalysis()
+fit = lda.fit(X_train,Y_train)
+\end{lstlisting}
+
+After creating the model the calculated prior probability, means and coefficients can be read. The prior probability for \emph{Down} is $\pi_1=0.492$ while the prior probability for \emph{Up} is $\pi_2=0.508$. So based on the data there are more days where the stock market went up than down. 
+
+The means $\mu_k$ are described by a matrix. The matrix describes a separate mean for both \emph{Lag1} and \emph{Lag2} and for each predictor a mean for \emph{Up} and \emph{Down}. The mean value for \emph{Lag1} and \emph{Lag2} has a tendency to be positive on days when the stock went up while they are negative when the stock went down.  $\bigl( \begin{smallmatrix} 	 & Lag1 & Lag2	\\ 	 Down & 0.0428 & 0.0339 \\ 	 Up & -0.0395 & -0.0313 \end{smallmatrix} \bigr) $. The coefficients are estimated to $-0.0554$ and $-0.0443$. These are the multipliers for \emph{Lag1} and \emph{Lag2}.
+
+\begin{lstlisting}[language=Python, label=lst:ldaProperties, caption=printing lda prior mean and coefficients]
+print "Prior probabilities:"
+print lda.priors_
+
+print "Mean:"
+print lda.means_
+
+print "Coefficients:"
+print lda.coef_
+\end{lstlisting}
+
+In listing \ref{lst:ldaScore} the score is printet. The score show that the lda model predicted correctly in $56\%$ of the predictions on the test data. 
+\begin{lstlisting}[language=Python, label=lst:ldaScore, caption=printing lda score]
+print(lda.score(X_test, Y_test))
+\end{lstlisting}
+
+This shows how linear discriminant analysis performs very similar to logistic regression on the stock market data.
+
+\section{Quadratic discriminant analysis}
+Similar to lda the Quadratic discriminant analysis (qda) also assumes that the observations are drawn from a Gaussian distribution and also uses Bayes theorem for prediction. 
+
+\myFigure{lda_vs_qda.PNG}{lda vs qda}{fig:qdaCompare}{0.6}
+
+In Figure \ref{fig:qdaCompare} the difference between lda and qda is illustrated. It shows that the lda can only learn linear boundaries, while the qda can learn quadratic boundaries. This makes the qda more flexible. 
+
+\subsection{Lab 4.6.4}
+Again the stock market data is used for prediction with \emph{Lag1} and \emph{Lag2} as predictors. The qda model is estimated with sklearn. This is shown in listing \ref{lst:qdaModel}.
+
+\begin{lstlisting}[language=Python, label=lst:qdaModel, caption=Creating quadratic discriminant analysis model sklearn]
+X_train = data[:'2004'][['Lag1', 'Lag2']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2']]
+Y_test = data['2005':]['Direction']
+
+qda = QuadraticDiscriminantAnalysis()
+fit = qda.fit(X_train,Y_train)
+\end{lstlisting}
+
+In listing \ref{lst:qdaScore} the score for the qda model is printed. The print shows that on the test data it predicted correctly in $59.9\%$ of the cases. With the stock market data it actually performed better than both logistic regression and linear discriminant analysis. 
+\begin{lstlisting}[language=Python, label=lst:qdaScore, caption=Printing qda score]
+print(qda.score(X_test, Y_test))
+\end{lstlisting}
+
+\section{K-Nearest Neighbors}
+
+\subsection{Lab 4.6.5}
+
+In this lab exercise the method \emph{K-nearest Neighbors} used. To perfrom this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number og n neighbors. After this the function fit is called, that fits the data.
+The code is shown in listing
+
+\begin{lstlisting}[caption={Python K-Nearest neighbors function, where K is set to 1}, label=lst:kneighbor, mathescape=true]
+X_train = data[:'2004'][['Lag1', 'Lag2']]
+Y_train = data[:'2004']['Direction']
+
+X_test = data['2005':][['Lag1', 'Lag2']]
+Y_test = data['2005':]['Direction']
+
+
+knn = KNeighborsClassifier(n_neighbors=1)
+fit = knn.fit(X_train, Y_train)
+\end{lstlisting}
+
+The function is used to predict the market's movement from the dates in 2005. If the value K is set to 1, 50\% of the predictions are correctly predicted which is not very good.
+If K is change to 3, the predictions turns out to be correct in 53\% of the cases. So increasing the number of k from 1 to 3 has made the model a bit better. All kinds of different values can be chosen for K, but it is important not to change the number to often because the model then will be customized to the training data which is not good.
+
+If the results are compared with the results that \emph{QDA} produces, the \emph{QDA} provides better results than K-nearest neighbors.
 
 
 

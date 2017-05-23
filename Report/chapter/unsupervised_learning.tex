@@ -78,29 +78,29 @@ The centroids are marked with crosses and each observation are either a blue or 
 
 
 \section{Hierarchical clustering}
-Hierarchical clustering does not require a pre-specified \emph{k} value at the beginning compared to K-means clustering.
+Hierarchical clustering does not require a pre-specified \emph{k} value as K-means clustering has to.
 Furthermore Hierarchical clustering produce a \emph{dendrogram} which shows the observations as a tree structure.
-The most common type is called the \emph{agglomerative} clustering, it is also called the \emph{bottom-up} approach.
+The most common type is called the \emph{agglomerative} clustering, it is also known as the \emph{bottom-up} approach.
 
 \subsection{Dendrograms}
 The easiest way of explaining a dendrogram is to show one. So figure \ref{fig:dendrogram} shows a dengrogram which is constructed of a data set with 50 observations.
 The labels are shown in different colors. But if these labels where not available and the data was observed without them then all labels will be in the same color. 
 One of the leafs is equal to one of the 50 observations. 
-Depending on the data set and the observations the dendrogram can help to determine the number of clusters that fits the data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the number of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters would be three.
+Depending on the data set and the observations the dendrogram can help to determine the number of clusters that fits the data best. In this example, the number of cluster are two. Line no. one shows the cut in the dendrogram to get the no. of cluster to be two. Line no. two shows a different cut, and if this was best for the data set the number of clusters would be three.
 Observations that fuse close to the top of dendrogram is often more different from each other compared to the observations in the bottom of the dendrogram. 
 
 \myFigure{Dendrogram.PNG}{Dendrogram with 50 observations}{fig:dendrogram}{1}
 
 \FloatBarrier
 To show how this works, a simple data set containing 7 observations are shown in figure \ref{fig:dendrogramdata} to the right.
-It can be seen that the observations 5 and 7 are quite similar to each other and observations 1 and 6 are also quite similar to each other. These are the bottom of the dendrogram, as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expanded, and by looking at the next observation that are closest to 5 and 7. Clearly 3 is the closest one to them, so this is the next leaf in the dendrogram. The same is done for observation 1 and 6 and at the end the dendrogram will look like figure \ref{fig:dendrogramdata} to the left.
+It can be seen that the observations 5 and 7 are close to each other, and observations 1 and 6 are also close to each other. These are the bottom of the dendrogram, as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expanded, and by looking at the next observation that are closest to 5 and 7. Clearly 3 is the closest one to them, so this is the next leaf in the dendrogram. The same is done for observation 1 and 6 and at the end the dendrogram will look like figure \ref{fig:dendrogramdata} to the left.
 
 \myFigure{DendrogramData.PNG}{Illustration of a dendrogram and its data set}{fig:dendrogramdata}{1}
 
 \FloatBarrier
 \subsection{The Hierarchical Clustering Algorithm}
-to produce the dendrogram the Hierarchical clustering algorithm is used. First thing is to find the Euclidean distance between pair of observation and find the dissimilarities.
-Then it runs iteratively trough all the observations. It starts at the bottom and finds the two observations who act as their own cluster, that are closest and fused to those two, so that there now are $n-1$ clusters. This continues, so the next two clusters that are most similar are fused so the number of cluster are now $n-2$. This is done until all observations belongs to one big cluster.
+to produce the dendrogram the Hierarchical clustering algorithm is used. First step is to find the Euclidean distance between the pair of observation and find the dissimilarities.
+Then it runs iteratively trough all the observations. It starts at the bottom and finds the two observations who act as their own cluster, that are closest and fuses those two, so that there now are $n-1$ clusters. This continues, so the next two clusters that are most similar are fused so the number of cluster are now $n-2$. This is done until all observations belongs to one big cluster.
 
 The Hierarchical Clustering algorithm is shown below.
 
@@ -130,20 +130,20 @@ These are explained in table XX
 		Single & Minimal intercluster dissimilarity. Record the smallest of these dissimilarities in cluster A and B \\ \hline
 		Average & Mean intercluster dissimilarity. record the average of pairwise dissimilarities in cluster A and B\\
 		\hline
-		Centroid & Dissimiliarity between the centroid for cluser A and B and record the average of these dissimilarities
+		Centroid & Dissimiliarity between the centroid for cluster A and B and record the average of these dissimilarities
 		\\
 		\hline
 	\end{tabular}
 \end{center}
 
-Complete and average linakge are generally the most preferred linakge as they produce more balanced dendrograms. 
+Complete and average linkage are generally the most preferred linkage as they produce more balanced dendrograms. 
 
 Sometimes you need to scale your data set to obtain standard deviation. Then there arise new problems, because which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.
 
 \subsection{Lab 10.5.2}
 A data set containing 50 observations are randomly generated and assigned in X and Y coordinates. So it is the same data set structure from lab 10.5.1.
 The hierarchical clustering dendrogram will be produced using complete, single and average linkage clustering with Euclidean distance.
-To perform the hierarchical clustering the library scipy in imported. This provide the functions for creating dendrograms with the linkage that is needed. 
+To perform the hierarchical clustering the library scipy is imported. This provides the functions for creating dendrograms with the linkage that is needed. 
 The code for creating the three types of linkage are shown in listing
 \ref{lst:Linkage}
 
@@ -154,7 +154,7 @@ average = linkage(zip(X,Y), method='average', metric='euclidean')
 \end{lstlisting}
 
 As it can been seen, the linkage functions look a lot like each other. The only difference is the method. The two other parameters are the data set and specifies that the linkage should use Euclidean distance. 
-Now is it time for creating the dendrograms. To create them the function \emph{dendrogram} from the scipy library is used. The only parameter that is needed to build them is the three linkage objects that was made in listing \ref{lst:Linkage}
+Now it is time for creating the dendrograms. To create them the function \emph{dendrogram} from the scipy library is used. The only parameter that is needed to build them is the three linkage objects that was made in listing \ref{lst:Linkage}
 The code that plots the three dendrograms are listed in listing \ref{lst:plottingDendrogram}
 
 \begin{lstlisting}[language=Python, label=lst:plottingDendrogram, caption=The python code that plots the dendrograms for the three different linakge]
@@ -182,8 +182,10 @@ The only thing that differ these diagrams is which linkage object that are send 
 The result of each of the three different dendrogram can be seen in figure- \ref{fig:dendrogramcomplete}, \ref{fig:dendrogramsingle} and \ref{fig:dendrogramaverage}
 
 
-\myFigure{DendrogramComplete.PNG}{The dendrogram for the linkage method complete}{fig:dendrogramcomplete}{0.}
+\myFigure{DendrogramComplete.PNG}{The dendrogram for the linkage method complete}{fig:dendrogramcomplete}{0.5}
 
 \myFigure{DendrogramSingle.PNG}{The dendrogram for the linkage method single}{fig:dendrogramsingle}{0.5}
 
 \myFigure{DendrogramAverage.PNG}{The dendrogram for the linkage method average}{fig:dendrogramaverage}{0.5}
+
+\todo{Der bliver ikke sagt noget om resultaterne, diagrammerne bliver bare vist}

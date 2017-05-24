@@ -56,7 +56,7 @@ Using polynomials shows a clear improvement of the Mean Squared Error, but not c
 \section{Leave-one-out cross validation}
 In validation-set approach only half of the data is used for training the model. This might give an overestimate of the mean squared error when training on the complete data set. The MSE might also vary a lot when doing random splits of the dataset. Leave-one-out Cross-validation tries to address this drawback and is illustrated in figure \ref{fig:loocv}. It splits the dataset in number of observations n and then uses n-1 observations for training and the last one as validation set. It then iterates through using all observations as validation. This might address the drawbacks of validation set approach but it is also very time consuming as a model has to be fitted n times.
 
-\myFigure{LOOCV.png}{Leave-one-out Cross-validation}{fig:loocv}{0.52}
+\myFigure{LOOCV.png}{Leave-one-out Cross-validation}{fig:loocv}{0.4}
 
 \subsection{Lab 5.3.2 Leave-one-out cross-validation}
 For the exercise for LOOCV, the \emph{Auto} data is read just like in Lab 5.3.1, but not split into two halves of random values. The \emph{horsepower} and \emph{mpg} data parts are though still distributed into respectively \emph{X\_train} and \emph{Y\_train}. 
@@ -84,13 +84,15 @@ It is then all used in the \emph{cross\_val\_score} function. It uses the fitted
 
 %\myFigure{LOOCV_result.png}{Result of the Leave-one-out Cross-validation}{fig:result_LOOCV}{0.3}
 
-The Mean Squared Error is lastly computed from the result of the Cross-validation. Once again it is clear that there is improvement when using second degree polynomial, but from there no clear improvement can be seen. Here the mse is a bit lower than with the validation set approach. This can be caused by the discussed overestimation of the mse by only training on half the dataset. For first degree polynomial the mse is 24.23, for second degree polynomial 19.25 and for third degree polynomial the mse was calculated to 19.33. All of these error rates showed lower than with validation set approach
+The Mean Squared Error is lastly computed from the result of the Cross-validation. Once again it is clear that there is improvement when using second degree polynomial, but from there no clear improvement can be seen. Here the mse is a bit lower than with the validation set approach. This can be caused by the discussed overestimation of the mse by only training on half the dataset. For first degree polynomial the mse is 24.23, for second degree polynomial 19.25 and for third degree polynomial the mse was calculated to 19.33. All of these error rates showed lower than with validation set approach.
 
 
 \section{K-fold Cross-validation}
-K-fold Cross-validation is similar to LOOCV, however it surpasses LOOCV in some areas. Instead of using only one observation as the validation set, the dataset is split into k roughly equal-sized parts, called \emph{folds}, and one of these folds is the validation set. All other folds are used as training set. Similar to LOOCV the algorithm then iterates through which fold is the validation set. Since there are less iterations to go through the Cross-validation has a computational advantage over the LOOCV, but that is not all. The ...
+K-fold Cross-validation is similar to LOOCV, however it surpasses LOOCV in some areas. Instead of using only one observation as the validation set, the dataset is split into k roughly equal-sized parts, called \emph{folds}, and one of these folds is the validation set. All other folds are used as training set. Similar to LOOCV the algorithm then iterates through which fold is the validation set. Since there are less iterations to go through the k-fold Cross-validation has a computational advantage over the LOOCV, but that is not all. You can also look at what is called the bias-variance trade-off. 
 
-\myFigure{K_fold.png}{Representation of K-fold Cross-validation}{fig:K_fold}{0.5}
+The LOOCV gives an approximately unbiased estimate of test error compared to the Validation set approach, due to training on all but one observation. However, in an estimating procedure, another important aspect is the procedure's variance, and this is an aspect where the k-fold Cross-validation is superior to LOOCV. When performing LOOCV, the result is an average of \emph{n} fitted models, and since the training set for each model only vary by one observation, the outputs are highly correlated. In k-fold Cross-validation the training sets in each model has a smaller overlap, and since the mean of highly correlated outputs has high variance, the LOOCV's results have higher variance than the k-fold Cross-validation's results. So the bias-variance trade-off is associated with k in k-fold Cross-validation. The higher the k, the more folds, and thereby higher correlation giving higher variance. 
+
+\myFigure{K_fold.png}{Representation of K-fold Cross-validation}{fig:K_fold}{0.4}
 
 The idea behind k-fold cross-validation is illustrated in Figure \ref{fig:K_fold}, where the blue folds are the training sets and the orange fold is the validation set. Note that the case where k is equal the number of observations is what was just described as LOOCV. Having a lower value of k therefore provides a less computationally expensive way of doing cross validation.
 

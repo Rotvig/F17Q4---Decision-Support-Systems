@@ -122,20 +122,26 @@ The Hierarchical Clustering algorithm is shown below.
 But one issue has bot been addressed. How does the algorithm determine that cluster 5 and 7 should be fused with cluster 3? The algorithm needs to be cable of define the dissimilarities between two cluster if one or both contains multiple observations. This is done with a extension by using \emph{linkage} which defines dissimilarities between two groups of observations. The most common types of linkage is \emph{complete}, \emph{average}, \emph{single} and
 \emph{centroid}.
 
-These are explained in table XX
-\begin{center}
-	\begin{tabular}{ | l | p{12cm} |}
-		\hline
-		Linkage & Description \\ \hline
-		Complete & Maximal intercluster dissimilarity. Record the largest of these dissimilarities in cluster A and B \\ \hline
-		Single & Minimal intercluster dissimilarity. Record the smallest of these dissimilarities in cluster A and B \\ \hline
-		Average & Mean intercluster dissimilarity. record the average of pairwise dissimilarities in cluster A and B\\
-		\hline
-		Centroid & Dissimiliarity between the centroid for cluster A and B and record the average of these dissimilarities
-		\\
-		\hline
-	\end{tabular}
-\end{center}
+These are explained in table \ref{table:linkage}
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{ | l | p{12cm} |}
+			\hline
+			Linkage & Description \\ \hline
+			Complete & Maximal intercluster dissimilarity. Record the largest of these dissimilarities in cluster A and B \\ \hline
+			Single & Minimal intercluster dissimilarity. Record the smallest of these dissimilarities in cluster A and B \\ \hline
+			Average & Mean intercluster dissimilarity. record the average of pairwise dissimilarities in cluster A and B\\
+			\hline
+			Centroid & Dissimiliarity between the centroid for cluster A and B and record the average of these dissimilarities
+			\\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Different linkage methods}
+	\label{table:linkage}
+\end{table}
+
 
 Complete and average linkage are generally the most preferred linkage as they produce more balanced dendrograms. 
 

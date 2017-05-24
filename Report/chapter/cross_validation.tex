@@ -101,9 +101,10 @@ for i in range(1, 11):
 	...
 \end{lstlisting}
 \FloatBarrier
+
 In table \ref{table:kfold_polynomials_mse} the result of the K-fold Cross-validation is shown from a 1 to 10 degree polynomial. The mean squared error is lower than with validation set approach. Compared to LOOCV it has a higher MSE for some polynomials while for others the MSE is lower. As explained this method is computationally less expensive than LOOCV and this was also obvious when executing the implementation.
 
-\begin{table}	
+\begin{table}[htbp]
 	\centering
 	\begin{subtable}[t]{2in}
 		\centering

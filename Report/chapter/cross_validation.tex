@@ -148,7 +148,7 @@ In table \ref{table:kfold_polynomials_mse} the result of the K-fold Cross-valida
 
 
 \section{Bootstrap}
-This chapter is about the bootstrap method which is a statistical tool that can be used to calculate uncertainty associated with estimators or statistical learning methods. It can be used to estimate the standard errors of the coefficients from a linear regression fit. This is just a simple example. Bootstrap is a simple approach which can be adapted and applied to many different statistical learning methods. Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set. 
+This chapter is about the bootstrap method which is a statistical tool that can be used to calculate uncertainty associated with estimators or statistical learning methods. It can for example be used to estimate the standard errors of the coefficients from a linear regression fit. Bootstrap is a simple approach which can be adapted and applied to many different statistical learning methods. Bootstrap relies on random sampling with replacement. Replacement means that the same observations can occur more than once or maybe not at all in the bootstrap data set. 
 
 The reason for using the bootstrap appraoch is if there is a case where there aren't enough samples, then the bootstrap approach can be used to generate simulated data from the original data set.
 
@@ -170,10 +170,10 @@ With the X and Y value the $\alpha$ can now be calculated and returned.
 
 \begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
 def alpha(data,index):
-X = data['X'][index]
-Y = data['Y'][index]
-return ((np.var(Y) - np.cov(X,Y)) / (np.var(X) + np.var(Y) - ...
-2*np.cov(X,Y)))[0,1]
+	X = data['X'][index]
+	Y = data['Y'][index]
+	return ((np.var(Y) - np.cov(X,Y)) / (np.var(X) + np.var(Y) - 
+	2*np.cov(X,Y)))[0,1]
 \end{lstlisting}
 
 The next step is to bootstrap the \emph{Portfolio} data set.
@@ -181,12 +181,12 @@ To perform a bootstrap a second function is needed which is seen in listing \ref
 
 \begin{lstlisting}[caption={Bootstrap function in python}, label=lst:bootstrap, mathescape=true]
 def boot_python(data, function, num_of_iteration):
-n = data.shape[0]
-idx = np.random.randint(0, n, (num_of_iteration, n))
-stat = np.zeros(num_of_iteration)
-for i in xrange(len(idx)):
-stat[i] = function(data, idx[i])
-return {'Mean': np.mean(stat), 'std. error': np.std(stat)}
+	n = data.shape[0]
+	idx = np.random.randint(0, n, (num_of_iteration, n))
+	stat = np.zeros(num_of_iteration)
+	for i in xrange(len(idx)):
+		stat[i] = function(data, idx[i])
+	return {'Mean': np.mean(stat), 'std. error': np.std(stat)}
 \end{lstlisting}
 
 The bootstrap method receives three arguments, the first being \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of simulated data that should be created.  
@@ -214,10 +214,10 @@ First step is to create a function to calculate the intercept and slope, this is
 
 \begin{lstlisting}[caption={Boot function in python}, label=lst:boot, mathescape=true]
 def boot(data, index):
-X = data['horsepower'][index]
-Y = data['mpg'][index]
-slope, intercept, r_value, p_value, std_err = stats.linregress(X,Y)
-return [intercept, slope]
+	X = data['horsepower'][index]
+	Y = data['mpg'][index]
+	slope, intercept, r_value, p_value, std_err = stats.linregress(X,Y)
+	return [intercept, slope]
 \end{lstlisting}
 
 The next step is to adjust the bootstrap function from the last part. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
@@ -240,10 +240,10 @@ So a new function for finding the standard error is needed, this function can be
 
 \begin{lstlisting}[caption={Function to calculate standard error with a qudratic model}, label=lst:bootstrap_q, mathescape=true]
 def boot_fn2(data, index):
-formula = 'mpg ~ horsepower+I(horsepower**2)'
-model = smf.glm(formula=formula, data=data, subset=index)
-result = model.fit()
-return result.params
+	formula = 'mpg ~ horsepower+I(horsepower**2)'
+	model = smf.glm(formula=formula, data=data, subset=index)
+	result = model.fit()
+	return result.params
 \end{lstlisting}
 
 The results it yields with a 1,000 simulated observations:

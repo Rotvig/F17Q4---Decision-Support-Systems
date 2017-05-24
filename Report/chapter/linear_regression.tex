@@ -133,15 +133,15 @@ lm = linear_model.LinearRegression()
 lm.fit(boston_X_train, boston_Y_train)
 \end{lstlisting}
 
-In listing \ref{lst:print} the calculated coefficients, intercept and variance for the linear regression model is printed.
+%In listing \ref{lst:print} the calculated coefficients, intercept and variance for the linear regression model is printed.
 
-\begin{lstlisting}[caption={Printing regression overview}, label=lst:print, mathescape=true]
-print("Coefficients:")
-print(lm.coef_)
-print("Intercept: ")
-print(lm.intercept_)
-print("Variance score: %.2f" % lm.score(boston_X_test, boston_Y_test))
-\end{lstlisting}
+%\begin{lstlisting}[caption={Printing regression overview}, label=lst:print, mathescape=true]
+%print("Coefficients:")
+%print(lm.coef_)
+%print("Intercept: ")
+%print(lm.intercept_)
+%print("Variance score: %.2f" % lm.score(boston_X_test, boston_Y_test))
+%\end{lstlisting}
 
 The printed output is shown in figure \ref{fig:multiOutput}. The output first shows the estimated coefficients for the linear regression model. The first value, -0.0717, is $\beta_1$ and is multiplied with the predictor \emph{crim}. The next value, 0.0464, is $\beta_2$ and is multiplied with the predictors \emph{zn}. In total there is 13 coefficients, one for each predictor.
 

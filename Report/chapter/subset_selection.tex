@@ -25,18 +25,7 @@ The algorithm for best subset selection is explained in Algorithm \ref{algo:best
 
 
 \subsection{Lab 6.5.1 Best subset selection}
-In this exercise a best subset selection is performed on a dataset called Hitters. The dataset is used for predicting the salary of baseball players.
-
-In listing \ref{lst:bestsubsetdata} the data is split into predictors and response. Dummy variables are created for categorical predictors.
-
-\begin{lstlisting}[language=Python, label=lst:bestsubsetdata, caption=Data is split into predictors and response]
-data = pd.read_csv('Hitters.csv', usecols=range(0,21)).dropna()
-
-X = pd.get_dummies(data.drop('Salary', axis=1).drop('Name', axis=1))
-	.drop(["League_A", "Division_E", "NewLeague_A"], axis=1)
-Y = data['Salary']
-\end{lstlisting}
-
+In this exercise a best subset selection is performed on a dataset called Hitters. The dataset is used for predicting the salary of baseball players. Before performing best subset selection the data is split into predictors and the response variable.
 
 A function for choosing the best subset is then defined in listing \ref{lst:best_subset_selection}. In line 3 it iterates through all combinations of the predictors with k number of predictors. A function process\_subset is called which returns the subset with calculated model, RSS, $R^2$, BIC and $C_p$. In line 4 all the different combinations are appended to the models array. In line 5 the best model is picked based on lowest RSS and then returned.
 
@@ -59,16 +48,11 @@ def process_subset(feature_set):
 	
 	rss = metricsUtil.RSS(Y, Y_hat)  
 	rsquared = metrics.r2_score(Y, Y_hat)
-	
 	cp = metricsUtil.Cp(rss, d, Y_hat, n)
 	bic = metricsUtil.Bic(n, rss, d, Y_hat)
 	
-	return {"model":model, 
-		"RSS":rss,
-		"features": feature_set,
-		"rsquared": rsquared,
-		"bic": bic,
-		"cp":cp }
+	return {"model":model, "features": feature_set,
+			"RSS":rss, "rsquared": rsquared, "bic": bic, "cp":cp }
 \end{lstlisting}
 
 For calculating RSS, $R^2$, $C_p$ and BIC a python module called metricsUtil was implemented. The module has defined functions for calculating these values. After these functions are defined the best subset selection is computed. In listing \ref{lst:best_subset9} a best subset selection is performed for the 19 possible predictors.
@@ -164,10 +148,9 @@ for train_index, test_index in kf.split(X):
     for i in xrange(1, 20):
 		subset = best_subset_selection(i, X_train, Y_train, X_test, Y_test)
         mse[j,i-1] = subset["mse"]
-    j = j+1
-print mse.mean(axis=0)    
+    j = j+1  
 \end{lstlisting}
-
+\FloatBarrier
 
 The results for cross-validation and best subset selection is shown in table \ref{table:mse_cross}. Using this approach the best model is achieved using a model with 10 predictors. Similar to the best subset selection, this method is even more computationally expensive because it runs the best subset selection one time for each fold.
 
@@ -178,23 +161,13 @@ The results for cross-validation and best subset selection is shown in table \re
 		\begin{tabular}{ p{2.5cm} p{1.5cm}  }
 			\textbf{Predictors} & \textbf{MSE} \\
 			\hline 
-			\\
-			5 & 90,675  \\\hline
-			\\
-			6 & 90,385  \\\hline
-			\\
+		 	6 & 90,385  \\\hline
 			7 & 90,133  \\\hline
-			\\
 			8 & 89,914  \\\hline
-			\\
 			\textbf{9} & \textbf{89,782}  \\\hline
-			\\
 			10 & 90,015  \\\hline
-			\\
 			11 & 90,192  \\\hline
-			\\
 			12 & 90,363  \\\hline
-			\\
 			13 & 90,794  \\\hline
 		\end{tabular}
 		\caption{Validation set approach}\label{table:mse_validation}
@@ -205,28 +178,18 @@ The results for cross-validation and best subset selection is shown in table \re
 	\begin{tabular}{ p{2.5cm} p{1.5cm}  }
 		\textbf{Predictors} & \textbf{MSE} \\
 		\hline 
-		\\
-		5 & 80,205  \\\hline
-		\\
 		6 & 78,654  \\\hline
-		\\
 		7 & 78,360  \\\hline
-		\\
 		8 & 77,971  \\\hline
-		\\
 		9 & 77,944  \\\hline
-		\\
 		\textbf{10} & \textbf{77,895} \\\hline
-		\\
 		11 & 78,352  \\\hline
-		\\
 		12 & 78,795 \\\hline
-		\\
 		13 & 80,686 \\\hline
 	\end{tabular}
 		\caption{Cross-validation}\label{table:mse_cross}
 	\end{subtable}
-	\caption{Calculated mean squared error from 5 to 13 predictors.}\label{table:mse}
+	\caption{Calculated mean squared error from 6 to 13 predictors.}\label{table:mse}
 \end{table}
 
 When choosing among the different techniques for subset selection it is often a matter of how much computation power is available.  The best subset selection is a lot more expensive than forward and backward stepwise selection. Combining best subset selection with cross-validation also makes the process even more computationally expensive. If many predictors are available, then best subset selection might simply be too expensive, even for very fast modern computers. If the amount of predictors available are more than 40 \citep[pp. 207]{ISLR}, then best subset selection is rarely feasible and it might be relevant to use forward and backward stepwise selection instead. 

@@ -1,16 +1,12 @@
 \chapter{Classification}
-
-\section{Logistic Regression}
-\label{chp:logreg}
 Linear regression discussed in previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem: Predicting whether a tumor is malignant or not based on the size of the tumor. Linear regression could be used by converting the wanted qualitative response variable into a quantitative response. The quantitative response can be converted into a qualitative by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the probability is higher than 0.5. 
 
 A problem though arises from this, the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would predict a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes, it can only be used for binary classification. The reason for this is that their might not be a natural ordering between the different classes and the gap between some classes might be bigger than others. This would make it difficult to make an accurate model using a linear regression.
 
-Instead logistic regression can be used to avoid the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used and can be seen in (3.1).
-
-%\begin{center}
-%	$p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}$ 
-%\end{center}
+Instead this chapter presents different methods that are more suited for classification.
+\section{Logistic Regression}
+\label{chp:logreg}
+Logistic regression is a classification method. It avoids the problem with values outside the interval of $[0,1]$. In logistic regression a logistic function is used and can be seen in (3.1).
 
 \begin{equation}
 	p(X) = \dfrac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
@@ -104,12 +100,10 @@ lr.fit(X_train,Y_train)
 
 Using only \emph{Lag1} and \emph{Lag2} as predictors gave a better result. Running the score function in Listing \ref{lst:LRscore} showed a mean accuracy of $56\%$. By only using \emph{Lag1} and \emph{Lag2} the model has been improved. This combination of predictors also showed the most accurate for predicting the \emph{Direction}. Using p-values for choosing predictors is important and provides information about the association when multiple predictors  are used.
 
-
-
 \section{Linear Discriminant Analysis}
 \label{chp:lindisana}
 
-In chapter \ref{chp:logreg} it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  a classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes. Furthermore a problem with logistic regression is that it does not perform very stable under some circumstance. One big problem with logistic regression is that it might not converge if the classes are well-separated  \citep{convergencefailure}. An example could be the data in the table below. Here we see that the classes are well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
+In chapter \ref{chp:logreg} it was described how logistic regression could be used for binary classification. It was also stated how it could be extended to  a classification problem with more than two classes. In practice logistic regression is though rarely used for classification problems with more than two classes \citep[pp. 137]{ISLR}. Furthermore a problem with logistic regression is that it does not perform very stable under some circumstance. One big problem with logistic regression is that it might not converge if the classes are well-separated  \citep{convergencefailure}. An example could be the data in the table below. Here we see that the classes are well-separated as $X<0$ then $Y=0$ and if $X>0$ then $Y=1$. Because of this perfect separation the algorithm will never converge because it can keep optimizing.
 %\begin{center} 
 %	\begin{tabular}{rll}
 %		\multicolumn{1}{c}{\textbf{Y}} &
@@ -201,11 +195,11 @@ print(lda.score(X_test, Y_test))
 This shows how linear discriminant analysis performs very similar to logistic regression on the stock market data.
 
 \section{Quadratic discriminant analysis}
-Similar to LDA the Quadratic discriminant analysis (QDA) also assumes that the observations are drawn from a Gaussian distribution and also uses Bayes theorem for prediction. 
+Similar to LDA the Quadratic discriminant analysis (QDA) also assumes that the observations are drawn from a Gaussian distribution. The difference lies in the fact that LDA assumes a shared mean and covariance for the observations for all classes K, while QDA assumes a different mean and covariance for the observations for each class.
 
 \myFigure{lda_vs_qda.PNG}{LDA vs QDA}{fig:qdaCompare}{0.6}
 
-In Figure \ref{fig:qdaCompare} the difference between LDA and QDA is illustrated. It shows that the LDA can only learn linear boundaries, while the QDA can learn quadratic boundaries. This makes the QDA more flexible. 
+In Figure \ref{fig:qdaCompare} the difference between LDA and QDA is illustrated. It shows the linear decision boundary of LDA, while the QDA can learn quadratic boundaries.
 
 \subsection{Lab 4.6.4}
 Again the stock market data is used for prediction with \emph{Lag1} and \emph{Lag2} as predictors. The QDA model is estimated with sklearn. This is shown in listing \ref{lst:qdaModel}.

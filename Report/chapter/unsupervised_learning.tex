@@ -154,10 +154,10 @@ single = linkage(zip(X,Y), method='single', metric='euclidean')
 average = linkage(zip(X,Y), method='average', metric='euclidean')
 \end{lstlisting}
 
-As it can been seen, the linkage functions look a lot like each other. The only difference is the method. The two other parameters are the data set and specifies that the linkage should use Euclidean distance. 
+As it can been seen, the linkage functions look a lot like each other. The only difference is the method. The two other parameters are the data set and the one that specifies which metric is should use. In this lab the linkage uses Euclidean distance. 
 Now it is time for creating the dendrograms. To create them the function \emph{dendrogram} from the scipy library is used. The only parameter that is needed to build them is the three linkage objects that was made in listing \ref{lst:Linkage}
 
-When plotting the dendrograms The only thing that differ is which linkage object that are send as a parameter to the dendrogram function.
+When plotting the dendrograms The only thing that differs is which linkage object that are send as a parameter to the dendrograms function.
 The result of each of the three different dendrogram can be seen in figures \ref{fig:dendrogramsCompAvg} and \ref{fig:dendrogramsingle}
 
 
@@ -170,4 +170,4 @@ The result of each of the three different dendrogram can be seen in figures \ref
 %\myFigure{DendrogramAverage.PNG}{The dendrogram for the linkage method average}{fig:dendrogramaverage}{0.5}
 
 As expected the dendrograms are different from each other.
-But looking at figures \ref{fig:denComplete} and \ref{fig:denAverage} Average and Complete looks more identical and correct compared to singles figure in figure \ref{fig:dendrogramsingle}. In the dendrogram for single it can be seen that one observation belongs to its own cluster. This can mean that maybe two clusters are not the best solution, and the data set should maybe be divided into more clusters. In this case four cluster would be better.
+Looking at figures \ref{fig:denComplete} and \ref{fig:denAverage} Average and Complete looks more identical and correct compared to figure \ref{fig:dendrogramsingle} where the method single are used. Here it can be seen that one observation belongs to its own cluster. This can mean that maybe two clusters are not the best solution, and the data set should maybe be divided into more clusters. In this case four cluster would be better.

@@ -54,7 +54,6 @@ The function in listing \ref{lst:process_subset} is called in listing \ref{lst:b
 def process_subset(feature_set):
 	d = len(feature_set)
 	n = X.shape[0]
-	# Fit model on feature_set  
 	model = lm.LinearRegression().fit(X[[i for i in feature_set]], Y)
 	Y_hat = model.predict(X[list(feature_set)])
 	

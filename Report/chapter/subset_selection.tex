@@ -72,38 +72,20 @@ def process_subset(feature_set):
 		"cp":cp }
 \end{lstlisting}
 
-For calculating RSS, $R^2$, $C_p$ and BIC a python module called metricsUtil was implemented. The module has defined functions for calculating these values.
-
-\begin{lstlisting}[language=Python, label=lst:metricsUtil, caption={metricsUtil module for calculating RSS, $R^2$, $C_p$, BIC and RSS}]
-def RSS(Y, Y_hat):
-	residual = Y - Y_hat
-	return (residual ** 2).sum()
-
-def A_rsquare(RSS, Y, Y_hat, n, d):
-	TSS = ((Y - Y.mean()) ** 2).sum()
-	return 1.0 - ((RSS / (n - d - 1)) / (TSS / (n - 1)))
-
-def Cp(RSS, d, Y_hat, n):
-	return  (1.0 / n) * (RSS + 2 * d * Y_hat.var())
-
-def Bic(n, RSS, d, Y_hat)
-	return (1.0 / n) * (RSS + math.log(n) * d * Y_hat.var())
-\end{lstlisting}
-
-After these functions are defined the best subset selection is computed. In listing \ref{lst:best_subset9} a best subset selection is performed for the 19 possible predictors.
+For calculating RSS, $R^2$, $C_p$ and BIC a python module called metricsUtil was implemented. The module has defined functions for calculating these values. After these functions are defined the best subset selection is computed. In listing \ref{lst:best_subset9} a best subset selection is performed for the 19 possible predictors.
 
 \begin{lstlisting}[language=Python, label=lst:best_subset9, caption=Calculating the best subset from 1 to 19 predictors]
 for i in xrange(1,20):
 	subsets.loc[i] = best_subset_selection(i)
 \end{lstlisting}
 
-Plotting RSS, $R^2$, $C_p$ and BIC for the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. It shows how RSS and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp and BIC can be used for estimating the optimal amount of predictors.
+Plotting RSS, $R^2$, $C_p$ and BIC for the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. It shows how RSS and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp, BIC or adjusted $R^2$ can be used for estimating the optimal amount of predictors. When calculating BIC and $C_p$ a penalty is added to the calculating. For adjusted $R^2$ the calculation takes into account that only small increases in RSS is often coursed by adding a noise variable. Noise variables are added this consequently leads to a decrease of $R^2$.
 
 \myFigure{subset_all_graph.PNG}{Plottet RSS, $R^2$, $C_p$ and BIC for best subset selection from 1-19 predictors}{fig:best_plottet}{1}
 \FloatBarrier
 
 
-BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{PutOuts}. $C_p$ indicates that the best model contains 10 predictors. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combination is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
+BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{PutOuts}. $C_p$ indicates that the best model contains 10 predictors, this also makes sense as BIC generally places a heavier penalty. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combination is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation 7.1 to 524,287.
 
 \begin{equation}
 2^{19} = 524288
@@ -198,14 +180,6 @@ The results for cross-validation and best subset selection is shown in table \re
 			\textbf{Predictors} & \textbf{MSE} \\
 			\hline 
 			\\
-			1 & 139,420 \\\hline
-			\\
-			2 & 109,059 \\\hline
-			\\
-			3 & 101,947 \\\hline
-			\\
-			4 & 95,490  \\\hline
-			\\
 			5 & 90,675  \\\hline
 			\\
 			6 & 90,385  \\\hline
@@ -233,14 +207,6 @@ The results for cross-validation and best subset selection is shown in table \re
 		\textbf{Predictors} & \textbf{MSE} \\
 		\hline 
 		\\
-		1 & 127,856 \\\hline
-		\\
-		2 & 101,343 \\\hline
-		\\
-		3 & 89,222  \\\hline
-		\\
-		4 & 83,120  \\\hline
-		\\
 		5 & 80,205  \\\hline
 		\\
 		6 & 78,654  \\\hline
@@ -261,7 +227,7 @@ The results for cross-validation and best subset selection is shown in table \re
 	\end{tabular}
 		\caption{Cross-validation}\label{table:mse_cross}
 	\end{subtable}
-	\caption{Calculated mean squared error from 1 to 13 predictors.}\label{table:mse}
+	\caption{Calculated mean squared error from 5 to 13 predictors.}\label{table:mse}
 \end{table}
 
 When choosing among the different techniques for subset selection it is often a matter of how much computation power is available.  The best subset selection is a lot more expensive than forward and backward stepwise selection. Combining best subset selection with cross-validation also makes the process even more computationally expensive. If many predictors are available, then best subset selection might simply be too expensive, even for very fast modern computers. If the amount of predictors available are more than 40 \citep[pp. 207]{ISLR}, then best subset selection is rarely feasible and it might be relevant to use forward and backward stepwise selection instead. 

@@ -39,7 +39,7 @@ The K-means Clustering algorithm can then be written as.
 	\end{algorithmic}
 \end{algorithm}
 
-\subsection{Lab 10.5.1}
+\subsection{Lab 10.5.1 - K-Means Clustering}
 First a random data set consisting of 50 observations is generated. After this, the \emph{K-means} from the sklearn library is used to perform the K-means clustering.
 After the algorithm is used, the labels and the centroids are saved. The code is showed in listing \ref{lst:kmeanscode} below with number of clusters are set to k = 2.
 \begin{lstlisting}[language=Python, label=lst:kmeanscode, caption=The KMean function and the code which saves the labels and the centroids]
@@ -78,7 +78,7 @@ The result of this code can be seen in figure \ref{fig:kmeansResult}.
 The centroids are marked with crosses and each observation are either a blue or a green dot depending on which cluster it is assigned too.
 
 
-\section{Hierarchical clustering}
+\section{Hierarchical Clustering}
 Hierarchical clustering does not require a prespecified \emph{k} value as K-means clustering has to.
 Furthermore Hierarchical clustering produce a \emph{dendrogram} which shows the observations as a tree structure.
 The most common type is called the \emph{agglomerative} clustering, it is also known as the \emph{bottom-up} approach.
@@ -148,7 +148,7 @@ Complete and average linkage are generally the most preferred linkage as they pr
 
 Sometimes you need to scale your data set to obtain standard deviation. Then new problems arises, because which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.
 
-\subsection{Lab 10.5.2}
+\subsection{Lab 10.5.2 - Hierarchical Clustering}
 A data set containing 50 observations are randomly generated and assigned in X and Y coordinates. So it is the same data set structure from lab 10.5.1.
 The hierarchical clustering dendrogram will be produced using complete, single and average linkage clustering with Euclidean distance.
 To perform the hierarchical clustering the library scipy is imported. This provides the functions for creating dendrograms with the linkage that is needed. 

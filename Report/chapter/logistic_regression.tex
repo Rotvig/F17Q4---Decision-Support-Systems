@@ -226,13 +226,13 @@ print(qda.score(X_test, Y_test))
 \end{lstlisting}
 
 \section{K-Nearest Neighbors}
-K-Nearest Neighbors or \emph{KNN} is a classification technique that classifies observations depending on distance to k other observations. 
+K-nearest neighbors or \emph{KNN} is a classification technique that classifies observations depending on distance to k other observations. 
 
 Say you have a  data set with two classes of observations A and B, with 10 observations each. Then a test observation is desired to be classified with $k=5$, which means the five nearest observations will be examined. If three of the examined observations are A and the other two are B then the estimated probabilities are $3/5$ for class A and $2/5$ for class B. 
 
 \subsection{Lab 4.6.5 - K-Nearest Neighbors}
 
-In this lab exercise the method \emph{K-Nearest Neighbors} is used. To perform this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number of n neighbors. After this the function fit is called, that fits the data.
+In this lab exercise the method \emph{K-nearest neighbors} is used. To perform this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number of n neighbors. After this the function fit is called, that fits the data.
 The code is shown in listing \ref{lst:kneighbor}.
 
 \begin{lstlisting}[caption={Python KNN function, where k is set to 1}, label=lst:kneighbor, mathescape=true]

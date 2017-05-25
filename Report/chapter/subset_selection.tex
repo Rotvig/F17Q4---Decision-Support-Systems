@@ -109,11 +109,11 @@ Similarly a function for backward stepwise selection was implemented. Comparing 
 \item Backward stepwise: \emph{AtBat, Hits, Walks, CRuns, CWalks, PutOuts} and \emph{Division\_W}
 \end{itemize}
 
-\section{Validation Set Approach and Cross-validation}
+\section{Validation Set Approach and Cross-Validation}
 In the previous exercises $C_p$, AIC, BIC and adjusted $R^2$ was used for picking the right amount of predictors. This was needed because the models were trained on the complete data set and so the test error would provide an underestimate of the true error.
 
-In this exercise the validation set approach and Cross-validation are used. Therefore instead of using $C_p$, AIC, BIC and adjusted $R^2$ the test error can be directly calculated. 
-\subsection{Lab 6.5.3 - Choosing Among Models Using The Validation Set Approach and Cross-validation}
+In this exercise the validation set approach and cross-validation are used. Therefore instead of using $C_p$, AIC, BIC and adjusted $R^2$ the test error can be directly calculated. 
+\subsection{Lab 6.5.3 - Choosing Among Models Using The Validation Set Approach and Cross-Validation}
 
 Initially the validation set approach will be used in combination with best subset selection. This is shown in listing \ref{lst:validationsetapproach}. First the data is split into a training and testing set. When this is done the best subset selection is run from 1 to 19 predictors. A small modification of the functions were needed so that the training and test sets were used appropriately.
 
@@ -129,9 +129,9 @@ for i in xrange(1, 20):
 
 The mean squared error for different numbers of predictors is shown in table \ref{table:mse_validation}. By using this validation set approach and best subset selection the optimal number of predictors is computed to 9. The optimal number of predictors is based on the model with lowest mean squared error. It is important to note that a different split of train and test data can give a different number of optimal predictors.
 
-The validation set approach splits the data equally in two parts. This does not leave much data for training and the test error is therefore very likely an overestimate for the model fit on the entire data. Another approach is K-fold Cross-validation. In this exercise a 10-fold Cross-validation is executed on the data set in combination with best subset selection.
+The validation set approach splits the data equally in two parts. This does not leave much data for training and the test error is therefore very likely an overestimate for the model fit on the entire data. Another approach is k-fold cross-validation. In this exercise a 10-fold cross-validation is executed on the data set in combination with best subset selection.
 
-The implementation of 10-fold Cross-validation is shown in listing \ref{lst:crossvalidation}. First a 10-fold random split of the data is done. Then a for loop iterates through the folds and gives a train and test index for each iteration. These indexes are used to create a training and test set for each fold. For each fold a best subset selection is performed from 1 to 19 predictors. After performing the best subset selection 10 times, one for each fold, then a mean of the MSE is calculated for all the folds.
+The implementation of 10-fold cross-validation is shown in listing \ref{lst:crossvalidation}. First a 10-fold random split of the data is done. Then a for loop iterates through the folds and gives a train and test index for each iteration. These indexes are used to create a training and test set for each fold. For each fold a best subset selection is performed from 1 to 19 predictors. After performing the best subset selection 10 times, one for each fold, then a mean of the MSE is calculated for all the folds.
 
 \begin{lstlisting}[language=Python, label=lst:crossvalidation, caption=Cross-validation and best subset selection for choosing predictors]
 kf = KFold(n_splits=10, shuffle=True)
@@ -150,7 +150,7 @@ for train_index, test_index in kf.split(X):
 \end{lstlisting}
 \FloatBarrier
 
-The results for Cross-validation and best subset selection is shown in table \ref{table:mse_cross}. Using this approach the best model is achieved using a model with 10 predictors. Similarly to the best subset selection, this method is even more computationally expensive because it runs the best subset selection one time for each fold.
+The results for cross-validation and best subset selection is shown in table \ref{table:mse_cross}. Using this approach the best model is achieved using a model with 10 predictors. Similarly to the best subset selection, this method is even more computationally expensive because it runs the best subset selection one time for each fold.
 
 \begin{table}	
 	\centering

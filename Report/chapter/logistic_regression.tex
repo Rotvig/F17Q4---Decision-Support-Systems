@@ -1,7 +1,7 @@
 \chapter{Classification}
 Linear regression discussed in the previous chapter assumes a quantitative response value Y but often classification is needed to solve a problem. Consider the binary classification problem: Predicting whether a tumor is malignant or not based on the size of the tumor. Linear regression could be used by converting the wanted qualitative response variable into a quantitative response. The quantitative response can be converted into a qualitative response by saying that $p(maligant = true | tumorsize) > 0.5$. The model would then classify a tumor as malignant if the probability is higher than 0.5. 
 
-A problem though arises from this, since the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would predict a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes. It can only be used for binary classification. The reason for this is that there might not be a natural ordering between the different classes and the gap between some classes might be bigger than others. This would make it difficult to make an accurate model using a linear regression. Instead this chapter presents different methods that are more suited for classification.
+A problem though arises from this, since the model will make estimates outside the interval $[0,1]$. Because some predictions are outside of this interval, then the prediction can not be thought of as probabilities. For example measuring a tumor size of 0 would predict a negative value. Another problem with linear regression is that it can not be extended to a classification problem with more than two classes. It can only be used for binary classification. The reason for this is that there might not be a natural ordering between the different classes and the gap between some classes might be bigger than others. This would make it difficult to make an accurate model using a linear regression \citep[pp. 129-130]{ISLR}. Instead this chapter presents different methods that are more suited for classification.
 
 \section{Logistic Regression}
 \label{chp:logreg}
@@ -43,7 +43,7 @@ The printed correlation matrix is illustrated in figure \ref{fig:lab461}. Here i
 
 \myFigure{461_plot.png}{Correlation between Volume and Year. Higher index describes forward in time}{fig:lab461Plot}{0.45}
  
-\emph{Volume} is plotted in figure \ref{fig:lab461Plot}. Here the increase in traded stock is obvious. When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if it is multiple predictors. When choosing predictors it is important to choose the predictors that actually are associated with the response variable. The following lab will therefore examine the data to find good predictors.
+\emph{Volume} is plotted in figure \ref{fig:lab461Plot}. Here the increase in traded stock is obvious. When choosing predictors in our logistic regression model it must be noted that a correlation matrix not necessarily describes the best predictors, at least not if multiple predictors are used. When choosing predictors it is important to choose the predictors that actually are associated with the response variable. The following lab will therefore examine the data to find good predictors.
 
 \subsection{Lab 4.6.2 - Logistic Regression}
 \label{sec:lab462}
@@ -143,16 +143,15 @@ For the equation the two variables $\pi_k$ and $f_k(x)$ still needs to be estima
 \delta_k(x) = x  \dfrac{\mu_k}{\sigma^2} - \dfrac{\mu_k^2}{2\sigma^2} + log(\pi_k)
 \end{equation}
 
-Then the equation is calculated for each class k and is classified for the k that results in the highest probability. The equation for multiple predictors instead uses a $mu$ matrix and a covariance matrix and can be written as follows:
+Then the equation is calculated for each class k and is classified for the k that results in the highest probability. The equation for multiple predictors instead uses a mean vector and a covariance matrix and can be written as follows:
 
 \begin{equation}
 \delta_k(x) = x^T \Sigma^{-1} \mu_k -  \frac{1}{2} \mu_k^{T} \Sigma^{-1} \mu_k + log (\pi_k)
 \end{equation}
 
-Note here that LDA assumes the observation to have a Gaussian distribution. If this is the case then LDA is likely to outperform Logistic regression, while if it is not, then Logistic regression is likely to outperform LDA. 
+The means of the Gaussian for each class are simply calculated by summing all values with a specific class and dividing by the total number. The covariance matrix is calculated as a common covariance for all classes.
 
-The means of the Gaussian are simply calculated by summing all values with a specific class and dividing by the total number.
-The variance is calculated across all the data with a specific class.
+Note here that LDA assumes the observation to have a Gaussian distribution. If this is the case then LDA is likely to outperform Logistic regression, while if it is not, then Logistic regression is likely to outperform LDA \citep{comparelogandlda}.
 
 \subsection{Lab 4.6.3 - Linear Discriminant Analysis}
 First a linear discriminant analysis model is created with the python library sklearn. The model is created based on the two predictors \emph{Lag1} and \emph{Lag2}. 
@@ -174,7 +173,7 @@ After creating the model the calculated prior probability, means and coefficient
 The means $\mu_k$ are described by a matrix. The matrix describes a separate mean for both \emph{Lag1} and \emph{Lag2} and for each predictor a mean for \emph{Up} and \emph{Down}. The mean value for \emph{Lag1} and \emph{Lag2} has a tendency to be positive on days when the stock went up while they are negative when the stock went down.  
 
 \begin{center}
-	$\bigl( \begin{smallmatrix} 	 & Lag1 & Lag2	\\ 	 Down & 0.0428 & 0.0339 \\ 	 Up & -0.0395 & -0.0313 \end{smallmatrix} \bigr) $
+	$\begin{matrix} 	 & Lag1 & Lag2	\\ 	 Down & 0.0428 & 0.0339 \\ 	 Up & -0.0395 & -0.0313 \end{matrix} $
 \end{center}
 
 
@@ -200,9 +199,9 @@ print(lda.score(X_test, Y_test))
 This shows how linear discriminant analysis performs very similar to logistic regression on the stock market data.
 
 \section{Quadratic Discriminant Analysis}
-Similar to LDA the Quadratic discriminant analysis \emph{QDA} also assumes that the observations are drawn from a Gaussian distribution. The difference lies in the fact that LDA assumes a shared mean and covariance for the observations for all classes K, while QDA assumes a different mean and covariance for the observations for each class.
+Similar to LDA the Quadratic discriminant analysis \emph{QDA} also assumes that the observations are drawn from a Gaussian distribution. The difference lies in the fact that LDA assumes a shared covariance for the observations for all classes K, while QDA assumes a different covariance for the observations for each class.
 
-\myFigure{lda_vs_qda.PNG}{LDA vs QDA}{fig:qdaCompare}{0.6}
+\myFigure{lda_vs_qda.PNG}{Comparison of LDA and QDA}{fig:qdaCompare}{0.6}
 
 In figure \ref{fig:qdaCompare} the difference between LDA and QDA is illustrated. It shows the linear decision boundary of LDA, while the QDA can learn quadratic boundaries.
 
@@ -220,7 +219,7 @@ qda = QuadraticDiscriminantAnalysis()
 fit = qda.fit(X_train,Y_train)
 \end{lstlisting}
 
-In listing \ref{lst:qdaScore} the score for the QDA model is printed. The print shows that on the test data the prediction was correct in $59.9\%$ of the cases. With the stock market data it actually performed better than both logistic regression and linear discriminant analysis. 
+In listing \ref{lst:qdaScore} the score for the QDA model is printed. The print shows that on the test data the prediction was correct in $59.9\%$ of the cases. With the stock market data it actually performed better than both logistic regression and linear discriminant analysis. This might indicate that the relationship for the data set is better captures with a quadratic form.
 \begin{lstlisting}[language=Python, label=lst:qdaScore, caption=Printing qda score]
 print(qda.score(X_test, Y_test))
 \end{lstlisting}
@@ -232,7 +231,7 @@ Say you have a  data set with two classes of observations A and B, with 10 obser
 
 \subsection{Lab 4.6.5 - K-Nearest Neighbors}
 
-In this lab exercise the method \emph{K-nearest neighbors} is used. To perform this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number of n neighbors. After this the function fit is called, that fits the data.
+In this lab exercise the method K-nearest neighbors is used. To perform this method, sklearn has a function called \emph{KNeighborsClassifier}. This takes one parameter, which is number of k. After this the function fit is called, that fits the data.
 The code is shown in listing \ref{lst:kneighbor}.
 
 \begin{lstlisting}[caption={Python KNN function, where k is set to 1}, label=lst:kneighbor, mathescape=true]

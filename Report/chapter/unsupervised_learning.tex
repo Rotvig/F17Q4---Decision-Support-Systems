@@ -1,15 +1,14 @@
 \chapter{Unsupervised Learning}
 \label{chp:unsuplea}
-In unsupervised learning there is no response variable Y. There is only a set of features $X_1, X_2,..., X_p$ measured on n observations. So the goal is to find the interesting parts of the measurements on the features.
-Supervised learning compared to unsupervised learning comes with some challenges. The tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no accepted method for performing cross-validation, due to the fact that there is no Y to check results up against.
-But it is an important tool to predict subgroups when the number of subgroups are unknown.
+In unsupervised learning there is no response variable Y. There is only a set of features $X_1, X_2,..., X_p$ measured on n observations. 
+Supervised learning compared to unsupervised learning comes with some challenges. The tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no accepted method for determining the quality of the result, due to the fact that there is no Y to check results up against.
 In this section the focus will be on the  technique called \emph{clustering} which is used to discover subgroups or clusters in a data set. 
-This is done by dividing the data set into clusters so that the observations in each of the clusters are similar to each other, and the observations belonging to other clusters are different compared to the observations in other clusters.
+This is done by dividing the data set into clusters so that the observations in each of the clusters are similar to each other, and the observations belonging to clusters are different compared to the observations in other clusters.
 The problem is to determine if observations are similar or different to each other.
  
 \section{K-Means Clustering}
 \label{chp:clus}
-K-means clustering is a technique to divide some observations in a data set into a prespecified \emph{k} number of clusters. When \emph{k} is specified it will give each of the observations to one of the clusters within 1 - \emph{k}. To understand this, it is easier to look at an example. In figure \ref{fig:K-meanex} a data set is assigned to three clusters. This means that \emph{k} is equal to 3. The data set consists of 50 observations. Each cluster is marked with a color and the cross is the center points of a cluster. This point is also called a \emph{centroid}.
+K-means clustering is a technique to divide observations in a data set into a prespecified k number of clusters. Each observation is assigned to one of the k clusters. In figure \ref{fig:K-meanex} a data set is assigned to three clusters. This means that \emph{k} is equal to 3. The data set consists of 50 observations. Each cluster is marked with a color and the cross is the center points of a cluster. This point is also called a \emph{centroid}.
 
 \myFigure{K-mean.PNG}{Example of the K-means algorithm where k is 3}{fig:K-meanex}{0.55}
 
@@ -19,8 +18,8 @@ K-means clustering needs to satisfy two properties.
 	\item Clusters cannot overlap, which means that no observation can belong to more than one cluster
 \end{itemize} 
 
-To get a good clustering the \emph{within-cluster variation} needs to be as small as possible. So the algorithm will divide the observation into k clusters, such that the total sum of all \emph{within-cluster variation} is as small as possible. The \emph{within-cluster variation} is commonly calculated with the \emph{squared Euclidean distance}. To obtain the correct result all Euclidean distances are divided by the number of observations in the given cluster. Now it will try to minimize the total \emph{within-cluster variation} summed over all clusters.
-The K-means clustering algorithm can then be written as in algorithm \ref{algo:KMeansClustering}.
+To get a good clustering the within-cluster variation needs to be as small as possible. So the algorithm tries to minimize this. The within-cluster variation is commonly calculated with the sum of squared pairwise Euclidean distance between observations and the centroid they belong to, divided by the number of observations belonging to that centroid. 
+The K-means clustering algorithm can then be written as in algorithm \ref{algo:KMeansClustering}. Other initialization algorithms than the one described in line 1 exists such as K-means++ \citep{kplusplus}.
 
 \begin{algorithm}
 	\caption{K-Means Clustering}
@@ -39,8 +38,8 @@ The K-means clustering algorithm can then be written as in algorithm \ref{algo:K
 \end{algorithm}
 
 \subsection{Lab 10.5.1 - K-Means Clustering}
-First a random data set consisting of 50 observations is generated. After this, the K-means from the sklearn library is used to perform the K-means clustering.
-After the algorithm is used, the labels and the centroids are saved. The code is shown in listing \ref{lst:kmeanscode} below with number of clusters set to k = 2.
+First, 50 random two dimensional data points with a normal distribution is generated. Then the mean is shiftet for 25 of the observations such that two clusters should exists. After this, the K-means from the sklearn library is used to perform the K-means clustering.
+After the algorithm is used, the labels and the centroids are saved. The code is shown in listing \ref{lst:kmeanscode} with number of clusters set to k = 2.
 \begin{lstlisting}[language=Python, label=lst:kmeanscode, caption=The KMeans function]
 k = 2
 kmeans = KMeans(n_clusters=k, init="k-means++",n_init= 20).fit(zip(X,Y))
@@ -48,10 +47,9 @@ Labels = kmeans.labels_
 centroids = kmeans.cluster_centers_
 \end{lstlisting}
 
-The K-means also takes two other parameters. Namely the \emph{init} and the \emph{n\_init}. Init states which approach is used, and in this case the \emph{K-means++} approach is used. The n\_init is how many times the approach should be performed. Here it is set to 20.
+The K-means also takes two other parameters. Namely the \emph{init} and the \emph{n\_init}. Init states which approach is used, and in this case the \emph{K-means++} approach is used. The n\_init is how many times the approach should be performed, this is set to 20. The algorithm then chooses the best initialization of the 20 that was run.
 
-Now the task is to plot the labels and the centroids so the two clusters can be visualized. 
-This is done with the code shown in listing \ref{lst:kmeansplot}.
+The clusters are visualized with the code in listing \ref{lst:kmeansplot}.
 
 \begin{lstlisting}[language=Python, label=lst:kmeansplot, caption=The code for plotting the two clusters]
 lines = plt.plot(centroids[:,0], centroids[:,1], 'kx')
@@ -71,27 +69,26 @@ The result of this code can be seen in figure \ref{fig:kmeansResult}.
 
 \myFigure{KmeansResult.PNG}{The plotted result of lab 10.5.1}{fig:kmeansResult}{0.6}
 
-The centroids are marked with crosses and each observation is either blue or green depending on which cluster it is assigned too.
+The centroids are marked with crosses and each observation is either blue or green depending on which cluster it is assigned too. The observations are clusters as expected but only because k was set correctly. If the true number of clusters were not known, then choosing k would have been a more difficult task, this is often the case when clustering is needed.
 
 
 \section{Hierarchical Clustering}
-Hierarchical clustering does not require a prespecified \emph{k} value as K-means clustering has to.
-Furthermore hierarchical clustering produces a \emph{dendrogram} which shows the observations as a tree structure.
-The most common type is called the \emph{agglomerative} clustering, it is also known as the \emph{bottom-up} approach.
+Hierarchical clustering does not require a prespecified k value as K-means clustering does.
+Furthermore hierarchical clustering produces a dendrogram which shows the observations as a tree structure.
+The most common type is called the agglomerative clustering, it is also known as the bottom-up approach.
 
 \subsection{Dendrograms}
-The easiest way of explaining a dendrogram is to show one. So figure \ref{fig:dendrogram} shows a dengrogram which is constructed of a data set with 50 observations.
-The labels are shown in different colors.
+Figure \ref{fig:dendrogram} shows a dengrogram which is constructed of a data set with 50 observations.
+One leaf is equal to one of the 50 observations. Observations that fuses into branches indicates similarity in the observations. The observations that fuse lowest in the dendrogram are more similar.
 
-One of the leafs are equal to one of the 50 observations. 
-Depending on the data set and the observations the dendrogram can help to determine the number of clusters that fits the data best. In this example, the number of clusters is two. Line number one shows where to cut in the dendrogram to get the number of clusters to be two. Line number two shows a different cut, and if this was best for the data set the number of clusters would be three.
-Observations that fuse close to the top of the dendrogram is often more different from each other compared to the observations in the bottom of the dendrogram. 
+Depending on the data set and the observations, the dendrogram can help determine the number of clusters that fits the data best. Line number one shows where to cut the dendrogram to divide the observations into two clusters. Line number two shows the cut dividing the observations into three clusters. Looking at the dendogram, two clusters would yield the best result.
+
 
 \myFigure{Dendrogram.PNG}{Dendrogram with 50 observations}{fig:dendrogram}{1}
 
 \FloatBarrier
 To show how this works, a simple data set containing 7 observations is shown in figure \ref{fig:dendrogramdata} to the right.
-It can be seen that the observations 5 and 7 are close to each other, and observations 1 and 6 are also close to each other. These are the bottom of the dendrogram, as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expanded, and by looking at the next observation that are closest to 5 and 7. Clearly 3 is the closest one, so this is the next leaf in the dendrogram. The same is done for observations 1 and 6 and at the end the dendrogram will look like figure \ref{fig:dendrogramdata} to the left.
+It can be seen that the observations 5 and 7 are close to each other, and observations 1 and 6 are also close to each other. These are at the bottom of the dendrogram, as it can been seen in the left side of figure \ref{fig:dendrogramdata}. Now the dendrogram is expanded, and by looking at the next observation that are closest to 5 and 7. Clearly 3 is the closest one, so this is the next leaf in the dendrogram. The same is done for observations 1 and 6 and at the end the dendrogram will look like figure \ref{fig:dendrogramdata}.
 
 \myFigure{DendrogramData.PNG}{Illustration of a dendrogram and its data set}{fig:dendrogramdata}{1}
 
@@ -106,29 +103,29 @@ The hierarchical clustering algorithm is shown in algorithm \ref{algo:Hierarchic
 	\caption{Hierarchical Clustering}
 	\label{algo:HierarchicalClustering}
 	\begin{algorithmic}[1]
- 		\State Begin with the number n of observations and the measure of all the $(\dfrac{n}{2}) =n(n-1)/2 $ pairwise dissimilarities. Each of the observations will treat this as its cluster.
+ 		\State Given n observations, measure the pairwise dissimilarities for all  $(\dfrac{n}{2}) =n(n-1)/2 $. Treat each observation as its own cluster.
  		
  		\State for \emph{i} $= n,n-1,...,2:$
  		\begin{enumerate}[label=(\alph*)]
- 			\item All pairwise inter-cluster dissimilarities matching the $i$ cluster are examined and then the pairs that are most similar are identified and fused into one cluster. This indicates at which height to place the fusion in the dendrogram.
+ 			\item Examine the pairwise dissimilarities among the i clusters and identity the pair which is most similar and fuse them. The pairwise dissimilarity describes at which height the fuse should be placed in the dendogram.
  			\item Compute the new pairwise inter-cluster dissimilarity for the remaining $\emph{i}-1$ clusters.
  		\end{enumerate}
  	\end{algorithmic}
  \end{algorithm}
 
-But one issue has not been addressed. The algorithm needs to be capable of defining the dissimilarities between two clusters if one or both contains multiple observations. This is done with an extension called \emph{linkage} which defines dissimilarities between two groups of observations. The most common types of linkage are \emph{complete}, \emph{average}, \emph{single} and
-\emph{centroid}. These are explained in table \ref{table:linkage}
+One issue has not been addressed. The algorithm needs to be capable of defining the dissimilarities between two clusters if one or both contains multiple observations. This is done with an extension called linkage which defines dissimilarities between two groups of observations. The most common types of linkage are complete, average, single and
+centroid. These are explained in table \ref{table:linkage}
 
 \begin{table}
 	\begin{center}
 		\begin{tabular}{ | l | p{12cm} |}
 			\hline
 			Linkage & Description \\ \hline
-			Complete & Maximal intercluster dissimilarity. Record the largest of these dissimilarities in cluster A and B \\ \hline
-			Single & Minimal intercluster dissimilarity. Record the smallest of these dissimilarities in cluster A and B \\ \hline
-			Average & Mean intercluster dissimilarity. Record the average of pairwise dissimilarities in cluster A and B\\
+			Complete & Maximal intercluster dissimilarity. Record the largest of the pairwise dissimilarities between observations in cluster A and B \\ \hline
+			Single & Minimal intercluster dissimilarity. Record the smallest of the pairwise dissimilarities between observation in cluster A and B \\ \hline
+			Average & Mean intercluster dissimilarity. Record the average of the pairwise dissimilarities between the observations in cluster A and B\\
 			\hline
-			Centroid & Dissimiliarity between the centroids for cluster A and B and record the average of these dissimilarities
+			Centroid & Dissimilarity between the centroids/means for the clusters A and B
 			\\
 			\hline
 		\end{tabular}
@@ -138,12 +135,14 @@ But one issue has not been addressed. The algorithm needs to be capable of defin
 \end{table}
 
 
-Complete and average linkage are generally the most preferred linkage as they produce more balanced dendrograms. Sometimes you need to scale your data set to obtain standard deviation. Then new problems arises, because of which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.
+Within statistics complete and average linkage are generally the most preferred linkage as they produce more balanced dendrograms \citep[pp. 394-395]{ISLR}. 
+
+%Sometimes you need to scale your data set to obtain standard deviation. Then new problems arises, because of which dissimilarity measure should be used and which linkage should be used. This is a difficult problem and there is no standard answer.
 
 \subsection{Lab 10.5.2 - Hierarchical Clustering}
-A data set containing 50 observations is randomly generated and assigned in X and Y coordinates. So it is the same data set structure from lab 10.5.1.
-The hierarchical clustering dendrogram will be produced using complete, single and average linkage with Euclidean distance.
-To perform the hierarchical clustering the library scipy is imported. This provides the functions for creating dendrograms with the linkage needed. 
+A random data set is generated the same way as in lab 10.5.1.
+The hierarchical clustering dendrogram will be produced using both complete, single and average linkage with Euclidean distance for measuring dissimilarity.
+To perform the hierarchical clustering the library scipy is imported.
 The code for creating the three types of linkage are shown in listing \ref{lst:Linkage}.
 
 \begin{lstlisting}[language=Python, label=lst:Linkage, caption=The code that applies the three different linkage on the data set]
@@ -152,11 +151,11 @@ single = linkage(X, method='single', metric='euclidean')
 average = linkage(X, method='average', metric='euclidean')
 \end{lstlisting}
 
-As it can be seen, the linkage functions look a lot like each other. The only difference is the method. The two other parameters are the data set and the one that specifies which metric it should use. In this lab the linkage uses Euclidean distance. 
-To create the dendrograms the function \emph{dendrogram} from the scipy library is used. The only parameter that is needed to build the dendrograms is the three linkage objects that was made in listing \ref{lst:Linkage}.
+Three parameters are passed: the data set, the method describing the chosen linkage algorithm and metric. The result of each of the three different dendrograms can be seen in figures \ref{fig:dendrogramsCompAvg} and \ref{fig:dendrogramsingle}.
+%To create the dendrograms the function \emph{dendrogram} from the scipy library is used. The only parameter that is needed to build the dendrograms is the three linkage objects that was made in listing \ref{lst:Linkage}.
 
-When plotting the dendrograms the only difference is which linkage object is parsed as a parameter.
-The result of each of the three different dendrograms can be seen in figures \ref{fig:dendrogramsCompAvg} and \ref{fig:dendrogramsingle}.
+%When plotting the dendrograms the only difference is which linkage object is parsed as a parameter.
+
 
 
 \mySubFigure{DendrogramComplete.PNG}{DendrogramAverage.PNG}{Dendrograms for linkage methods complete and Average}{Complete}{Average}{fig:dendrogramsCompAvg}{fig:denComplete}{fig:denAverage}
@@ -165,5 +164,4 @@ The result of each of the three different dendrograms can be seen in figures \re
 \myFigure{DendrogramSingle.PNG}{Dendrogram for the linkage method single}{fig:dendrogramsingle}{0.7}
 
 As expected the dendrograms are different from each other.
-Looking at figures \ref{fig:denComplete} and \ref{fig:denAverage} average and complete looks more balanced compared to figure \ref{fig:dendrogramsingle} where the method single is used. It can be seen that by using single linkage one observation belongs to its own cluster, and two other observations belong to their own cluster.
-This could indicate that two clusters are not the best solution, and it could be more sensible to divide the data set into more clusters. In this case four clusters would be better. When performed in the exercise this proved to be correct and improved the clustering. 
+Looking at figures \ref{fig:denComplete} and \ref{fig:denAverage} average and complete looks more balanced compared to figure \ref{fig:dendrogramsingle} where the method single is used. Both average and complete also placed the 25 observations correctly in each their cluster. Single instead placed one observations in its own and 49 observations in the other. By looking at the dendogram it can also be seen that the three observations on the left should probably be placed in two different clusters, making a total of four clusters. Using four clusters with the single linkage method also gave better result. Now only four observations were placed wrongly in a cluster.

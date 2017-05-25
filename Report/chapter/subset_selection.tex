@@ -19,7 +19,7 @@ The algorithm for best subset selection is explained in Algorithm \ref{algo:best
 		\State \parbox[t]{\dimexpr\linewidth-\algorithmicindent}{Pick the best model with k predictors. Best can be defined as smallest RSS or largest $R^2$}
 		\State $M_k = best\_model$
 		\EndFor
-		\State Choose a single best models from all the best models in $M_0,...M_k$. The best model is chosen based on $C_p$, $BIC$ or adjusted $R^2$ if the whole data set is used for choosing the best subset.
+		\State Choose a single best models from all the best models in $M_0,...M_k$. The best model is chosen based on $C_p$, $BIC$ or adjusted $R^2$ if the whole data set is used for training the models.
 	\end{algorithmic}
 \end{algorithm}
 
@@ -62,13 +62,13 @@ for i in xrange(1,20):
 	subsets.loc[i] = best_subset_selection(i)
 \end{lstlisting}
 
-Plotting RSS, $R^2$, $C_p$ and BIC for the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. It shows how RSS and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp, BIC or adjusted $R^2$ can be used for estimating the optimal amount of predictors. When calculating BIC and $C_p$ a penalty is added to the calculation. For adjusted $R^2$ the calculation takes into account that only small increases in RSS are often caused by adding a noise variable. Noise variables are added, which consequently leads to a decrease of $R^2$.
+Plotting RSS, $R^2$, $C_p$ and BIC for the best models from 1-19 predictors gives the plotted graphs shown in figure \ref{fig:best_plottet}. It shows how RSS and $R^2$ respectively monotonically increases and decreases. This is caused by using the same data for both training and testing. When doing this Cp, BIC or adjusted $R^2$ can be used for estimating the optimal amount of predictorss. When calculating BIC and $C_p$ a penalty is added to the calculation. For adjusted $R^2$ the calculation takes into account that only small increases in RSS are often caused by adding a noise variable. Noise variables are added, which consequently leads to a decrease of $R^2$ \citep[pp. 598]{propandstats} \citep[pp. 210-213]{ISLR}. 
 
 \myFigure{subset_all_graph.PNG}{Plotted RSS, $R^2$, $C_p$ and BIC for best subset selection from 1-19 predictors}{fig:best_plottet}{1}
 \FloatBarrier
 
 
-BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, DiwisionW} and \emph{PutOuts}. $C_p$ indicates that the best model contains 10 predictors, this also makes sense as BIC generally places a heavier penalty. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division\_W}\todo{Division\_W eller DiwisionW ovenover? Hvad er rigtigt?? Der står bare Division i filen}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combination is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation (5.1) to 524,288.
+BIC indicates that the best model contains 6 predictors. The best model with 6 predictors include: \emph{AtBat, Hits, Walks, CRBI, Division} and \emph{PutOuts}. $C_p$ indicates that the best model contains 10 predictors, this also makes sense as BIC generally places a heavier penalty \citep[pp. 212]{ISLR}. The best 10 predictors for a model included: \emph{AtBat, Hits, Walks, CAtBat, CRuns, CRBI, CWalks, PutOuts, Assists} and \emph{Division}. This also shows how the set of 6 predictors is not just a subset of the 10 predictors. This is because every combination is tried for every number of predictors. A drawback of the algorithm is therefore that it is computationally expensive. The models that must be computed for 19 predictors to find the best amount of predictors is calculated in equation (5.1) to 524,288.
 
 \begin{equation}
 2^{19} = 524,288
@@ -104,9 +104,9 @@ def forward_stepwise_selection(already_chosen_predictors):
 Similarly a function for backward stepwise selection was implemented. Comparing the models for best subset selection, forward and backward stepwise selection showed that some models were identical while others differed. For example the models with predictors from 1 to 6 for both best subset selection and forward stepwise selection were identical while the model with 7 predictors differed. This is not the case with backward stepwise selection which differs in all these. Actually the best model with 7 predictors differs in all three algorithms. The following 7 predictors were chosen:
 
 \begin{itemize}
-\item Forward stepwise: \emph{CRBI, Hits, PutOuts, Division\_W, AtBat, Walks} and \emph{CWalks}
-\item Best subset: \emph{Hits, Walks, CAtBat, CHits, ChMRun, PutOuts} \emph{Division\_W}
-\item Backward stepwise: \emph{AtBat, Hits, Walks, CRuns, CWalks, PutOuts} and \emph{Division\_W}
+\item Forward stepwise: \emph{CRBI, Hits, PutOuts, Division, AtBat, Walks} and \emph{CWalks}
+\item Best subset: \emph{Hits, Walks, CAtBat, CHits, ChMRun, PutOuts} \emph{Division}
+\item Backward stepwise: \emph{AtBat, Hits, Walks, CRuns, CWalks, PutOuts} and \emph{Division}
 \end{itemize}
 
 \section{Validation Set Approach and Cross-Validation}
@@ -150,7 +150,7 @@ for train_index, test_index in kf.split(X):
 \end{lstlisting}
 \FloatBarrier
 
-The results for cross-validation and best subset selection is shown in table \ref{table:mse_cross}. Using this approach the best model is achieved using a model with 10 predictors. Similarly to the best subset selection, this method is even more computationally expensive because it runs the best subset selection one time for each fold.
+The results for cross-validation and best subset selection is shown in table \ref{table:mse_cross}. Using this approach the best model is achieved using a model with 10 predictors. Compared to the best subset selection, this method is even more computationally expensive because it runs the best subset selection one time for each fold.
 
 \begin{table}	
 	\centering
@@ -159,12 +159,18 @@ The results for cross-validation and best subset selection is shown in table \re
 		\begin{tabular}{ p{2.5cm} p{1.5cm}  }
 			\textbf{Predictors} & \textbf{MSE} \\
 			\hline 
-			7 & 90,133  \\\hline
-			8 & 89,914  \\\hline
-			\textbf{9} & \textbf{89,782}  \\\hline
-			10 & 90,015  \\\hline
-			11 & 90,192  \\\hline
-			12 & 90,363  \\\hline
+			\vspace{0.1px}
+			7 & \vspace{0.1px} 90,133  \\\hline
+			\vspace{0.03em}
+			8 & \vspace{0.03em} 89,914  \\\hline
+			\vspace{0.03em}
+			\textbf{9} & \vspace{0.03em} \textbf{89,782}  \\\hline
+			\vspace{0.03em}
+			10 &\vspace{0.03em} 90,015  \\\hline
+			\vspace{0.03em}
+			11 & \vspace{0.03em} 90,192  \\\hline
+			\vspace{0.03em}
+			12 & \vspace{0.03em} 90,363  \\\hline
 		\end{tabular}
 		\caption{Validation set approach}\label{table:mse_validation}
 	\end{subtable}
@@ -174,18 +180,24 @@ The results for cross-validation and best subset selection is shown in table \re
 	\begin{tabular}{ p{2.5cm} p{1.5cm}  }
 		\textbf{Predictors} & \textbf{MSE} \\
 		\hline 
-		7 & 78,360  \\\hline
-		8 & 77,971  \\\hline
-		9 & 77,944  \\\hline
-		\textbf{10} & \textbf{77,895} \\\hline
-		11 & 78,352  \\\hline
-		12 & 78,795 \\\hline
+		\vspace{0.03em}
+		7 & \vspace{0.03em} 78,360  \\\hline
+		\vspace{0.03em}
+		8 & \vspace{0.03em} 77,971  \\\hline
+		\vspace{0.03em}
+		9 & \vspace{0.03em} 77,944  \\\hline
+		\vspace{0.03em}
+		\textbf{10} & \vspace{0.03em} \textbf{77,895} \\\hline
+		\vspace{0.03em}
+		11 & \vspace{0.03em} 78,352  \\\hline
+		\vspace{0.03em}
+		12 & \vspace{0.03em} 78,795 \\\hline
 	\end{tabular}
 		\caption{Cross-validation}\label{table:mse_cross}
 	\end{subtable}
 	\caption{Calculated mean squared error from 6 to 12 predictors.}\label{table:mse}
 \end{table}
 
-When choosing among the different techniques for subset selection it is often a matter of how much computation power is available.  The best subset selection is a lot more expensive than forward and backward stepwise selection. Combining best subset selection with cross-validation also makes the process even more computationally expensive. If many predictors are available, then best subset selection might simply be too expensive, even for very fast modern computers. If the amount of predictors available are more than 40 \citep[pp. 207]{ISLR}, then best subset selection is rarely feasible and it might be relevant to use forward and backward stepwise selection instead. 
+When choosing among the different techniques for subset selection it is often a matter of how much computation power is available.  The best subset selection is a lot more expensive than forward and backward stepwise selection. Combining best subset selection with cross-validation also makes the process even more computationally expensive. If many predictors are available, then best subset selection might simply be too expensive, even for very fast modern computers. If more than 40 predictors are available, then best subset selection is rarely feasible and methods such as forward and backward stepwise selection could be used instead  \citep[pp. 207]{ISLR}. 
 
-Another important aspect of subset selection is that it does not always make sense to choose the best model. The best model might be more complex while a simpler model might perform approximately as good. So when choosing subset of predictors complexity vs simplicity should also be included in the final choice of predictors
+An important aspect of subset selection is that the best model might be more complex than a simpler model performing approximately as good. When choosing subset of predictors complexity vs simplicity should also be included in the final choice of predictors

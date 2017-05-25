@@ -1,12 +1,10 @@
 \chapter{Resampling Methods}
 \label{chp:crossvalidation}
-In this chapter different types of resampling methods are explained. The validation set approach is presented as a simple way of estimating the test error for a model, while cross-validation is presented as a more thorough tool for achieving a better result. Lastly Bootstrap is presented as an equivalent to cross-validation, but with slight alterations. 
-
-Cross-validation in general is done by splitting up the data set in different ways, so that training and testing is done on varying samples. Bootstrap however, clones original  data sets to create multiple  data sets. Also, where cross-validation is a technique to validate the performance of a model, Bootstrap is used to estimate the uncertainty of a certain coefficient. 
+In this chapter different types of resampling methods are explained. The validation set approach and cross validation is presented as two ways of estimating the test error for a model. Lastly Bootstrap is presented as a method for estimating properties of a model.
 
 \section{The Validation Set Approach}
 \label{sec:VSA}
-In the validation set approach the available set of samples is randomly divided into two parts of approximately equal size. One is the training set and the other is the validation set. The idea is then to fit the model on the training set, and then apply the model to the validation set. The resulting error of the validation set is then used as an estimate of the test error. This error is typically found as the mean squared error \emph{MSE}. 
+In the validation set approach the available set of samples is randomly divided into two parts of approximately equal size. One is the training set and the other is the validation set. The idea is then to fit the model on the training set, and then apply the model to the validation set. The resulting prediction error of the validation set is then used as an estimate of the test error. This error rate is typically calculated as the mean squared error (MSE). 
 
 \myFigure{validationSetApproach.png}{Splitting data randomly}{fig:valid}{0.6} 
 
@@ -17,6 +15,8 @@ The blue half of the  data set is the training set, this is used for fitting the
 
 \subsection{Lab 5.3.1 - The Validation Set Approach}
 In this exercise the goal is to use the validation set approach. So as described in the section above the first thing to do is to split the data randomly in two halves. The data used here is the \emph{Auto}  data set, containing a list of car information. 
+
+\newpage
 
 \begin{lstlisting}[language=Python, label=lst:fit_valid, caption=Fitting linear regression]
 train, test = train_test_split(df, test_size = 0.5)
@@ -54,7 +54,7 @@ lm.fit(X_poly_train_deg2, Y_train)
 Using polynomials shows a clear improvement of the MSE, but not continuously. Using the second degree polynomial shows a drop in the MSE from 24,42 to 19,46, but using the third degree polynomial shows a slight increase from 19,46 to 19,55. 
 
 \section{Leave-one-out cross-Validation}
-In validation-set approach only half of the data is used for training the model. This might give an overestimate of the mean squared error when training on the complete data set. The MSE might also vary a lot when doing random splits of the  data set. Leave-one-out cross-validation tries to address this drawback and is illustrated in figure \ref{fig:loocv}. It splits the  data set in number of observations n and then uses n-1 observations for training and the last observation as validation set. It then iterates through using all observations as validation. This might address the drawbacks of validation set approach but it is also very time consuming as a model has to be fitted n times.
+In validation-set approach only half of the data is used for training the model. This might give an overestimate of the mean squared error when training on the complete data set. The MSE might also vary a lot when doing random splits of the  data set  \citep[pp. 54]{AIbook}. Leave-one-out cross-validation tries to address this drawback and is illustrated in figure \ref{fig:loocv}. It splits the  data set in number of observations n and then uses n-1 observations for training and the last observation as validation set. It then iterates through using all observations as validation. This might address the drawbacks of validation set approach but it is also very time consuming as a model has to be fitted n times.
 
 \myFigure{LOOCV.png}{Leave-one-out cross-validation}{fig:loocv}{0.4}
 
@@ -84,7 +84,7 @@ The mean squared error is lastly computed from the result of the cross-validatio
 \section{K-Fold Cross-Validation}
 K-fold cross-validation is similar to LOOCV, however it surpasses LOOCV in some areas. Instead of using only one observation as the validation set, the  data set is split into k roughly equal-sized parts, called \emph{folds}, and one of these folds is the validation set. All other folds are used as training set. Similar to LOOCV the algorithm then iterates through which fold is the validation set. Since there are less iterations to go through the K-fold cross-validation has a computational advantage over the LOOCV, but that is not all. You can also look at what is called the bias-variance trade-off. 
 
-The LOOCV gives an approximately unbiased estimate of test error compared to the validation set approach, due to training on all but one observation. However, in an estimating procedure, another important aspect is the procedure's variance, and this is an aspect where the k-fold cross-validation is superior to LOOCV. When performing LOOCV, the result is an average of \emph{n} fitted models, and since the training set for each model only vary by one observation, the outputs are highly correlated. In k-fold cross-validation the training sets in each model has a smaller overlap, and since the mean of highly correlated outputs has high variance, the LOOCV's results have higher variance than the K-fold cross-validation's results. So the bias-variance trade-off is associated with k in K-fold cross-validation. The higher the k, the more folds, and thereby higher correlation giving higher variance. In practice, $k=5$ or $k=10$ gives a good result \citep[pp. 183]{ISLR}.
+The LOOCV gives an approximately unbiased estimate of test error compared to the validation set approach, due to training on all but one observation. However, in an estimating procedure, another important aspect is the procedure's variance, and this is an aspect where the k-fold cross-validation is superior to LOOCV \citep[pp. 304-305]{datamining}. When performing LOOCV, the result is an average of \emph{n} fitted models, and since the training set for each model only vary by one observation, the outputs are highly correlated. In k-fold cross-validation the training sets in each model has a smaller overlap, and since the mean of highly correlated outputs has high variance, the LOOCV's results have higher variance than the K-fold cross-validation's results. So the bias-variance trade-off is associated with k in K-fold cross-validation. The higher the k, the more folds, and thereby higher correlation giving higher variance. In practice, $k=5$ or $k=10$ gives a good result for estimating the test error \citep[pp. 183]{ISLR} \citep[pp. 54]{AIbook}.
 
 \myFigure{K_fold.png}{Representation of K-fold cross-validation}{fig:K_fold}{0.4}
 
@@ -92,7 +92,7 @@ The idea behind k-fold cross-validation is illustrated in Figure \ref{fig:K_fold
 
 \FloatBarrier
 \subsection{Lab 5.3.3 - k-Fold Cross-Validation}
-The only difference from Lab 5.3.2 to this lab exercise is that now the number of folds is set by k, and not the amount of observations. In Listing \ref{lst:K_fold} it can be seen that the number of splits is set to 10, as the exercise specifies $k=10$, and the loop now runs 10 times, up until a 10th degree polynomial. The rest is similar to Listing \ref{lst:LOOCV}.
+The only difference from Lab 5.3.2 to this exercise is that now the number of folds is set by k, and not the amount of observations. In Listing \ref{lst:K_fold} it can be seen that the number of splits is set to 10, as the exercise specifies $k=10$, and the loop now runs 10 times, up until a 10th degree polynomial. The rest is similar to Listing \ref{lst:LOOCV}.
 
 \begin{lstlisting}[language=Python, label=lst:K_fold, caption=K-fold cross-validation loop]
 for i in range(1, 11):
@@ -165,7 +165,7 @@ The goal with Lab 5.3.4 is to show the use of bootstrap on the example used in S
 
 Initially, a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y values in the vector \emph{data}.
 With the X and Y values the $\alpha$ can now be calculated and returned.
-
+\newpage
 \begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
 def alpha(data,index):
 	X = data['X'][index]
@@ -226,9 +226,9 @@ The bootstrap estimates for the standard error intercept and slope are shown bel
 	$SE(\hat{\beta_1}) = 0.007335$
 \end{center}
 
-The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtained by performing a linear regression on the \emph{Auto} data set are 0.717 for the intercept and 0.0064 for the slope. These are different from the results which the bootstrap estimates yielded.
+The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtained by the library when performing a linear regression on the \emph{Auto} data set are 0.717 for the intercept and 0.0064 for the slope. These are different from the results which the bootstrap estimates yielded. This is caused by the libraries relying on the assumption of the data being linear, while it is in fact non-linear. In this case bootstrap is therefore more reliable. 
 
-The reason is that the \emph{Auto} data set has a non-linear relationship, so using a quadratic model to fit the data should yield a result that are closer to the bootstrap estimates.
+The reason is that the \emph{Auto} data set has a non-linear relationship, so using a quadratic model to fit the data should yield a result that is closer to the bootstrap estimates
 
 So a new function for finding the standard error is needed, and this function can be seen in Listing \ref{lst:bootstrap_q}.
 
@@ -252,4 +252,4 @@ The results it yields with a 1,000 simulated observations:
 	$SE(\hat{\beta_2}) = 0.00012$
 \end{center}
 
-The new values from the quadratic formula shows a closer correspondence between the estimates from the bootstrap and the standard estimates.
+The new values from the quadratic formula shows a closer correspondence between the estimates from the bootstrap and the estimates from the library.

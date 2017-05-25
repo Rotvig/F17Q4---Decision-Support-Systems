@@ -18,7 +18,7 @@ The blue half of the  data set is the training set, this is used for fitting the
 \subsection{Lab 5.3.1 - The Validation Set Approach}
 In this exercise the goal is to use the validation set approach. So as described in the section above the first thing to do is to split the data randomly in two halves. The data used here is the \emph{Auto}  data set, containing a list of car information. 
 
-\begin{lstlisting}[language=Python, label=lst:fit_valid, caption=Fit linear regression]
+\begin{lstlisting}[language=Python, label=lst:fit_valid, caption=Fitting linear regression]
 train, test = train_test_split(df, test_size = 0.5)
 
 X_train = train[['horsepower']]
@@ -34,12 +34,12 @@ lm.fit(X_train, Y_train)
 Listing \ref{lst:fit_valid} shows the \emph{Auto} data as \emph{df} being split randomly in half by the \emph{train\_test\_split()} function. 
 \emph{horsepower} is used as a predictor and denoted X while \emph{mpg} is the response value denoted Y. The model is then fitted on the training data \emph{X\_train} and \emph{Y\_train}.
 
-\begin{lstlisting}[language=Python, label=lst:print_valid, caption=Print Mean Squeared Error]
+\begin{lstlisting}[language=Python, label=lst:print_valid, caption=Printing MSE]
 print("Mean squared error: %.2f" 
 		% np.mean((lm.predict(X_test) - Y_test) ** 2))
 \end{lstlisting}
 
-In Listing \ref{lst:print_valid} the Mean Squared Error is computed by applying the fitted model to the test sets. The error is 24,42. 
+In Listing \ref{lst:print_valid} the MSE is computed by applying the fitted model to the test sets. The error is 24,42. 
 
 Because the relationship between \emph{horsepower} and \emph{mpg} is non-linear the model can be improved upon by using higher polynomial features for fitting the model. Using second degree polynomials is shown in Listing \ref{lst:poly2_valid}. Third degree polynomials was also applied in the exercise.
 
@@ -51,10 +51,10 @@ X_poly_test_deg2 = poly.fit_transform(X_test)
 lm.fit(X_poly_train_deg2, Y_train)
 \end{lstlisting}
 
-Using polynomials shows a clear improvement of the Mean Squared Error, but not continuously. Using the second degree polynomial shows a drop in the Mean Squared Error from 24,42 to 19,46, but using the third degree polynomial shows a slight increase from 19,46 to 19,55. 
+Using polynomials shows a clear improvement of the MSE, but not continuously. Using the second degree polynomial shows a drop in the MSE from 24,42 to 19,46, but using the third degree polynomial shows a slight increase from 19,46 to 19,55. 
 
 \section{Leave-one-out Cross-validation}
-In validation-set approach only half of the data is used for training the model. This might give an overestimate of the mean squared error when training on the complete data set. The MSE might also vary a lot when doing random splits of the  data set. Leave-one-out Cross-validation tries to address this drawback and is illustrated in figure \ref{fig:loocv}. It splits the  data set in number of observations n and then uses n-1 observations for training and the last one as validation set. It then iterates through using all observations as validation. This might address the drawbacks of validation set approach but it is also very time consuming as a model has to be fitted n times.
+In validation-set approach only half of the data is used for training the model. This might give an overestimate of the mean squared error when training on the complete data set. The MSE might also vary a lot when doing random splits of the  data set. Leave-one-out Cross-validation tries to address this drawback and is illustrated in figure \ref{fig:loocv}. It splits the  data set in number of observations n and then uses n-1 observations for training and the last observation as validation set. It then iterates through using all observations as validation. This might address the drawbacks of validation set approach but it is also very time consuming as a model has to be fitted n times.
 
 \myFigure{LOOCV.png}{Leave-one-out Cross-validation}{fig:loocv}{0.4}
 
@@ -74,31 +74,29 @@ for i in range(1, 6):
 	print(np.mean(-test))
 \end{lstlisting}
 
-In Listing \ref{lst:LOOCV} the LOOCV is done. Lines 2-4 are the same functionality as in Listing \ref{lst:poly2_valid}, where polynomials are used for the Validation Set Approach. However, here the degrees are iteratively increasing up to a fifth degree polynomial.
+In Listing \ref{lst:LOOCV} the LOOCV is done. Lines 2-4 are the same functionality as in Listing \ref{lst:poly2_valid}, where polynomials are used for the validation set approach. However, here the degree is iteratively increasing up to a fifth degree polynomial.
 
-\emph{KFold} is used for leave-one-out validation to split the set in as many folds as there are observations, i.e. making 392 folds.
-
-It is then all used in the \emph{cross\_val\_score} function. It uses the fitted model, the \emph{horsepower} training set fitted to an i'th degree polynomial, the \emph{mpg} training set and the folds to evaluate a score by Cross Validation.
+The \emph{KFold} function is used for LOOCV to split the data set in as many folds as there are observations, i.e. making 392 folds. Then everything is used as parameters for the \emph{cross\_val\_score} function. It uses the fitted model, the \emph{horsepower} training set fitted to an i'th degree polynomial, the \emph{mpg} training set and the folds to evaluate a score by Cross Validation.
 
 %The Mean Squared Error is lastly printed from the result of the Cross-validation, and is illustrated in Figure \ref{fig:result_LOOCV}.
 
 %\myFigure{LOOCV_result.png}{Result of the Leave-one-out Cross-validation}{fig:result_LOOCV}{0.3}
 
-The Mean Squared Error is lastly computed from the result of the Cross-validation. Once again it is clear that there is improvement when using second degree polynomial, but from there no clear improvement can be seen. Here the mse is a bit lower than with the validation set approach. This can be caused by the discussed overestimation of the mse by only training on half the  data set. For first degree polynomial the mse is 24.23, for second degree polynomial 19.25 and for third degree polynomial the mse was calculated to 19.33. All of these error rates showed lower than with validation set approach.
+The mean squared error is lastly computed from the result of the Cross-validation. Once again it is clear that there is improvement when using second degree polynomial, but from there no clear improvement can be seen. Here the MSE is a bit lower than with the validation set approach. This can be caused by the discussed overestimation of the MSE by only training on half the  data set. For first degree polynomial the MSE is 24.23, for second degree polynomial 19.25 and for third degree polynomial the MSE was calculated to 19.33. All of these error rates showed lower than with validation set approach.
 
 
 \section{K-fold Cross-Validation}
-K-fold cross-validation is similar to LOOCV, however it surpasses LOOCV in some areas. Instead of using only one observation as the validation set, the  data set is split into k roughly equal-sized parts, called \emph{folds}, and one of these folds is the validation set. All other folds are used as training set. Similar to LOOCV the algorithm then iterates through which fold is the validation set. Since there are less iterations to go through the k-fold cross-validation has a computational advantage over the LOOCV, but that is not all. You can also look at what is called the bias-variance trade-off. 
+K-fold Cross-validation is similar to LOOCV, however it surpasses LOOCV in some areas. Instead of using only one observation as the validation set, the  data set is split into k roughly equal-sized parts, called \emph{folds}, and one of these folds is the validation set. All other folds are used as training set. Similar to LOOCV the algorithm then iterates through which fold is the validation set. Since there are less iterations to go through the K-fold Cross-validation has a computational advantage over the LOOCV, but that is not all. You can also look at what is called the bias-variance trade-off. 
 
-The LOOCV gives an approximately unbiased estimate of test error compared to the Validation set approach, due to training on all but one observation. However, in an estimating procedure, another important aspect is the procedure's variance, and this is an aspect where the k-fold cross-validation is superior to LOOCV. When performing LOOCV, the result is an average of \emph{n} fitted models, and since the training set for each model only vary by one observation, the outputs are highly correlated. In k-fold cross-validation the training sets in each model has a smaller overlap, and since the mean of highly correlated outputs has high variance, the LOOCV's results have higher variance than the k-fold cross-validation's results. So the bias-variance trade-off is associated with k in k-fold cross-validation. The higher the k, the more folds, and thereby higher correlation giving higher variance. In practice, $k=5$ or $k=10$ gives a good result\citep{ISLR}.
+The LOOCV gives an approximately unbiased estimate of test error compared to the validation set approach, due to training on all but one observation. However, in an estimating procedure, another important aspect is the procedure's variance, and this is an aspect where the K-fold Cross-validation is superior to LOOCV. When performing LOOCV, the result is an average of \emph{n} fitted models, and since the training set for each model only vary by one observation, the outputs are highly correlated. In K-fold Cross-validation the training sets in each model has a smaller overlap, and since the mean of highly correlated outputs has high variance, the LOOCV's results have higher variance than the K-fold Cross-validation's results. So the bias-variance trade-off is associated with k in K-fold Cross-validation. The higher the k, the more folds, and thereby higher correlation giving higher variance. In practice, $k=5$ or $k=10$ gives a good result \citep[pp. 183]{ISLR}.
 
-\myFigure{K_fold.png}{Representation of K-fold cross-validation}{fig:K_fold}{0.4}
+\myFigure{K_fold.png}{Representation of K-fold Cross-validation}{fig:K_fold}{0.4}
 
-The idea behind k-fold cross-validation is illustrated in Figure \ref{fig:K_fold}, where the blue folds are the training sets and the orange fold is the validation set. Note that the case where k is equal the number of observations is what was just described as LOOCV. Having a lower value of k therefore provides a less computationally expensive way of doing cross validation.
+The idea behind K-fold Cross-validation is illustrated in Figure \ref{fig:K_fold}, where the blue folds are the training sets and the orange fold is the validation set. Note that the case where k is equal to the number of observations is what was just described as LOOCV. Having a lower value of k therefore provides a less computationally expensive way of doing Cross-validation.
 
 \FloatBarrier
 \subsection{Lab 5.3.3 - K-fold Cross-validation}
-The only difference from Lab 5.3.2 to this lab exercise is that now the number of folds is set by k, and not the amount of observations. In Listing \ref{lst:K_fold} it can be seen that the number of splits is set to 10, as the exercise specifies $k=10$, and the loop now runs 10 times up until a 10th degree polynomial. The rest is similar to Listing \ref{lst:LOOCV}.
+The only difference from Lab 5.3.2 to this lab exercise is that now the number of folds is set by k, and not the amount of observations. In Listing \ref{lst:K_fold} it can be seen that the number of splits is set to 10, as the exercise specifies $k=10$, and the loop now runs 10 times, up until a 10th degree polynomial. The rest is similar to Listing \ref{lst:LOOCV}.
 
 \begin{lstlisting}[language=Python, label=lst:K_fold, caption=K-fold Cross-validation loop]
 for i in range(1, 11):
@@ -108,7 +106,7 @@ for i in range(1, 11):
 \end{lstlisting}
 \FloatBarrier
 
-In table \ref{table:kfold_polynomials_mse} the result of the K-fold cross-validation is shown from a 1 to 10 degree polynomial. The mean squared error is lower than with validation set approach. Compared to LOOCV it has a higher MSE for some polynomials while for others the MSE is lower. As explained this method is computationally less expensive than LOOCV and this was also obvious when executing the implementation.
+In table \ref{table:kfold_polynomials_mse} the result of the K-fold Cross-validation is shown from a 1 to 10 degree polynomial. The mean squared error is lower than with validation set approach. Compared to LOOCV it has a higher MSE for some polynomials while for others the MSE is lower. As explained this method is computationally less expensive than LOOCV and this was also obvious when executing the implementation.
 
 \begin{table}[htbp]
 	\centering
@@ -165,19 +163,19 @@ With all $\alpha$ values estimated the mean and standard deviation can be estima
 
 \subsection{Lab 5.3.4 - The Bootstrap}
 
-The goal with lab 5.3.4 is to show the use of bootstrap on the example used in Section 5.2\citep{ISLR} which uses the \emph{Portfolio} data set. The second task of lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
+The goal with Lab 5.3.4 is to show the use of bootstrap on the example used in Section 5.2 \citep[pp. 187-190]{ISLR} which uses the \emph{Portfolio} data set. The second task of Lab 5.3.4 is to estimate the accuracy of the linear regression model on the \emph{Auto} data set.
 
 \subsubsection{Estimating the Accuracy of a Statistic of Interest}
 
-To start with a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y value in the vector \emph{data}.
-With the X and Y value the $\alpha$ can now be calculated and returned.
+Initially, a function for calculating $\alpha$ is required. The function is shown in listing \ref{lst:alpha}. The function receives \emph{data} which is a vector with the properties X and Y. The second input is \emph{index} which is used to access the wanted X and Y values in the vector \emph{data}.
+With the X and Y values the $\alpha$ can now be calculated and returned.
 
 \begin{lstlisting}[caption={Function for calculating $\alpha$ in python}, label=lst:alpha, mathescape=true]
 def alpha(data,index):
 	X = data['X'][index]
 	Y = data['Y'][index]
 	return ((np.var(Y) - np.cov(X,Y)) / (np.var(X) + np.var(Y) - 
-	2*np.cov(X,Y)))[0,1]
+		2*np.cov(X,Y)))[0,1]
 \end{lstlisting}
 
 The next step is to bootstrap the \emph{Portfolio} data set.
@@ -195,7 +193,7 @@ def boot_python(data, function, num_of_iteration):
 
 The bootstrap method receives three arguments, the first being \emph{data} which is the data that the bootstrap approach should be performed on. The next argument is the function for calculating $\alpha$. The last argument is the number of simulated data that should be created.  
 
-Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1,000.
+Now everything is set to perform a bootstrap on the \emph{Portfolio} data set with an \emph{num\_of\_iteration} set to 1,000. The result is as follows.
 
 \begin{center}
 	$\hat{\alpha} = 0.5834$
@@ -208,7 +206,7 @@ Now everything is set to perform a bootstrap on the \emph{Portfolio} data set wi
 
 \subsubsection{Estimating the Accuracy of a Linear Regression Model}
 
-In the next part of lab 5.3.4 the goal is to use the bootstrap approach to check the variability for $\beta_0$ and $\beta_1$, which is the intercept and slope terms for the linear regression model. The linear regression model in this exercise uses \emph{horsepower} to make a prediction of \emph{mpg}. \emph{horsepower} and \emph{mpg} are part of the \emph{Auto} data set.
+In the next part of Lab 5.3.4 the goal is to use the bootstrap approach to check the variability for $\beta_0$ and $\beta_1$, which is the intercept and slope terms for the linear regression model. The linear regression model in this exercise uses \emph{horsepower} to make a prediction of \emph{mpg}. \emph{horsepower} and \emph{mpg} are part of the \emph{Auto} data set.
 
 First step is to create a function to calculate the intercept and slope, this is seen in listing \ref{lst:boot}. The function \emph{boot} performs a linear regression fit on X and Y. 
 \newpage
@@ -222,8 +220,8 @@ def boot(data, index):
 
 The next step is to adjust the bootstrap function from the last part. The modified version is the same function as in Listing \ref{lst:bootstrap}, except the modified function now returns the mean intercept, standard error, mean slope and standard error slope.
 
-Now the standard errors of 1,000 bootstrap estimates for the intercept and slope can be computed.
-The bootstrap estimates for the standard error intercept and slope:
+Now with the standard errors of 1,000, the bootstrap estimate for the intercept and slope can be computed.
+The bootstrap estimates for the standard error intercept and slope are shown below.
 
 \begin{center}
 	$SE(\hat{\beta_0}) = 0.8601$
@@ -236,7 +234,7 @@ The standard errors estimates $SE(\hat{\beta_0})$ and $SE(\hat{\beta_1})$ obtain
 
 The reason is that the \emph{Auto} data set has a non-linear relationship, so using a quadratic model to fit the data should yield a result that are closer to the bootstrap estimates.
 
-So a new function for finding the standard error is needed, this function can be seen in Listing \ref{lst:bootstrap_q}.
+So a new function for finding the standard error is needed, and this function can be seen in Listing \ref{lst:bootstrap_q}.
 
 \begin{lstlisting}[caption={Function to calculate standard error with a qudratic model}, label=lst:bootstrap_q, mathescape=true]
 def boot_fn2(data, index):

@@ -50,7 +50,7 @@ centroids = kmeans.cluster_centers_
 The K-means also takes two other parameters. Namely the \emph{init} and the \emph{n\_init}. Init states which approach is used, and in this case the \emph{K-means++} approach is used. The n\_init is how many times the approach should be performed, this is set to 20. The algorithm then chooses the best initialization of the 20 that was run.
 
 The clusters are visualized with the code in listing \ref{lst:kmeansplot}.
-
+\newpage
 \begin{lstlisting}[language=Python, label=lst:kmeansplot, caption=The code for plotting the two clusters]
 lines = plt.plot(centroids[:,0], centroids[:,1], 'kx')
 plt.setp(lines, ms=15.0)

@@ -1,14 +1,14 @@
 \chapter{Unsupervised Learning}
 \label{chp:unsuplea}
 In unsupervised learning there is no response variable Y. There is only a set of features $X_1, X_2,..., X_p$ measured on n observations. 
-Supervised learning compared to unsupervised learning comes with some challenges. The tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no accepted method for determining the quality of the result, due to the fact that there is no Y to check results up against.
+Supervised learning compared to unsupervised learning comes with some challenges. The tasks tends to be more subjective and there is no simple goal such as prediction of a response as there is in supervised learning. Furthermore there is no accepted method for determining the quality of the result, due to the fact that there is no Y to check the results up against.
 In this section the focus will be on the  technique called \emph{clustering} which is used to discover subgroups or clusters in a data set. 
 This is done by dividing the data set into clusters so that the observations in each of the clusters are similar to each other, and the observations belonging to clusters are different compared to the observations in other clusters.
 The problem is to determine if observations are similar or different to each other.
  
 \section{K-Means Clustering}
 \label{chp:clus}
-K-means clustering is a technique to divide observations in a data set into a prespecified k number of clusters. Each observation is assigned to one of the k clusters. In figure \ref{fig:K-meanex} a data set is assigned to three clusters. This means that \emph{k} is equal to 3. The data set consists of 50 observations. Each cluster is marked with a color and the cross is the center points of a cluster. This point is also called a \emph{centroid}.
+K-means clustering is a technique to divide observations in a data set into a prespecified k number of clusters. Each observation is assigned to one of the k clusters. In figure \ref{fig:K-meanex} a data set is assigned to three clusters. This means that \emph{k} is equal to 3. The data set consists of 50 observations. Each cluster is marked with a color and the cross is the center point of a cluster. This point is also called a \emph{centroid}.
 
 \myFigure{K-mean.PNG}{Example of the K-means algorithm where k is 3}{fig:K-meanex}{0.55}
 
@@ -30,7 +30,7 @@ The K-means clustering algorithm can then be written as in algorithm \ref{algo:K
 		\State 
 		Iterate until the observations stop changing between clusters.
 		\begin{enumerate}[label=(\alph*)]
-			\item The centroids are calculated for each of the k clusters and these centroids acts as the vector for the means for each observation in the k'th cluster.
+			\item The centroids are calculated for each of the k clusters and these centroids act as the vector for the means for each observation in the k'th cluster.
 			
 			\item For each observation the Euclidean distance to each centroid is calculated and the observation is assigned to the closest one.
 		\end{enumerate}
@@ -38,8 +38,8 @@ The K-means clustering algorithm can then be written as in algorithm \ref{algo:K
 \end{algorithm}
 
 \subsection{Lab 10.5.1 - K-Means Clustering}
-First, 50 random two dimensional data points with a normal distribution is generated. Then the mean is shiftet for 25 of the observations such that two clusters should exists. After this, the K-means from the sklearn library is used to perform the K-means clustering.
-After the algorithm is used, the labels and the centroids are saved. The code is shown in listing \ref{lst:kmeanscode} with number of clusters set to k = 2.
+First, 50 random two dimensional data points with a normal distribution are generated. Then the mean is shifted for 25 of the observations such that two clusters should exists. After this, the K-means from the sklearn library is used to perform the K-means clustering.
+After the algorithm is used, the labels and the centroids are saved. The code is shown in listing \ref{lst:kmeanscode} with the number of clusters set to k = 2.
 \begin{lstlisting}[language=Python, label=lst:kmeanscode, caption=The KMeans function]
 k = 2
 kmeans = KMeans(n_clusters=k, init="k-means++",n_init= 20).fit(zip(X,Y))
@@ -47,11 +47,11 @@ Labels = kmeans.labels_
 centroids = kmeans.cluster_centers_
 \end{lstlisting}
 
-The K-means also takes two other parameters. Namely the \emph{init} and the \emph{n\_init}. Init states which approach is used, and in this case the \emph{K-means++} approach is used. The n\_init is how many times the approach should be performed, this is set to 20. The algorithm then chooses the best initialization of the 20 that was run.
+The K-means also takes two other parameters. Namely the \emph{init} and the \emph{n\_init}. Init states which approach is used, and in this case the \emph{K-means++} approach is used. The n\_init is how many times the approach should be performed, and this is set to 20. The algorithm then chooses the best initialization of the 20 that was run.
 
 The clusters are visualized with the code in listing \ref{lst:kmeansplot}.
 \newpage
-\begin{lstlisting}[language=Python, label=lst:kmeansplot, caption=The code for plotting the two clusters]
+\begin{lstlisting}[language=Python, label=lst:kmeansplot, caption=Plotting the two clusters]
 lines = plt.plot(centroids[:,0], centroids[:,1], 'kx')
 plt.setp(lines, ms=15.0)
 plt.setp(lines, mew=3.0)
@@ -65,7 +65,7 @@ plt.show()
 \end{lstlisting}
 
 Initially the two centroids are plotted. This is done from line 1 to 3. The \emph{kx} is written so they are labeled with a cross. For plotting the observations a for loop is used. It runs through the two possible clusters. The \emph{o} is added so the observations are plotted as a dot. 
-The result of this code can be seen in figure \ref{fig:kmeansResult}.
+The result can be seen in figure \ref{fig:kmeansResult}.
 
 \myFigure{KmeansResult.PNG}{The plotted result of lab 10.5.1}{fig:kmeansResult}{0.6}
 
@@ -79,7 +79,7 @@ The most common type is called the agglomerative clustering, it is also known as
 
 \subsection{Dendrograms}
 Figure \ref{fig:dendrogram} shows a dengrogram which is constructed of a data set with 50 observations.
-One leaf is equal to one of the 50 observations. Observations that fuses into branches indicates similarity in the observations. The observations that fuse lowest in the dendrogram are more similar.
+One leaf is equal to one of the 50 observations. Observations that fuse into branches indicates similarity in the observations. The observations that fuse lowest in the dendrogram are more similar.
 
 Depending on the data set and the observations, the dendrogram can help determine the number of clusters that fits the data best. Line number one shows where to cut the dendrogram to divide the observations into two clusters. Line number two shows the cut dividing the observations into three clusters. Looking at the dendogram, two clusters would yield the best result.
 
@@ -95,7 +95,7 @@ It can be seen that the observations 5 and 7 are close to each other, and observ
 \FloatBarrier
 \subsection{The Hierarchical Clustering Algorithm}
 To produce the dendrogram the hierarchical clustering algorithm is used. First step is to find the Euclidean distance between the pair of observations and find the dissimilarities.
-Then it runs iteratively trough all the observations. It starts at the bottom and finds the two observations acting as their own cluster, that are closest and fuses those two, so that there now are $n-1$ clusters. This continues, so the next two clusters that are most similar are fused, making the number of clusters $n-2$. This is done until all observations belong to one big cluster.
+Then it runs iteratively trough all the observations. It starts at the bottom and finds the two observations acting as their own cluster that are closest, and fuses those two so that there now are $n-1$ clusters. This continues, so the next two clusters that are most similar are fused, making the number of clusters $n-2$. This is done until all observations belong to one big cluster.
 
 The hierarchical clustering algorithm is shown in algorithm \ref{algo:HierarchicalClustering}.
 
@@ -145,7 +145,7 @@ The hierarchical clustering dendrogram will be produced using both complete, sin
 To perform the hierarchical clustering the library scipy is imported.
 The code for creating the three types of linkage are shown in listing \ref{lst:Linkage}.
 
-\begin{lstlisting}[language=Python, label=lst:Linkage, caption=The code that applies the three different linkage on the data set]
+\begin{lstlisting}[language=Python, label=lst:Linkage, caption=Applying the three different linkage styles on the data set]
 complete = linkage(X, method='complete', metric='euclidean')
 single = linkage(X, method='single', metric='euclidean') 
 average = linkage(X, method='average', metric='euclidean')
@@ -164,4 +164,4 @@ Three parameters are passed: the data set, the method describing the chosen link
 \myFigure{DendrogramSingle.PNG}{Dendrogram for the linkage method single}{fig:dendrogramsingle}{0.7}
 
 As expected the dendrograms are different from each other.
-Looking at figures \ref{fig:denComplete} and \ref{fig:denAverage} average and complete looks more balanced compared to figure \ref{fig:dendrogramsingle} where the method single is used. Both average and complete also placed the 25 observations correctly in each their cluster. Single instead placed one observations in its own and 49 observations in the other. By looking at the dendogram it can also be seen that the three observations on the left should probably be placed in two different clusters, making a total of four clusters. Using four clusters with the single linkage method also gave better result. Now only four observations were placed wrongly in a cluster.
+Looking at figures \ref{fig:denComplete} and \ref{fig:denAverage} average and complete looks more balanced compared to figure \ref{fig:dendrogramsingle} where the method single is used. Both average and complete also placed the 25 observations correctly in each their cluster. Single instead placed one observations in its own and 49 observations in the other. By looking at the dendogram it can also be seen that the three observations on the left should probably be placed in two different clusters, making a total of four clusters. Using four clusters with the single linkage method also gave a better result. Now only four observations were placed wrongly in a cluster.

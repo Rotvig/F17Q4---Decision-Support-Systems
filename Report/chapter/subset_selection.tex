@@ -195,7 +195,7 @@ The results for cross-validation and best subset selection is shown in table \re
 	\end{tabular}
 		\caption{Cross-validation}\label{table:mse_cross}
 	\end{subtable}
-	\caption{Calculated mean squared error from 6 to 12 predictors.}\label{table:mse}
+	\caption{Calculated mean squared error from 7 to 12 predictors.}\label{table:mse}
 \end{table}
 
 When choosing among the different techniques for subset selection it is often a matter of how much computation power is available.  The best subset selection is a lot more expensive than forward and backward stepwise selection. Combining best subset selection with cross-validation also makes the process even more computationally expensive. If many predictors are available, then best subset selection might simply be too expensive, even for very fast modern computers. If more than 40 predictors are available, then best subset selection is rarely feasible and methods such as forward and backward stepwise selection could be used instead  \citep[pp. 207]{ISLR}. 
